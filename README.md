@@ -26,6 +26,7 @@
 
 - `analysis_report.md`: 수율 개선 관점의 분석 리포트
 - `analysis_summary.html`: 브라우저에서 확인할 수 있는 요약 리포트
+- `RALPH_LOOP.md`: Ralph Loop 기반 장기 실행 AI 자동화 개념 정리
 - `daily_ng_rate.csv`: 일자별 NG율 집계
 - `defect_pareto.csv`: 불량 코드 파레토 분석
 - `line_ng_rate.csv`: 라인별 NG율
