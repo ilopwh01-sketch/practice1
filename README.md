@@ -52,6 +52,19 @@
 - 승인 후 반영: 검토 완료된 개선 항목만 최종 리포트와 액션 아이템에 반영
 - 피드백 축적: 사람이 수정한 판단 기준을 다음 분석 기준에 반영
 
+## Codex/GitHub MCP 연동 기록
+
+2026-05-07 기준으로 Codex에서 GitHub 작업을 안전하게 반복하기 위한 전용 skill을 생성했습니다.
+
+- Skill 이름: `github-mcp-repo-onboarding`
+- 목적: Codex와 GitHub MCP/plugin 또는 로컬 Git을 이용해 private repo 연결, 최소 권한 토큰 설정, README-only 업로드, 첫 push 문제 해결을 표준화
+- GitHub MCP/plugin 확인 계정: `ilopwh01-sketch`
+- 저장소 연결 방식: README-only bootstrap으로 민감 파일이나 전체 프로젝트가 실수로 업로드되지 않도록 분리
+- 인증 원칙: 토큰은 채팅에 붙여넣지 않고, 노출된 토큰은 즉시 폐기 후 재발급
+- 최소 권한 기준: fine-grained token, 선택 repo 한정, `Contents: Read and write`, 나머지 권한은 `No access`
+
+이후 GitHub 저장소를 새로 만들거나 README부터 안전하게 올릴 때는 `$github-mcp-repo-onboarding` skill을 사용합니다.
+
 ## 메모
 
 이 저장소의 데이터와 분석 내용은 실습용 더미 데이터를 기반으로 하며, 실제 회사 내부 데이터가 아닙니다.
