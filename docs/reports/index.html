@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>프로젝트 결과보고서 모음</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.58;
+    }
+
+    .wrap {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section,
+    .report {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 31px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .report {
+      display: grid;
+      min-height: 190px;
+      padding: 18px;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .report p {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .tag {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag.green { background: #dff3e9; color: #135b3b; }
+    .tag.orange { background: #fff0d4; color: #70420f; }
+
+    .hint { color: var(--muted); }
+
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">프로젝트 결과보고서</div>
+      <h1>Laminator AI 업무 자동화 결과보고서 모음</h1>
+      <p>매주 하루씩 진행하는 프로젝트의 구현 결과, 검증 내용, 다음 계획을 일차별로 누적 관리합니다.</p>
+    </header>
+
+    <section>
+      <h2>보고서 목록</h2>
+      <p class="hint">오늘이 1일차이며, 이후 2일차/3일차 보고서도 이 폴더에 계속 추가합니다.</p>
+      <div class="grid">
+        <a class="report" href="day1_implementation_report.html">
+          <h3>1일차 구현 결과보고서</h3>
+          <p>BRD/PRD 기반 문서 패키지, HTML 대시보드, CSV 업로드, 컬럼 매핑 추천, 위험도 점수, GitHub Pages 반영 내역을 정리했습니다.</p>
+          <div class="tag-row">
+            <span class="tag green">Day 1</span>
+            <span class="tag">Dashboard</span>
+            <span class="tag orange">CSV Mapping</span>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>1일차 구현 결과보고서 - Laminator AI 업무 자동화</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.58;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 31px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .card {
+      padding: 16px;
+      min-height: 120px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .value {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    li { margin-bottom: 6px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag.green { background: #dff3e9; color: #135b3b; }
+    .tag.orange { background: #fff0d4; color: #70420f; }
+    .tag.red { background: #f7d7d7; color: #842525; }
+
+    .hint { color: var(--muted); }
+
+    a { color: var(--blue); font-weight: 900; text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .summary-grid, .grid-2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .summary-grid, .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">1일차 구현 결과보고서</div>
+      <h1>Laminator 공정 AI 업무 자동화 대시보드</h1>
+      <p>2026-05-21 기준 구현 결과, 검증 내용, 남은 리스크, 2일차 계획을 정리했습니다.</p>
+      <div class="tag-row">
+        <span class="tag green">Day 1</span>
+        <span class="tag">CSV Dashboard</span>
+        <span class="tag orange">Column Mapping</span>
+        <span class="tag red">Risk Score</span>
+      </div>
+    </header>
+
+    <div class="summary-grid">
+      <div class="card">
+        <strong>발표/과제 산출물</strong>
+        <p class="value">90%</p>
+        <p class="sub">BRD, PRD, 설계서, 발표자료, 포털 구성</p>
+      </div>
+      <div class="card">
+        <strong>화면 프로토타입</strong>
+        <p class="value">90%</p>
+        <p class="sub">대시보드, 차트, RCA, 위험도 점수 구현</p>
+      </div>
+      <div class="card">
+        <strong>파일 기반 MVP</strong>
+        <p class="value">70%</p>
+        <p class="sub">CSV 업로드와 자동 분석 중심</p>
+      </div>
+      <div class="card">
+        <strong>전체 프로젝트 범위</strong>
+        <p class="value">60~65%</p>
+        <p class="sub">현장 데이터 검증과 운영 보정 필요</p>
+      </div>
+    </div>
+
+    <section>
+      <h2>1. 프로젝트 개요</h2>
+      <p>이번 프로젝트는 Laminator 공정에서 07시-익일 07시 기준 생산량, NG 수량, 불량률, 설비 Profile, 알람, CRACK/BUBBLE 불량 집중성을 자동 분석하는 AI 업무 자동화 프로토타입입니다.</p>
+      <p class="hint">1일차 목표는 실제 MES/DB 연동이 아니라, 비식별 샘플 CSV를 기반으로 작동하는 파일 기반 분석 대시보드와 제출용 문서 패키지를 만드는 것이었습니다.</p>
+    </section>
+
+    <section>
+      <h2>2. 오늘 구현한 주요 내용</h2>
+      <div class="grid-2">
+        <div>
+          <h3>문서/기획</h3>
+          <ul>
+            <li>BRD/PRD 상세 문서 작성</li>
+            <li>화면 시각화 설계서 작성</li>
+            <li>요구사항 관리 포털 작성</li>
+            <li>논문 레퍼런스 및 RCA 프레임워크 작성</li>
+            <li>최종 10문항 발표 요약 작성</li>
+          </ul>
+        </div>
+        <div>
+          <h3>대시보드/기능</h3>
+          <ul>
+            <li>KPI, Pareto, Heatmap 구현</li>
+            <li>시간대별 NG 그래프와 Boxplot 구현</li>
+            <li>CSV 다중 업로드 기능 구현</li>
+            <li>컬럼 매핑 추천 기능 구현</li>
+            <li>위험도 점수 100점 만점 계산 구현</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 핵심 구현 상세</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>구분</th>
+            <th>구현 내용</th>
+            <th>의미</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>CSV 업로드</td>
+            <td>생산 요약, 불량 이벤트, 설비 알람, Profile CSV 다중 업로드</td>
+            <td>현장 PC에서 내려받은 파일 기반 MVP 가능</td>
+          </tr>
+          <tr>
+            <td>컬럼 매핑</td>
+            <td>시간, 설비, 불량, 알람, Profile, 생산수량, BOM/Recipe 자동 분류</td>
+            <td>파일 양식이 달라도 분석 구조로 변환 가능</td>
+          </tr>
+          <tr>
+            <td>위험도 점수</td>
+            <td>불량 집중, 우선 불량, Profile/알람 중첩, 수량 불일치, NG율을 100점으로 환산</td>
+            <td>긴급/주의보다 객관적인 점검 우선순위 제시</td>
+          </tr>
+          <tr>
+            <td>논문 RCA</td>
+            <td>Crack, Bubble/Delamination 등 PV Failure Mode를 현장 데이터 신호와 연결</td>
+            <td>단순 통계가 아니라 근거 기반 원인 후보 제시</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 검증 결과</h2>
+      <ul>
+        <li>HTML 대시보드 JavaScript 문법 검사 통과</li>
+        <li>자유 형식 영어 CSV 컬럼 매핑 테스트 통과</li>
+        <li>`timestamp` 컬럼의 `event_time` 변환 확인</li>
+        <li>`equipment_id`, `defect_code`, `vacuum_kpa`, `upper_temp_c` 표준 매핑 확인</li>
+        <li>샘플 CSV 기준 위험도 점수 계산 확인</li>
+        <li>GitHub 코드 브랜치와 GitHub Pages 브랜치 업로드 완료</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>5. 남은 이슈와 리스크</h2>
+      <ul>
+        <li>실제 MES/설비 CSV 컬럼 구조가 아직 검증되지 않았습니다.</li>
+        <li>`.xlsx` 직접 업로드 분석은 아직 구현되지 않았습니다.</li>
+        <li>위험도 점수 산식은 초기 가설이며 현장 데이터로 보정해야 합니다.</li>
+        <li>CRACK/BUBBLE 원인 후보는 데이터 기반 추정이며 담당자 검증이 필요합니다.</li>
+        <li>설비 Recipe 자동 변경은 side effect 우려로 파일럿 범위에서 제외해야 합니다.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>6. 2일차 진행 계획</h2>
+      <ul>
+        <li>실제 또는 비식별 현장 CSV 1~2개로 업로드 테스트</li>
+        <li>컬럼 매핑 추천 정확도 확인 및 보정</li>
+        <li>위험도 점수 산식 현장 감각에 맞게 조정</li>
+        <li>분석 결과 엑셀 자동 생성 방식 설계</li>
+        <li>사람 최종 승인 항목 정의</li>
+        <li>반복 이슈 히스토리 관리 방식 구체화</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>7. 1일차 결론</h2>
+      <p>1일차에는 Laminator 공정 AI 업무 자동화 프로젝트의 기본 골격을 만들었습니다. 단순 문서 작성이 아니라 실제로 CSV를 업로드하고 대시보드가 계산되는 프로토타입까지 구현했습니다.</p>
+      <p>현재 결과물은 과제 제출과 발표에는 충분히 사용할 수 있는 수준이며, 다음 단계는 실제 현장 데이터와 비교하면서 컬럼 매핑, 위험도 점수, 원인 후보 판단 기준을 보정하는 것입니다.</p>
+      <p><a href="../dashboard/laminator_ai_dashboard.html">대시보드 열기</a> · <a href="../reports/index.html">보고서 목록으로 이동</a></p>
+    </section>
+  </main>
+</body>
+</html>
