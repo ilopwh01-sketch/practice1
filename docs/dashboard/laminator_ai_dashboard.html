@@ -739,6 +739,63 @@
       font-size: 13px;
     }
 
+    .mapping-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .mapping-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .mapping-card h4 {
+      margin: 0 0 8px;
+      font-size: 15px;
+    }
+
+    .mapping-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .mapping-pill {
+      display: inline-flex;
+      min-height: 24px;
+      align-items: center;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .mapping-pill.warn {
+      background: #fff0d4;
+      color: #70420f;
+    }
+
+    .mapping-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    .mapping-table th,
+    .mapping-table td {
+      padding: 7px 6px;
+      border-top: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
     @media (max-width: 1080px) {
       .app {
         grid-template-columns: 1fr;
@@ -761,6 +818,10 @@
       .grid-3,
       .evidence-grid,
       .upload-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .mapping-grid {
         grid-template-columns: 1fr;
       }
 
@@ -882,6 +943,12 @@
             <div class="upload-chip"><strong>Profile</strong>샘플 데이터 대기</div>
           </div>
           <ul class="file-list" id="fileList"></ul>
+          <div class="mapping-grid" id="mappingCards">
+            <div class="mapping-card">
+              <h4>컬럼 매핑 추천</h4>
+              <p class="hint">CSV를 업로드하면 컬럼명을 시간, 설비, 불량, 알람, Profile, 생산수량, BOM/Recipe로 자동 분류한다.</p>
+            </div>
+          </div>
         </section>
 
         <div class="kpi-grid">
@@ -1487,7 +1554,8 @@
       defects: [],
       alarms: [],
       profile: [],
-      files: []
+      files: [],
+      mappings: []
     };
 
     const fileInput = document.getElementById("dashboardCsvFiles");
@@ -1579,6 +1647,150 @@
         if (value !== undefined && String(value).trim() !== "") return value;
       }
       return "";
+    }
+
+    function normalizeText(value) {
+      return String(value ?? "")
+        .toLowerCase()
+        .replace(/[\s_\-./()[\]{}]/g, "");
+    }
+
+    function headerHas(header, keywords) {
+      const normalized = normalizeText(header);
+      return keywords.some((keyword) => normalized.includes(normalizeText(keyword)));
+    }
+
+    function sampleValues(rows, header, limit = 20) {
+      const key = header.toLowerCase();
+      return rows.slice(0, limit).map((row) => row[key]).filter((value) => String(value ?? "").trim() !== "");
+    }
+
+    function looksLikeDateTime(values) {
+      return values.some((value) => {
+        const text = String(value ?? "").trim();
+        return /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}/.test(text) || /\d{1,2}:\d{2}/.test(text) || !Number.isNaN(new Date(text).getTime());
+      });
+    }
+
+    function looksNumeric(values) {
+      return values.length > 0 && values.filter((value) => Number.isFinite(toNumber(value))).length / values.length >= 0.7;
+    }
+
+    function chooseMappingTarget(header, rows) {
+      const values = sampleValues(rows, header);
+      const numeric = looksNumeric(values);
+      const datetime = looksLikeDateTime(values);
+
+      const rules = [
+        { canonical: "event_time", category: "시간", score: 98, reason: "발생/검사 시간 후보", keywords: ["event_time", "occur_time", "defect_time", "judge_time", "inspection_time", "timestamp", "date_time", "datetime", "발생시간", "발생시각", "검사시간", "판정시간", "측정시간", "시간"] },
+        { canonical: "sample_time", category: "시간", score: 96, reason: "Profile 시계열 시간 후보", keywords: ["sample_time", "profile_time", "log_time", "data_time", "수집시간", "로그시간", "측정일시"] },
+        { canonical: "alarm_time", category: "시간", score: 96, reason: "설비 알람 시간 후보", keywords: ["alarm_time", "alarmdate", "alarm_datetime", "알람시간", "알람시각", "알람발생"] },
+        { canonical: "time_bucket", category: "시간", score: 92, reason: "시간대 집계 후보", keywords: ["time_bucket", "hour", "time_slot", "시간대", "작업시간대", "shift_hour"] },
+        { canonical: "work_date", category: "시간", score: 90, reason: "생산일 후보", keywords: ["work_date", "prod_date", "production_date", "date", "일자", "작업일", "생산일"] },
+        { canonical: "equipment_id", category: "설비", score: 98, reason: "설비/호기 식별 후보", keywords: ["equipment_id", "equipment", "eqp", "machine", "tool", "laminator", "lam", "chamber", "설비", "장비", "호기", "설비명"] },
+        { canonical: "line", category: "설비", score: 86, reason: "라인 구분 후보", keywords: ["line", "라인", "공정라인"] },
+        { canonical: "defect_code", category: "불량", score: 98, reason: "불량 코드/유형 후보", keywords: ["defect_code", "defect", "ng_code", "ngtype", "fail_code", "불량코드", "불량유형", "불량명", "불량", "ng명", "ng유형"] },
+        { canonical: "judge", category: "불량", score: 86, reason: "PASS/NG 판정 후보", keywords: ["judge", "judgement", "judgment", "result", "판정", "검사결과", "passng", "okng"] },
+        { canonical: "alarm_code", category: "알람", score: 98, reason: "알람 코드 후보", keywords: ["alarm_code", "alarmid", "alarm_no", "error_code", "알람코드", "알람id", "에러코드"] },
+        { canonical: "alarm_name", category: "알람", score: 94, reason: "알람명 후보", keywords: ["alarm_name", "alarm_message", "message", "error_name", "알람명", "알람내용", "에러명", "메시지"] },
+        { canonical: "severity", category: "알람", score: 82, reason: "알람 등급 후보", keywords: ["severity", "level", "grade", "priority", "등급", "심각도", "레벨"] },
+        { canonical: "input_qty", category: "생산수량", score: 92, reason: "투입 수량 후보", keywords: ["input_qty", "input", "in_qty", "투입", "투입수량"] },
+        { canonical: "output_qty", category: "생산수량", score: 92, reason: "생산/배출 수량 후보", keywords: ["output_qty", "output", "out_qty", "생산수", "생산수량", "배출수량", "완료수량"] },
+        { canonical: "inspection_qty", category: "생산수량", score: 92, reason: "검사 수량 후보", keywords: ["inspection_qty", "inspect_qty", "검사수", "검사수량", "판정수량"] },
+        { canonical: "ng_qty", category: "생산수량", score: 94, reason: "NG 수량 후보", keywords: ["ng_qty", "ngcount", "ng_cnt", "fail_qty", "defect_qty", "불량수", "불량수량", "ng수량"] },
+        { canonical: "recipe_id", category: "BOM/Recipe", score: 92, reason: "Recipe 조건 후보", keywords: ["recipe", "recipe_id", "recipe_name", "레시피", "조건"] },
+        { canonical: "product_model", category: "BOM/Recipe", score: 90, reason: "제품/BOM/자재 후보", keywords: ["product_model", "model", "product", "bom", "material", "part", "lot", "제품", "모델", "자재", "원자재", "bom", "lot"] },
+        { canonical: "vacuum_kpa", category: "Profile", score: 98, reason: "진공도 Profile 후보", keywords: ["vacuum", "vac", "진공", "진공도"] },
+        { canonical: "upper_temp_c", category: "Profile", score: 96, reason: "온도 Profile 후보", keywords: ["temperature", "temp", "heater", "upper_temp", "lower_temp", "온도", "히터", "상부온도", "하부온도"] },
+        { canonical: "pressure_kpa", category: "Profile", score: 94, reason: "압력 Profile 후보", keywords: ["pressure", "press", "압력", "프레스"] },
+        { canonical: "cycle_time_sec", category: "Profile", score: 92, reason: "공정 time/cycle 후보", keywords: ["cycle", "cycle_time", "process_time", "tact", "takt", "lamination_time", "공정time", "공정시간", "택타임", "사이클"] }
+      ];
+
+      const matched = rules.find((rule) => headerHas(header, rule.keywords));
+      if (matched) {
+        const bonus = datetime && matched.category === "시간" ? 2 : numeric && ["Profile", "생산수량"].includes(matched.category) ? 2 : 0;
+        return { ...matched, score: Math.min(100, matched.score + bonus), original: header };
+      }
+
+      if (datetime) return { original: header, canonical: "event_time", category: "시간", score: 72, reason: "값 패턴이 날짜/시간 형태" };
+      if (numeric) return { original: header, canonical: `metric_${normalizeText(header) || "value"}`, category: "기타 수치", score: 62, reason: "숫자형 시계열 CTQ 후보" };
+      return { original: header, canonical: "", category: "미분류", score: 0, reason: "추천 근거 부족" };
+    }
+
+    function recommendSchema(headers, rows, fileName) {
+      const mappings = headers.map((header) => chooseMappingTarget(header, rows));
+      const byCanonical = new Map();
+      mappings.forEach((item) => {
+        if (!item.canonical) return;
+        const current = byCanonical.get(item.canonical);
+        if (!current || item.score > current.score) byCanonical.set(item.canonical, item);
+      });
+
+      const canonicals = new Set([...byCanonical.keys()]);
+      const hasDefect = canonicals.has("defect_code") || rows.some((row) => /ng/i.test(String(getValue(row, ["judge", "result", "판정"]))));
+      const hasAlarm = canonicals.has("alarm_code") || canonicals.has("alarm_name");
+      const hasProfile = ["vacuum_kpa", "upper_temp_c", "pressure_kpa", "cycle_time_sec"].some((key) => canonicals.has(key));
+      const hasProduction = ["input_qty", "output_qty", "inspection_qty", "ng_qty"].some((key) => canonicals.has(key));
+
+      let type = "unknown";
+      let confidence = 50;
+      if (hasAlarm) {
+        type = "alarms";
+        confidence = 92;
+      } else if (hasDefect && (canonicals.has("event_time") || canonicals.has("equipment_id"))) {
+        type = "defects";
+        confidence = 90;
+      } else if (hasProfile) {
+        type = "profile";
+        confidence = 88;
+      } else if (hasProduction) {
+        type = "production";
+        confidence = 86;
+      }
+
+      const exactType = inferFileType(headers);
+      if (exactType !== "unknown") {
+        type = exactType;
+        confidence = 100;
+      }
+
+      const usableMappings = mappings.filter((item) => item.canonical && item.category !== "미분류");
+      return {
+        fileName,
+        type,
+        confidence,
+        mappings,
+        usableMappings,
+        categoryCounts: usableMappings.reduce((acc, item) => {
+          acc[item.category] = (acc[item.category] || 0) + 1;
+          return acc;
+        }, {})
+      };
+    }
+
+    function contextualCanonical(canonical, type, value) {
+      if (canonical === "event_time") {
+        if (type === "alarms") return "alarm_time";
+        if (type === "profile") return "sample_time";
+        if (type === "production") return /\d{1,2}:\d{2}/.test(String(value)) ? "time_bucket" : "work_date";
+      }
+      if (canonical === "sample_time" && type === "defects") return "event_time";
+      if (canonical === "alarm_time" && type === "defects") return "event_time";
+      return canonical;
+    }
+
+    function canonicalizeRows(rows, recommendation) {
+      return rows.map((row) => {
+        const normalized = { ...row };
+        recommendation.usableMappings.forEach((mapping) => {
+          const rawValue = row[mapping.original.toLowerCase()];
+          const target = contextualCanonical(mapping.canonical, recommendation.type, rawValue);
+          if (target && rawValue !== undefined && String(normalized[target] ?? "").trim() === "") {
+            normalized[target] = rawValue;
+          }
+        });
+        return normalized;
+      });
     }
 
     function hourLabel(value) {
@@ -1902,6 +2114,67 @@
       chip.textContent = reflectedCount ? `데이터: 업로드 CSV ${reflectedCount}개 반영` : "데이터: sample_data";
     }
 
+    function renderMappingCards() {
+      const mappingCards = document.getElementById("mappingCards");
+      if (!mappingCards) return;
+
+      const typeLabels = {
+        production: "생산 실적",
+        defects: "불량 이벤트",
+        alarms: "설비 알람",
+        profile: "Profile",
+        unknown: "미분류"
+      };
+
+      mappingCards.innerHTML = state.mappings.map((mapping) => {
+        const categories = Object.entries(mapping.categoryCounts)
+          .sort((a, b) => b[1] - a[1])
+          .map(([category, count]) => `<span class="mapping-pill">${escapeHtml(category)} ${fmtNumber(count)}</span>`)
+          .join("");
+        const statusClass = mapping.confidence >= 85 ? "" : "warn";
+        const statusText = mapping.confidence >= 85 ? "자동 구조화 적용" : "사람 확인 필요";
+        const rows = mapping.usableMappings
+          .sort((a, b) => b.score - a.score)
+          .slice(0, 10)
+          .map((item) => `
+            <tr>
+              <td>${escapeHtml(item.original)}</td>
+              <td>${escapeHtml(item.category)}</td>
+              <td>${escapeHtml(contextualCanonical(item.canonical, mapping.type, ""))}</td>
+              <td>${fmtNumber(item.score)}%</td>
+            </tr>
+          `).join("");
+
+        return `
+          <div class="mapping-card">
+            <h4>${escapeHtml(mapping.fileName)}</h4>
+            <div class="mapping-meta">
+              <span class="mapping-pill">${escapeHtml(typeLabels[mapping.type] || "미분류")}</span>
+              <span class="mapping-pill ${statusClass}">${statusText}</span>
+              <span class="mapping-pill ${statusClass}">신뢰도 ${fmtNumber(mapping.confidence)}%</span>
+              ${categories}
+            </div>
+            <table class="mapping-table">
+              <thead>
+                <tr>
+                  <th>원본 컬럼</th>
+                  <th>카테고리</th>
+                  <th>표준 컬럼</th>
+                  <th>추천</th>
+                </tr>
+              </thead>
+              <tbody>${rows || `<tr><td colspan="4">추천 가능한 컬럼이 부족합니다.</td></tr>`}</tbody>
+            </table>
+          </div>
+        `;
+      }).join("") || `
+        <div class="mapping-card">
+          <h4>컬럼 매핑 추천</h4>
+          <p class="hint">CSV를 업로드하면 컬럼명을 시간, 설비, 불량, 알람, Profile, 생산수량, BOM/Recipe로 자동 분류한다.</p>
+        </div>
+      `;
+    }
+
     function renderKpis() {
       const totalInput = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["input_qty"])), 0);
       const totalInspection = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["inspection_qty"])), 0);
@@ -2122,6 +2395,7 @@
 
     function renderAll() {
       renderUploadSummary();
+      renderMappingCards();
       renderKpis();
       renderDefects();
       renderEquipmentAndHeatmap();
@@ -2137,12 +2411,14 @@
         state.alarms = [];
         state.profile = [];
         state.files = [];
+        state.mappings = [];
 
         const files = Array.from(event.target.files || []);
         for (const file of files) {
           const text = await file.text();
           const parsed = toObjects(parseCsv(text));
-          const type = inferFileType(parsed.headers);
+          const recommendation = recommendSchema(parsed.headers, parsed.rows, file.name);
+          const type = recommendation.type;
           const labelMap = {
             production: "생산 실적",
             defects: "불량 이벤트",
@@ -2151,8 +2427,15 @@
             unknown: "미분류"
           };
 
-          if (state[type]) state[type] = state[type].concat(parsed.rows);
-          state.files.push({ name: file.name, type, label: labelMap[type], rows: parsed.rows.length });
+          const normalizedRows = canonicalizeRows(parsed.rows, recommendation);
+          if (state[type]) state[type] = state[type].concat(normalizedRows);
+          const categories = new Set(recommendation.usableMappings.map((mapping) => mapping.category));
+          if (type !== "defects" && categories.has("불량")) state.defects = state.defects.concat(normalizedRows);
+          if (type !== "alarms" && categories.has("알람")) state.alarms = state.alarms.concat(normalizedRows);
+          if (type !== "profile" && categories.has("Profile")) state.profile = state.profile.concat(normalizedRows);
+          if (type !== "production" && categories.has("생산수량")) state.production = state.production.concat(normalizedRows);
+          state.mappings.push(recommendation);
+          state.files.push({ name: file.name, type, label: labelMap[type], rows: parsed.rows.length, confidence: recommendation.confidence });
         }
 
         renderAll();
