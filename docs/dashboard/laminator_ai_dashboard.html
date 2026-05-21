@@ -399,6 +399,59 @@
       color: #842525;
     }
 
+    .chart-wrap {
+      min-height: 260px;
+      display: grid;
+      align-content: stretch;
+      gap: 10px;
+    }
+
+    .chart-svg {
+      width: 100%;
+      min-height: 230px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .legend-dot.red {
+      background: var(--red);
+    }
+
+    .legend-dot.orange {
+      background: var(--orange);
+    }
+
+    .legend-dot.green {
+      background: var(--green);
+    }
+
+    .boxplot-table {
+      margin-top: 10px;
+      font-size: 12px;
+    }
+
     .timeline {
       position: relative;
       display: grid;
@@ -787,6 +840,7 @@
         <a href="#alerts">핵심 이슈</a>
         <a href="#defect">불량 Pareto</a>
         <a href="#equipment">설비/시간 집중</a>
+        <a href="#trend">시간별 그래프/Boxplot</a>
         <a href="#profile">Profile/알람</a>
         <a href="#cause">AI 원인 후보</a>
         <a href="#validation">검증/조치</a>
@@ -1031,6 +1085,82 @@
                 <div class="cell">1</div>
                 <div class="cell">1</div>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="trend">
+          <h3>4. 시간별 불량 그래프 / Boxplot</h3>
+          <p class="hint" id="trendHint">시간대별 NG 발생량과 설비별 시간분포를 함께 봐서 특정 시간, 특정 설비에 불량이 몰리는지 확인한다.</p>
+          <div class="grid-2">
+            <div class="panel chart-wrap">
+              <h4>시간대별 NG 추이</h4>
+              <svg class="chart-svg" id="hourlyTrendChart" viewBox="0 0 640 270" role="img" aria-label="시간대별 NG 추이 그래프">
+                <line x1="52" y1="210" x2="602" y2="210" stroke="#c8d4df" />
+                <line x1="52" y1="34" x2="52" y2="210" stroke="#c8d4df" />
+                <rect x="90" y="180" width="26" height="30" fill="#1769aa" rx="4" />
+                <rect x="155" y="166" width="26" height="44" fill="#1769aa" rx="4" />
+                <rect x="220" y="54" width="26" height="156" fill="#b83a3a" rx="4" />
+                <rect x="285" y="130" width="26" height="80" fill="#1769aa" rx="4" />
+                <rect x="350" y="146" width="26" height="64" fill="#b85b18" rx="4" />
+                <polyline points="103,182 168,168 233,58 298,132 363,148" fill="none" stroke="#b83a3a" stroke-width="3" />
+                <text x="52" y="236" fill="#5d6b78" font-size="12">12</text>
+                <text x="117" y="236" fill="#5d6b78" font-size="12">13</text>
+                <text x="182" y="236" fill="#5d6b78" font-size="12">14</text>
+                <text x="247" y="236" fill="#5d6b78" font-size="12">15</text>
+                <text x="312" y="236" fill="#5d6b78" font-size="12">16</text>
+                <text x="52" y="24" fill="#17202a" font-size="13" font-weight="700">Sample: 14시 CRACK 집중</text>
+              </svg>
+              <div class="legend">
+                <span class="legend-item"><span class="legend-dot"></span>전체 NG</span>
+                <span class="legend-item"><span class="legend-dot red"></span>CRACK</span>
+                <span class="legend-item"><span class="legend-dot orange"></span>BUBBLE</span>
+              </div>
+            </div>
+            <div class="panel chart-wrap">
+              <h4>설비별 시간분포 Boxplot</h4>
+              <svg class="chart-svg" id="equipmentBoxplotChart" viewBox="0 0 640 270" role="img" aria-label="설비별 시간분포 박스플롯">
+                <line x1="58" y1="212" x2="600" y2="212" stroke="#c8d4df" />
+                <line x1="58" y1="34" x2="58" y2="212" stroke="#c8d4df" />
+                <g>
+                  <line x1="165" y1="174" x2="165" y2="206" stroke="#1769aa" stroke-width="2" />
+                  <rect x="132" y="178" width="66" height="18" fill="#eaf2f8" stroke="#1769aa" rx="4" />
+                  <line x1="132" y1="188" x2="198" y2="188" stroke="#1769aa" stroke-width="2" />
+                  <text x="137" y="236" fill="#5d6b78" font-size="12">LAM-01</text>
+                </g>
+                <g>
+                  <line x1="320" y1="154" x2="320" y2="206" stroke="#b85b18" stroke-width="2" />
+                  <rect x="287" y="164" width="66" height="30" fill="#fff0d4" stroke="#b85b18" rx="4" />
+                  <line x1="287" y1="180" x2="353" y2="180" stroke="#b85b18" stroke-width="2" />
+                  <text x="292" y="236" fill="#5d6b78" font-size="12">LAM-02</text>
+                </g>
+                <g>
+                  <line x1="475" y1="54" x2="475" y2="204" stroke="#b83a3a" stroke-width="2" />
+                  <rect x="442" y="112" width="66" height="72" fill="#f7d7d7" stroke="#b83a3a" rx="4" />
+                  <line x1="442" y1="150" x2="508" y2="150" stroke="#b83a3a" stroke-width="2" />
+                  <text x="447" y="236" fill="#5d6b78" font-size="12">LAM-03</text>
+                </g>
+                <text x="58" y="24" fill="#17202a" font-size="13" font-weight="700">시간대별 NG 분포: 박스가 크면 변동이 큼</text>
+              </svg>
+              <div class="legend">
+                <span class="legend-item"><span class="legend-dot"></span>Q1~Q3</span>
+                <span class="legend-item"><span class="legend-dot red"></span>최대/집중 시간</span>
+              </div>
+              <table class="table boxplot-table">
+                <thead>
+                  <tr>
+                    <th>설비</th>
+                    <th>Median</th>
+                    <th>Q3</th>
+                    <th>Max</th>
+                  </tr>
+                </thead>
+                <tbody id="boxplotStatsBody">
+                  <tr><td>LAM-03</td><td>2</td><td>4</td><td><strong>10</strong></td></tr>
+                  <tr><td>LAM-02</td><td>1</td><td>1</td><td>2</td></tr>
+                  <tr><td>LAM-01</td><td>1</td><td>1</td><td>1</td></tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
@@ -1548,6 +1678,205 @@
       });
     }
 
+    function sortHoursForShift(hours) {
+      return [...new Set(hours.filter((hour) => hour && hour !== "--"))]
+        .sort((a, b) => {
+          const hourA = Number(a);
+          const hourB = Number(b);
+          const shiftedA = Number.isFinite(hourA) ? (hourA + 17) % 24 : 99;
+          const shiftedB = Number.isFinite(hourB) ? (hourB + 17) % 24 : 99;
+          return shiftedA - shiftedB || String(a).localeCompare(String(b));
+        });
+    }
+
+    function defectSourceRows() {
+      const source = state.defects.length ? state.defects : state.production;
+      return source.map((row) => {
+        const hour = hourLabel(getValue(row, ["event_time", "time_bucket"]));
+        return {
+          equipment: getValue(row, ["equipment_id"]) || "UNKNOWN",
+          hour,
+          defect: getValue(row, ["defect_code", "top_defect_code", "defect_name", "top_defect_name"]) || "UNKNOWN",
+          count: state.defects.length ? 1 : toNumber(getValue(row, ["ng_qty"]))
+        };
+      }).filter((row) => row.hour && row.hour !== "--" && row.count > 0);
+    }
+
+    function percentile(values, ratio) {
+      if (values.length === 0) return 0;
+      const sorted = [...values].sort((a, b) => a - b);
+      const position = (sorted.length - 1) * ratio;
+      const lower = Math.floor(position);
+      const upper = Math.ceil(position);
+      if (lower === upper) return sorted[lower];
+      return sorted[lower] + (sorted[upper] - sorted[lower]) * (position - lower);
+    }
+
+    function renderTrendAndBoxplot() {
+      const rows = defectSourceRows();
+      const trendChart = document.getElementById("hourlyTrendChart");
+      const boxplotChart = document.getElementById("equipmentBoxplotChart");
+      const statsBody = document.getElementById("boxplotStatsBody");
+      const hint = document.getElementById("trendHint");
+
+      if (!trendChart || !boxplotChart || !statsBody) return;
+
+      if (rows.length === 0) {
+        trendChart.outerHTML = `<svg class="chart-svg" id="hourlyTrendChart" viewBox="0 0 640 270" role="img" aria-label="시간대별 NG 추이">
+          <text x="52" y="130" fill="#5d6b78" font-size="16">defect_events 또는 production CSV를 업로드하면 그래프가 계산됩니다.</text>
+        </svg>`;
+        boxplotChart.outerHTML = `<svg class="chart-svg" id="equipmentBoxplotChart" viewBox="0 0 640 270" role="img" aria-label="설비별 Boxplot">
+          <text x="52" y="130" fill="#5d6b78" font-size="16">시간대별 NG 분포가 있으면 설비별 박스플롯이 계산됩니다.</text>
+        </svg>`;
+        statsBody.innerHTML = `<tr><td colspan="4">CSV 업로드 필요</td></tr>`;
+        if (hint) hint.textContent = "CSV 업로드 후 시간대별 불량 집중과 설비별 변동성을 자동 계산한다.";
+        return;
+      }
+
+      const hours = sortHoursForShift(rows.map((row) => row.hour));
+      const hourly = new Map();
+      rows.forEach((row) => {
+        const current = hourly.get(row.hour) || { total: 0, crack: 0, bubble: 0 };
+        current.total += row.count;
+        if (String(row.defect).toUpperCase().includes("CRACK")) current.crack += row.count;
+        if (String(row.defect).toUpperCase().includes("BUBBLE")) current.bubble += row.count;
+        hourly.set(row.hour, current);
+      });
+
+      const totals = hours.map((hour) => hourly.get(hour)?.total || 0);
+      const maxTotal = Math.max(...totals, 1);
+      const topHour = hours
+        .map((hour) => ({ hour, ...(hourly.get(hour) || { total: 0, crack: 0, bubble: 0 }) }))
+        .sort((a, b) => b.total - a.total)[0];
+
+      const width = 640;
+      const height = 270;
+      const left = 52;
+      const right = 32;
+      const top = 34;
+      const bottom = 212;
+      const plotWidth = width - left - right;
+      const plotHeight = bottom - top;
+      const step = plotWidth / Math.max(hours.length, 1);
+      const xCenter = (index) => left + step * index + step / 2;
+      const yValue = (value) => bottom - (value / maxTotal) * plotHeight;
+      const barWidth = Math.max(8, Math.min(28, step * 0.5));
+      const yTicks = [0, 0.25, 0.5, 0.75, 1].map((ratio) => Math.round(maxTotal * ratio));
+
+      const bars = hours.map((hour, index) => {
+        const total = hourly.get(hour)?.total || 0;
+        const y = yValue(total);
+        const x = xCenter(index) - barWidth / 2;
+        const fill = total === maxTotal ? "#b83a3a" : "#1769aa";
+        return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth.toFixed(1)}" height="${Math.max(1, bottom - y).toFixed(1)}" fill="${fill}" rx="4" />`;
+      }).join("");
+
+      const linePoints = (key) => hours
+        .map((hour, index) => `${xCenter(index).toFixed(1)},${yValue(hourly.get(hour)?.[key] || 0).toFixed(1)}`)
+        .join(" ");
+
+      const labels = hours.map((hour, index) => {
+        const visible = hours.length <= 12 || index % 2 === 0;
+        return visible ? `<text x="${(xCenter(index) - 7).toFixed(1)}" y="236" fill="#5d6b78" font-size="11">${escapeHtml(hour)}</text>` : "";
+      }).join("");
+
+      const grid = yTicks.map((tick) => {
+        const y = yValue(tick);
+        return `<line x1="${left}" y1="${y.toFixed(1)}" x2="${width - right}" y2="${y.toFixed(1)}" stroke="#d9e1e8" stroke-dasharray="3 5" />
+          <text x="18" y="${(y + 4).toFixed(1)}" fill="#5d6b78" font-size="10">${fmtNumber(tick)}</text>`;
+      }).join("");
+
+      trendChart.outerHTML = `
+        <svg class="chart-svg" id="hourlyTrendChart" viewBox="0 0 ${width} ${height}" role="img" aria-label="시간대별 NG 추이 그래프">
+          ${grid}
+          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c8d4df" />
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c8d4df" />
+          ${bars}
+          <polyline points="${linePoints("crack")}" fill="none" stroke="#b83a3a" stroke-width="3" />
+          <polyline points="${linePoints("bubble")}" fill="none" stroke="#b85b18" stroke-width="3" />
+          ${labels}
+          <text x="${left}" y="24" fill="#17202a" font-size="13" font-weight="700">최대 집중: ${escapeHtml(topHour.hour)}시 전체 NG ${fmtNumber(topHour.total)}건</text>
+        </svg>`;
+
+      const equipments = [...new Set(rows.map((row) => row.equipment))].slice(0, 6);
+      const equipmentHourCounts = new Map();
+      rows.forEach((row) => {
+        const key = `${row.equipment}|${row.hour}`;
+        equipmentHourCounts.set(key, (equipmentHourCounts.get(key) || 0) + row.count);
+      });
+
+      const stats = equipments.map((equipment) => {
+        const values = hours.map((hour) => equipmentHourCounts.get(`${equipment}|${hour}`) || 0);
+        return {
+          equipment,
+          min: Math.min(...values),
+          q1: percentile(values, 0.25),
+          median: percentile(values, 0.5),
+          q3: percentile(values, 0.75),
+          max: Math.max(...values),
+          avg: values.reduce((sum, value) => sum + value, 0) / Math.max(values.length, 1)
+        };
+      }).sort((a, b) => b.max - a.max || b.q3 - a.q3);
+
+      const boxMax = Math.max(...stats.map((item) => item.max), 1);
+      const xStep = plotWidth / Math.max(stats.length, 1);
+      const boxY = (value) => bottom - (value / boxMax) * plotHeight;
+      const boxWidth = Math.max(32, Math.min(66, xStep * 0.48));
+      const boxGrid = [0, 0.5, 1].map((ratio) => {
+        const tick = Math.round(boxMax * ratio);
+        const y = boxY(tick);
+        return `<line x1="${left}" y1="${y.toFixed(1)}" x2="${width - right}" y2="${y.toFixed(1)}" stroke="#d9e1e8" stroke-dasharray="3 5" />
+          <text x="18" y="${(y + 4).toFixed(1)}" fill="#5d6b78" font-size="10">${fmtNumber(tick)}</text>`;
+      }).join("");
+
+      const boxShapes = stats.map((item, index) => {
+        const x = left + xStep * index + xStep / 2;
+        const q1Y = boxY(item.q1);
+        const q3Y = boxY(item.q3);
+        const medianY = boxY(item.median);
+        const minY = boxY(item.min);
+        const maxY = boxY(item.max);
+        const boxTop = Math.min(q1Y, q3Y);
+        const boxHeight = Math.max(6, Math.abs(q1Y - q3Y));
+        const isTop = index === 0;
+        const stroke = isTop ? "#b83a3a" : "#1769aa";
+        const fill = isTop ? "#f7d7d7" : "#eaf2f8";
+        return `
+          <g>
+            <line x1="${x.toFixed(1)}" y1="${maxY.toFixed(1)}" x2="${x.toFixed(1)}" y2="${minY.toFixed(1)}" stroke="${stroke}" stroke-width="2" />
+            <line x1="${(x - boxWidth / 4).toFixed(1)}" y1="${maxY.toFixed(1)}" x2="${(x + boxWidth / 4).toFixed(1)}" y2="${maxY.toFixed(1)}" stroke="${stroke}" stroke-width="2" />
+            <line x1="${(x - boxWidth / 4).toFixed(1)}" y1="${minY.toFixed(1)}" x2="${(x + boxWidth / 4).toFixed(1)}" y2="${minY.toFixed(1)}" stroke="${stroke}" stroke-width="2" />
+            <rect x="${(x - boxWidth / 2).toFixed(1)}" y="${boxTop.toFixed(1)}" width="${boxWidth.toFixed(1)}" height="${boxHeight.toFixed(1)}" fill="${fill}" stroke="${stroke}" rx="4" />
+            <line x1="${(x - boxWidth / 2).toFixed(1)}" y1="${medianY.toFixed(1)}" x2="${(x + boxWidth / 2).toFixed(1)}" y2="${medianY.toFixed(1)}" stroke="${stroke}" stroke-width="2" />
+            <circle cx="${x.toFixed(1)}" cy="${boxY(item.avg).toFixed(1)}" r="3.5" fill="#1f8a5b" />
+            <text x="${(x - 24).toFixed(1)}" y="236" fill="#5d6b78" font-size="11">${escapeHtml(item.equipment)}</text>
+          </g>`;
+      }).join("");
+
+      boxplotChart.outerHTML = `
+        <svg class="chart-svg" id="equipmentBoxplotChart" viewBox="0 0 ${width} ${height}" role="img" aria-label="설비별 시간분포 박스플롯">
+          ${boxGrid}
+          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c8d4df" />
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c8d4df" />
+          ${boxShapes}
+          <text x="${left}" y="24" fill="#17202a" font-size="13" font-weight="700">시간대별 NG 분포: Max/Q3가 큰 설비 우선 점검</text>
+        </svg>`;
+
+      statsBody.innerHTML = stats.map((item) => `
+        <tr>
+          <td>${escapeHtml(item.equipment)}</td>
+          <td>${item.median.toFixed(1)}</td>
+          <td>${item.q3.toFixed(1)}</td>
+          <td><strong>${fmtNumber(item.max)}</strong></td>
+        </tr>
+      `).join("");
+
+      if (hint) {
+        const topEquipment = stats[0];
+        hint.textContent = `${topHour.hour}시 NG ${fmtNumber(topHour.total)}건이 최대이며, ${topEquipment.equipment}의 시간대별 Max ${fmtNumber(topEquipment.max)}건으로 변동성이 가장 크다.`;
+      }
+    }
+
     function renderUploadSummary() {
       const summary = document.getElementById("uploadSummary");
       const fileList = document.getElementById("fileList");
@@ -1796,6 +2125,7 @@
       renderKpis();
       renderDefects();
       renderEquipmentAndHeatmap();
+      renderTrendAndBoxplot();
       renderAlertsAndProfile();
       renderValidation();
     }
