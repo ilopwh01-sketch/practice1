@@ -212,6 +212,8 @@ BRD가 비즈니스 필요성과 성과 기준을 설명하는 문서라면, 본
 
 - 파일 컬럼을 시간, 설비, 불량, 알람, Profile, 생산수량, BOM/Recipe, 기타 수치 카테고리로 자동 분류한다.
 - `event_time`, `sample_time` 같은 표준 컬럼명이 없어도 `측정일시`, `발생시각`, `장비명`, `NG유형`, `진공도`, `상부온도`, `프레스압력`, `공정Time`, `Recipe`, `BOM자재` 같은 현장식 명칭을 표준 컬럼으로 추천 매핑한다.
+- PC/엑셀/GitHub 환경에서 한글 인코딩 이슈가 있을 수 있으므로 제출용·공유용 샘플 데이터의 권장 컬럼명은 영어로 관리한다.
+- 권장 영어 컬럼 예시는 `timestamp`, `equipment_id`, `line`, `defect_code`, `judge`, `vacuum_kpa`, `upper_temp_c`, `pressure_kpa`, `process_time_sec`, `recipe_id`, `bom_material`, `image_ref`, `note`이다.
 - 추천 결과에는 원본 컬럼명, 추천 카테고리, 표준 컬럼명, 추천 신뢰도를 표시한다.
 - 추천 신뢰도가 낮은 파일은 자동 분석 전에 사람이 확인해야 할 항목으로 표시한다.
 - 하나의 시계열 파일 안에 불량 정보와 Profile 정보가 같이 들어있으면 불량 분석과 Profile 분석 양쪽에 모두 활용한다.
