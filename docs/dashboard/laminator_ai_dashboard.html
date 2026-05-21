@@ -218,7 +218,7 @@
 
     .kpi-grid {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 12px;
       margin-bottom: 16px;
     }
@@ -247,6 +247,29 @@
       margin: 8px 0 0;
       color: var(--muted);
       font-size: 13px;
+    }
+
+    .risk-meter {
+      height: 9px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e4ebf1;
+      margin-top: 12px;
+    }
+
+    .risk-fill {
+      height: 100%;
+      width: 0;
+      border-radius: 999px;
+      background: var(--green);
+    }
+
+    .risk-fill.medium {
+      background: var(--orange);
+    }
+
+    .risk-fill.high {
+      background: var(--red);
     }
 
     .grid-2 {
@@ -898,7 +921,7 @@
       <nav aria-label="대시보드 목차">
         <a href="#overview">Overview</a>
         <a href="#data-import">CSV 불러오기</a>
-        <a href="#alerts">핵심 이슈</a>
+        <a href="#alerts">위험도 점수</a>
         <a href="#defect">불량 Pareto</a>
         <a href="#equipment">설비/시간 집중</a>
         <a href="#trend">시간별 그래프/Boxplot</a>
@@ -919,9 +942,9 @@
           </p>
           <div class="topline">
             <div class="chips">
-              <span class="chip red">P1 CRACK 집중</span>
-              <span class="chip red">P1 Profile 동시 이탈</span>
-              <span class="chip orange">P2 수량 불일치</span>
+              <span class="chip red">Risk 92/100</span>
+              <span class="chip red">CRACK 집중</span>
+              <span class="chip orange">Profile/알람 중첩</span>
               <span class="chip green">담당자 승인 필요</span>
             </div>
             <span class="chip" id="data-source-chip">데이터: sample_data</span>
@@ -977,35 +1000,43 @@
             <p class="value" id="kpiTopEquipment">LAM-03</p>
             <p class="sub" id="kpiTopEquipmentSub">NG율 1.04%</p>
           </div>
+          <div class="card">
+            <strong>위험도 점수</strong>
+            <p class="value" id="kpiRiskScore">92/100</p>
+            <div class="risk-meter" aria-label="위험도 점수">
+              <div class="risk-fill high" id="kpiRiskFill" style="width: 92%"></div>
+            </div>
+            <p class="sub" id="kpiRiskSub">CRACK 집중 + Profile/알람 중첩</p>
+          </div>
         </div>
 
         <section id="alerts">
-          <h3>1. 금일 핵심 이슈</h3>
-          <p class="hint">팀장 보고 첫 화면에는 오늘의 위험 신호와 조치 필요 사항을 먼저 표시한다.</p>
+          <h3>1. 금일 위험도 점수</h3>
+          <p class="hint">위험도는 불량 집중, CRACK/BUBBLE 우선순위, Profile/알람 중첩, 수량 불일치를 100점 만점으로 환산한다.</p>
           <div id="alertList">
             <div class="alert">
-              <span class="priority p1">P1</span>
+              <span class="priority p1">92/100</span>
               <div>
                 <strong>LAM-03 14:00-15:00 CRACK 10건 집중</strong>
                 <p>동일 설비/동일 불량이 1시간 내 5건 이상 발생 기준을 초과했다.</p>
               </div>
-              <span class="status">즉시 확인</span>
+              <span class="status">위험도</span>
             </div>
             <div class="alert">
-              <span class="priority p1">P1</span>
+              <span class="priority p1">88/100</span>
               <div>
                 <strong>진공도 하락 및 압력 변동 알람이 CRACK 집중 시간과 겹침</strong>
                 <p>13:58 Vacuum pressure deviation, 14:06 Press pressure fluctuation 알람 발생.</p>
               </div>
-              <span class="status">원인 후보</span>
+              <span class="status">위험도</span>
             </div>
             <div class="alert">
-              <span class="priority p2">P2</span>
+              <span class="priority p2">64/100</span>
               <div>
                 <strong>LAM-03 14시대 수량 불일치 및 재투입 이력</strong>
                 <p>output 187, inspection 186, 재판정 1건, 재투입 2건으로 MES 재확인 필요.</p>
               </div>
-              <span class="status">검증 필요</span>
+              <span class="status">위험도</span>
             </div>
           </div>
         </section>
@@ -1890,6 +1921,77 @@
       });
     }
 
+    function riskBand(score) {
+      if (score >= 80) return { label: "High", className: "high", priority: "p1" };
+      if (score >= 55) return { label: "Medium", className: "medium", priority: "p2" };
+      return { label: "Low", className: "", priority: "p3" };
+    }
+
+    function calculateRiskScore() {
+      const topGroup = concentrationGroups()[0];
+      const equipmentRows = groupProductionByEquipment(state.production);
+      const topEquipment = equipmentRows[0];
+      const profile = profileSummary(topGroup?.equipment);
+      const alarmMatches = topGroup ? alarmsFor(topGroup.equipment, topGroup.hour) : [];
+      const mismatchRows = quantityMismatches();
+      const totalInspection = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["inspection_qty"])), 0);
+      const totalNgFromProduction = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["ng_qty"])), 0);
+      const totalNg = totalNgFromProduction || state.defects.length;
+      const ngRate = totalInspection ? (totalNg / totalInspection) * 100 : 0;
+
+      let score = 0;
+      const reasons = [];
+
+      if (topGroup) {
+        const concentrationScore = Math.min(35, topGroup.count * 4);
+        score += concentrationScore;
+        reasons.push(`${topGroup.equipment} ${topGroup.hour}시 ${topGroup.defect} ${fmtNumber(topGroup.count)}건 집중`);
+
+        const defectText = String(topGroup.defect).toUpperCase();
+        if (defectText.includes("CRACK")) {
+          score += 15;
+          reasons.push("CRACK 우선 감소 대상");
+        } else if (defectText.includes("BUBBLE")) {
+          score += 12;
+          reasons.push("BUBBLE 우선 감소 대상");
+        }
+      }
+
+      if (profile) {
+        score += 15;
+        reasons.push("Profile 데이터 중첩");
+      }
+
+      if (alarmMatches.length) {
+        score += Math.min(15, 8 + alarmMatches.length * 3);
+        reasons.push(`동시간대 알람 ${fmtNumber(alarmMatches.length)}건`);
+      }
+
+      if (mismatchRows.length) {
+        score += Math.min(10, mismatchRows.length * 4);
+        reasons.push(`수량 불일치 ${fmtNumber(mismatchRows.length)}건`);
+      }
+
+      if (topEquipment?.rate) {
+        score += Math.min(10, topEquipment.rate * 4);
+        reasons.push(`${topEquipment.equipment} NG율 ${fmtRate(topEquipment.rate)}`);
+      } else if (ngRate) {
+        score += Math.min(10, ngRate * 6);
+        reasons.push(`전체 NG율 ${fmtRate(ngRate)}`);
+      }
+
+      const finalScore = Math.max(0, Math.min(100, Math.round(score)));
+      return {
+        score: finalScore,
+        ...riskBand(finalScore),
+        reasons,
+        topGroup,
+        profile,
+        alarmMatches,
+        mismatchRows
+      };
+    }
+
     function sortHoursForShift(hours) {
       return [...new Set(hours.filter((hour) => hour && hour !== "--"))]
         .sort((a, b) => {
@@ -2182,6 +2284,7 @@
       const totalNg = totalNgFromProduction || state.defects.length;
       const ngRate = totalInspection ? (totalNg / totalInspection) * 100 : 0;
       const equipment = groupProductionByEquipment(state.production)[0];
+      const risk = calculateRiskScore();
 
       document.getElementById("kpiInput").textContent = totalInput ? fmtNumber(totalInput) : "-";
       document.getElementById("kpiInspection").textContent = totalInspection ? fmtNumber(totalInspection) : "-";
@@ -2193,6 +2296,11 @@
       document.getElementById("kpiNgSub").textContent = totalNgFromProduction ? "daily summary 기준" : "defect event 기준";
       document.getElementById("kpiNgRateSub").textContent = totalInspection ? `${fmtNumber(totalNg)} / ${fmtNumber(totalInspection)}` : "검사 수량 필요";
       document.getElementById("kpiTopEquipmentSub").textContent = equipment ? `NG율 ${fmtRate(equipment.rate)}` : "생산 실적 CSV 필요";
+      document.getElementById("kpiRiskScore").textContent = `${risk.score}/100`;
+      document.getElementById("kpiRiskSub").textContent = risk.reasons.slice(0, 2).join(" + ") || "분석 데이터 필요";
+      const riskFill = document.getElementById("kpiRiskFill");
+      riskFill.style.width = `${risk.score}%`;
+      riskFill.className = `risk-fill ${risk.className}`.trim();
     }
 
     function renderDefects() {
@@ -2285,47 +2393,59 @@
       const profile = profileSummary(topGroup?.equipment);
       const alarmMatches = topGroup ? alarmsFor(topGroup.equipment, topGroup.hour) : [];
       const mismatchRows = quantityMismatches();
+      const risk = calculateRiskScore();
       const alerts = [];
 
       if (topGroup && topGroup.count >= 5) {
+        const score = Math.min(100, 50 + topGroup.count * 5);
+        const band = riskBand(score);
         alerts.push({
-          priority: "p1",
-          status: "즉시 확인",
+          priority: band.priority,
+          score,
+          status: "위험도",
           title: `${topGroup.equipment} ${topGroup.hour}:00-${topGroup.hour}:59 ${topGroup.defect} ${fmtNumber(topGroup.count)}건 집중`,
           body: "동일 설비/동일 불량이 1시간 내 5건 이상 발생 기준을 초과했다."
         });
       }
 
       if (topGroup && (profile || alarmMatches.length)) {
+        const score = Math.min(100, Math.max(65, risk.score));
+        const band = riskBand(score);
         alerts.push({
-          priority: "p1",
-          status: "원인 후보",
+          priority: band.priority,
+          score,
+          status: "위험도",
           title: `${topGroup.equipment} ${topGroup.hour}시대 Profile/알람 중첩 확인`,
           body: `${alarmMatches.length ? `${alarmMatches.length}건의 설비 알람` : "Profile 데이터"}이 불량 집중 시간과 연결된다.`
         });
       }
 
       if (mismatchRows.length) {
+        const score = Math.min(100, 40 + mismatchRows.length * 12);
+        const band = riskBand(score);
         alerts.push({
-          priority: "p2",
-          status: "검증 필요",
+          priority: band.priority,
+          score,
+          status: "위험도",
           title: `수량 불일치 ${fmtNumber(mismatchRows.length)}개 시간대 확인`,
           body: "output_qty와 inspection_qty 차이가 있어 재판정/재투입 이력 확인이 필요하다."
         });
       }
 
       if (alerts.length === 0) {
+        const band = riskBand(risk.score);
         alerts.push({
-          priority: "p3",
-          status: "모니터링",
-          title: "P1 기준 초과 이슈 없음",
+          priority: band.priority,
+          score: risk.score,
+          status: "위험도",
+          title: "위험도 기준 초과 이슈 없음",
           body: "CSV 기준으로 즉시 조치가 필요한 집중 구간은 확인되지 않았다."
         });
       }
 
       document.getElementById("alertList").innerHTML = alerts.map((alert) => `
         <div class="alert">
-          <span class="priority ${alert.priority}">${alert.priority.toUpperCase()}</span>
+          <span class="priority ${alert.priority}">${fmtNumber(alert.score)}/100</span>
           <div>
             <strong>${escapeHtml(alert.title)}</strong>
             <p>${escapeHtml(alert.body)}</p>
