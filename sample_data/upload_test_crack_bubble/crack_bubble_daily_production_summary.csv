@@ -1,0 +1,15 @@
+work_date,time_bucket,line,equipment_id,product_model,input_qty,output_qty,inspection_qty,ng_qty,rejudge_qty,reinput_qty,top_defect_code,top_defect_name,note
+2026-05-21,07:00-08:00,MODULE-A,LAM-01,MOD-A1,210,208,208,1,0,0,EDGE,Edge defect,Normal baseline
+2026-05-21,07:00-08:00,MODULE-A,LAM-02,MOD-A1,205,204,204,1,0,0,BUBBLE,Bubble,Normal baseline
+2026-05-21,07:00-08:00,MODULE-A,LAM-03,MOD-A1,212,210,210,1,0,0,FOREIGN,Foreign material,Normal baseline
+2026-05-21,08:00-09:00,MODULE-A,LAM-01,MOD-A1,218,216,216,1,0,0,BUBBLE,Bubble,Normal baseline
+2026-05-21,08:00-09:00,MODULE-A,LAM-02,MOD-A1,214,212,212,1,0,0,EDGE,Edge defect,Normal baseline
+2026-05-21,08:00-09:00,MODULE-A,LAM-03,MOD-A1,220,218,218,1,0,0,CRACK,Crack,Normal baseline
+2026-05-21,13:00-14:00,MODULE-A,LAM-03,MOD-A1,228,226,226,2,0,0,CRACK,Crack,Pre-concentration warning
+2026-05-21,14:00-15:00,MODULE-A,LAM-03,MOD-A1,230,228,227,12,2,1,CRACK,Crack,LAM-03 crack concentration with output-inspection mismatch
+2026-05-21,15:00-16:00,MODULE-A,LAM-03,MOD-A1,224,223,223,3,1,1,CRACK,Crack,Recovery after crack concentration
+2026-05-21,15:00-16:00,MODULE-A,LAM-02,MOD-A1,219,218,218,2,0,0,BUBBLE,Bubble,Bubble pre-warning
+2026-05-21,16:00-17:00,MODULE-A,LAM-02,MOD-A1,222,220,219,8,1,2,BUBBLE,Bubble,LAM-02 bubble concentration with vacuum/temperature shift
+2026-05-21,17:00-18:00,MODULE-A,LAM-02,MOD-A1,216,215,215,3,0,1,BUBBLE,Bubble,Bubble recovery monitoring
+2026-05-21,18:00-19:00,MODULE-A,LAM-01,MOD-A1,208,207,207,1,0,0,FOREIGN,Foreign material,Normal baseline
+2026-05-21,18:00-19:00,MODULE-A,LAM-03,MOD-A1,212,211,211,1,0,0,EDGE,Edge defect,Normal baseline

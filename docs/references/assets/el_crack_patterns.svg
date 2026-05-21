@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">EL Crack Pattern Explanation</title>
+  <desc id="desc">Schematic explanation of common EL crack patterns and how they connect to root cause candidates.</desc>
+  <rect width="960" height="520" fill="#f5f7f9"/>
+  <text x="40" y="54" font-family="Malgun Gothic, Arial" font-size="28" font-weight="700" fill="#17202a">EL 이미지 기반 Cell Crack 해석 도식</text>
+  <text x="40" y="88" font-family="Malgun Gothic, Arial" font-size="15" fill="#5d6b78">논문 원본 그림 복제가 아닌, EL 관찰 포인트를 현장 원인 후보로 연결하기 위한 설명 이미지</text>
+
+  <g transform="translate(42 126)">
+    <rect x="0" y="0" width="250" height="300" rx="8" fill="#ffffff" stroke="#d9e1e8"/>
+    <text x="20" y="34" font-family="Malgun Gothic, Arial" font-size="18" font-weight="700" fill="#17202a">1. Edge Crack</text>
+    <rect x="42" y="72" width="166" height="166" rx="4" fill="#1f2933"/>
+    <g stroke="#dce7ee" opacity="0.28">
+      <line x1="75" y1="72" x2="75" y2="238"/><line x1="108" y1="72" x2="108" y2="238"/><line x1="141" y1="72" x2="141" y2="238"/><line x1="174" y1="72" x2="174" y2="238"/>
+      <line x1="42" y1="105" x2="208" y2="105"/><line x1="42" y1="138" x2="208" y2="138"/><line x1="42" y1="171" x2="208" y2="171"/><line x1="42" y1="204" x2="208" y2="204"/>
+    </g>
+    <path d="M62 92 C84 122, 76 148, 96 177 C112 199, 107 218, 118 238" fill="none" stroke="#f7d7d7" stroke-width="7" stroke-linecap="round"/>
+    <path d="M62 92 C84 122, 76 148, 96 177 C112 199, 107 218, 118 238" fill="none" stroke="#b83a3a" stroke-width="3" stroke-linecap="round"/>
+    <text x="20" y="268" font-family="Malgun Gothic, Arial" font-size="14" fill="#5d6b78">가능 후보: Handling stress,</text>
+    <text x="20" y="290" font-family="Malgun Gothic, Arial" font-size="14" fill="#5d6b78">Lamination edge stress</text>
+  </g>
+
+  <g transform="translate(354 126)">
+    <rect x="0" y="0" width="250" height="300" rx="8" fill="#ffffff" stroke="#d9e1e8"/>
+    <text x="20" y="34" font-family="Malgun Gothic, Arial" font-size="18" font-weight="700" fill="#17202a">2. Cross Crack</text>
+    <rect x="42" y="72" width="166" height="166" rx="4" fill="#1f2933"/>
+    <g stroke="#dce7ee" opacity="0.28">
+      <line x1="75" y1="72" x2="75" y2="238"/><line x1="108" y1="72" x2="108" y2="238"/><line x1="141" y1="72" x2="141" y2="238"/><line x1="174" y1="72" x2="174" y2="238"/>
+      <line x1="42" y1="105" x2="208" y2="105"/><line x1="42" y1="138" x2="208" y2="138"/><line x1="42" y1="171" x2="208" y2="171"/><line x1="42" y1="204" x2="208" y2="204"/>
+    </g>
+    <path d="M62 222 L188 92" stroke="#f7d7d7" stroke-width="8" stroke-linecap="round"/>
+    <path d="M62 92 L188 222" stroke="#f7d7d7" stroke-width="8" stroke-linecap="round"/>
+    <path d="M62 222 L188 92" stroke="#b83a3a" stroke-width="3" stroke-linecap="round"/>
+    <path d="M62 92 L188 222" stroke="#b83a3a" stroke-width="3" stroke-linecap="round"/>
+    <text x="20" y="268" font-family="Malgun Gothic, Arial" font-size="14" fill="#5d6b78">가능 후보: Mechanical load,</text>
+    <text x="20" y="290" font-family="Malgun Gothic, Arial" font-size="14" fill="#5d6b78">pre-existing cell crack propagation</text>
+  </g>
+
+  <g transform="translate(666 126)">
+    <rect x="0" y="0" width="250" height="300" rx="8" fill="#ffffff" stroke="#d9e1e8"/>
+    <text x="20" y="34" font-family="Malgun Gothic, Arial" font-size="18" font-weight="700" fill="#17202a">3. Inactive Area</text>
+    <rect x="42" y="72" width="166" height="166" rx="4" fill="#1f2933"/>
+    <g stroke="#dce7ee" opacity="0.28">
+      <line x1="75" y1="72" x2="75" y2="238"/><line x1="108" y1="72" x2="108" y2="238"/><line x1="141" y1="72" x2="141" y2="238"/><line x1="174" y1="72" x2="174" y2="238"/>
+      <line x1="42" y1="105" x2="208" y2="105"/><line x1="42" y1="138" x2="208" y2="138"/><line x1="42" y1="171" x2="208" y2="171"/><line x1="42" y1="204" x2="208" y2="204"/>
+    </g>
+    <rect x="112" y="138" width="56" height="70" rx="6" fill="#05080c" stroke="#b83a3a" stroke-width="3"/>
+    <path d="M88 108 C110 132, 130 148, 168 174" fill="none" stroke="#b83a3a" stroke-width="3" stroke-linecap="round"/>
+    <text x="20" y="268" font-family="Malgun Gothic, Arial" font-size="14" fill="#5d6b78">가능 후보: crack-induced isolation,</text>
+    <text x="20" y="290" font-family="Malgun Gothic, Arial" font-size="14" fill="#5d6b78">interconnect/solder issue</text>
+  </g>
+
+  <text x="40" y="474" font-family="Malgun Gothic, Arial" font-size="14" fill="#5d6b78">대시보드 적용: defect_code + pattern_hint + equipment/time/profile 데이터를 함께 보고 High/Medium/Low 원인 후보로 표시</text>
+</svg>

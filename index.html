@@ -1,0 +1,1027 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Day3 AI 업무 자동화 인터뷰</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --soft: #f5f7f9;
+      --panel: #ffffff;
+      --blue: #1769aa;
+      --blue-dark: #0e4f83;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --shadow: 0 16px 44px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    textarea,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 300px minmax(0, 1fr);
+    }
+
+    aside {
+      background: #17202a;
+      color: #f8fbfd;
+      padding: 28px 22px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: #f0b429;
+      display: grid;
+      place-items: center;
+      color: #17202a;
+      font-weight: 800;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: #b8c5d1;
+      font-size: 13px;
+    }
+
+    .progress {
+      margin: 24px 0;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #dce7ef;
+      margin-bottom: 8px;
+    }
+
+    .bar {
+      height: 8px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.13);
+      overflow: hidden;
+    }
+
+    .bar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: #f0b429;
+      transition: width 0.2s ease;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav-item {
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 10px 12px;
+      color: #c7d3de;
+      background: rgba(255, 255, 255, 0.03);
+      font-size: 14px;
+    }
+
+    .nav-item.active {
+      color: #17202a;
+      background: #f0b429;
+      border-color: #f0b429;
+      font-weight: 700;
+    }
+
+    .side-note {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.13);
+      color: #b8c5d1;
+      font-size: 13px;
+    }
+
+    main {
+      padding: 32px;
+    }
+
+    .shell {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .kicker {
+      margin: 0 0 8px;
+      color: var(--blue-dark);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(26px, 3vw, 40px);
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      color: var(--muted);
+      max-width: 780px;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--muted);
+      padding: 9px 12px;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .section {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-top: 18px;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .section h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .hint {
+      margin: 0 0 18px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    label,
+    .label {
+      font-weight: 800;
+      font-size: 14px;
+    }
+
+    .mini {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 400;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #cbd6df;
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 11px 12px;
+      outline: none;
+    }
+
+    textarea {
+      min-height: 116px;
+      resize: vertical;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(23, 105, 170, 0.12);
+    }
+
+    .check-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .check {
+      min-height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 11px 12px;
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .check input {
+      width: auto;
+      margin-top: 4px;
+    }
+
+    .candidate-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .candidate {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: #fff;
+      display: grid;
+      gap: 14px;
+    }
+
+    .candidate-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: 12px;
+      align-items: end;
+    }
+
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .score {
+      display: grid;
+      gap: 5px;
+    }
+
+    .score input {
+      padding: 8px;
+    }
+
+    .candidate .remove {
+      justify-self: end;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: space-between;
+    }
+
+    .actions .left,
+    .actions .right {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    button {
+      border: 1px solid transparent;
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 800;
+      color: #17202a;
+      background: #e6edf3;
+    }
+
+    button.primary {
+      background: var(--blue);
+      color: #fff;
+    }
+
+    button.primary:hover {
+      background: var(--blue-dark);
+    }
+
+    button.secondary {
+      background: #fff;
+      border-color: var(--line);
+    }
+
+    button.warn {
+      background: #fff7ed;
+      border-color: #f4c48d;
+      color: #8a3d08;
+    }
+
+    .results {
+      display: grid;
+      gap: 16px;
+    }
+
+    .result-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      background: #fff;
+    }
+
+    .rank {
+      display: inline-flex;
+      min-width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      align-items: center;
+      justify-content: center;
+      background: #17202a;
+      color: #fff;
+      font-weight: 900;
+      margin-right: 10px;
+    }
+
+    .result-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 19px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .badge {
+      display: inline-flex;
+      border-radius: 8px;
+      padding: 4px 8px;
+      background: #edf6ff;
+      color: var(--blue-dark);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .badge.green {
+      background: #eaf8f0;
+      color: #16633f;
+    }
+
+    .badge.orange {
+      background: #fff3e6;
+      color: #8a3d08;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .metric {
+      background: var(--soft);
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 74px;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 20px;
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .report {
+      white-space: pre-wrap;
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      color: #26323f;
+      overflow-x: auto;
+    }
+
+    .empty {
+      padding: 18px;
+      background: #fff7ed;
+      border: 1px solid #f4c48d;
+      border-radius: 8px;
+      color: #713405;
+    }
+
+    @media (max-width: 920px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+        height: auto;
+      }
+
+      main {
+        padding: 20px;
+      }
+
+      .topline,
+      .grid.two,
+      .candidate-head,
+      .score-grid,
+      .metrics,
+      .check-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .topline {
+        display: grid;
+      }
+
+      .status-pill {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">AI</div>
+        <div>
+          <h1>업무 자동화 인터뷰</h1>
+          <p>모듈공정팀 KPI 과제 발굴</p>
+        </div>
+      </div>
+
+      <div class="progress">
+        <div class="progress-label">
+          <span>진행률</span>
+          <span id="progressText">1 / 5</span>
+        </div>
+        <div class="bar"><span id="progressBar"></span></div>
+      </div>
+
+      <div class="nav-list" id="navList"></div>
+
+      <div class="side-note">
+        설비 원본 데이터는 업로드하지 않아도 됩니다. 이 페이지는 문제 정의와 우선순위 판단을 돕는 로컬 인터뷰 도구입니다.
+      </div>
+    </aside>
+
+    <main>
+      <div class="shell">
+        <div class="topline">
+          <div>
+            <p class="kicker">Hanwha Qcells Module Process Team</p>
+            <h2>AI 자동화 KPI 성과를 위한 문제 선정 가이드</h2>
+            <p class="subtitle">평소 업무를 인터뷰한 뒤 반복성, 시간 절감, 품질/수율 영향, 데이터 접근성, 구현 난이도를 기준으로 먼저 해결할 자동화 과제를 추천합니다.</p>
+          </div>
+          <div class="status-pill">외부 인터넷 없이 사용 가능</div>
+        </div>
+
+        <section class="section active" data-title="기본 정보">
+          <h3>1. 현재 역할과 업무 범위</h3>
+          <p class="hint">고과 KPI로 연결하려면 먼저 “내가 어떤 성과 지표에 영향을 주는 사람인지”가 보여야 합니다.</p>
+          <div class="grid two">
+            <div class="field">
+              <label for="name">이름 또는 닉네임</label>
+              <input id="name" placeholder="예: 모듈공정 담당자">
+            </div>
+            <div class="field">
+              <label for="role">담당 역할</label>
+              <input id="role" value="한화큐셀 모듈공정팀" placeholder="예: 모듈공정기술, 설비/공정 개선, 품질 대응">
+            </div>
+            <div class="field">
+              <label for="line">담당 라인/공정</label>
+              <input id="line" placeholder="예: Laminator, Stringer, EL 검사, Layup, Framing">
+            </div>
+            <div class="field">
+              <label for="kpi">회사에서 보는 주요 KPI</label>
+              <input id="kpi" placeholder="예: 자동화 건수, 시간 절감, 수율 개선, 불량 감소, 보고 리드타임 단축">
+            </div>
+          </div>
+          <div class="field" style="margin-top:16px">
+            <label for="workSummary">평소 업무를 자유롭게 적어주세요</label>
+            <textarea id="workSummary" placeholder="예: 설비 알람 확인, 일일 생산/불량 현황 정리, 이슈 발생 시 원인 추적, 회의 보고자료 작성, 작업자/품질팀 커뮤니케이션 등"></textarea>
+          </div>
+        </section>
+
+        <section class="section" data-title="업무 패턴">
+          <h3>2. 반복 업무와 병목 찾기</h3>
+          <p class="hint">AI 자동화는 “자주 반복되고, 규칙이 있고, 결과물을 확인할 수 있는 업무”에서 성과가 잘 나옵니다.</p>
+          <div class="grid two">
+            <div class="field">
+              <label for="repeatTasks">반복적으로 하는 업무</label>
+              <textarea id="repeatTasks" placeholder="예: 매일 설비 알람 다운로드 후 엑셀 정리, 불량 코드별 건수 집계, 주간 보고서 작성"></textarea>
+            </div>
+            <div class="field">
+              <label for="painPoints">시간이 오래 걸리거나 귀찮은 업무</label>
+              <textarea id="painPoints" placeholder="예: 여러 시스템에서 데이터를 따로 확인해야 함, 보고서 양식 맞추기, 이슈 원인 후보 정리"></textarea>
+            </div>
+            <div class="field">
+              <label for="mistakeRisk">실수나 누락이 자주 생기는 지점</label>
+              <textarea id="mistakeRisk" placeholder="예: 수작업 복사/붙여넣기, 날짜 필터 실수, 설비명 표기 불일치, 불량 코드 누락"></textarea>
+            </div>
+            <div class="field">
+              <label for="stakeholders">결과물을 받는 사람</label>
+              <textarea id="stakeholders" placeholder="예: 팀장, 생산팀, 품질팀, 설비팀, 교대조 담당자"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" data-title="데이터 제약">
+          <h3>3. 데이터와 보안 제약</h3>
+          <p class="hint">라인 설비 데이터가 인트라넷에만 있다면, 첫 과제는 외부 연동보다 로컬 파일, 엑셀, 수기 입력 기반으로 설계하는 편이 안전합니다.</p>
+          <div class="grid two">
+            <div class="field">
+              <label for="dataSources">사용 가능한 데이터 형태</label>
+              <textarea id="dataSources" placeholder="예: 설비 알람 CSV, MES 엑셀 다운로드, 검사 결과 엑셀, 작업일지, 회의록, 수기 메모"></textarea>
+            </div>
+            <div class="field">
+              <label for="dataLimits">접근 제한 또는 보안 주의사항</label>
+              <textarea id="dataLimits" placeholder="예: 라인 PC에서만 조회 가능, 외부 반출 금지, 개인정보 없음, 설비 원본 로그는 공유 불가"></textarea>
+            </div>
+          </div>
+          <div class="field" style="margin-top:16px">
+            <div class="label">가능한 자동화 방식</div>
+            <div class="check-grid">
+              <label class="check"><input type="checkbox" value="엑셀/CSV 파일 분석" class="method"> 엑셀/CSV 파일 분석</label>
+              <label class="check"><input type="checkbox" value="수기 메모 요약" class="method"> 수기 메모 요약</label>
+              <label class="check"><input type="checkbox" value="보고서 자동 작성" class="method"> 보고서 자동 작성</label>
+              <label class="check"><input type="checkbox" value="이상 징후/불량 Pareto 정리" class="method"> 이상 징후/불량 Pareto 정리</label>
+              <label class="check"><input type="checkbox" value="설비 알람 분류" class="method"> 설비 알람 분류</label>
+              <label class="check"><input type="checkbox" value="회의록 액션아이템 추출" class="method"> 회의록 액션아이템 추출</label>
+            </div>
+          </div>
+        </section>
+
+        <section class="section" data-title="후보 평가">
+          <h3>4. 자동화 후보 점수화</h3>
+          <p class="hint">아래 기본 후보를 수정하거나 새 후보를 추가하세요. 1점은 낮음, 5점은 높음입니다. 구현 난이도는 점수가 낮을수록 추천 점수에 유리하게 계산됩니다.</p>
+          <div class="candidate-list" id="candidateList"></div>
+          <div style="margin-top:14px">
+            <button type="button" class="secondary" id="addCandidate">+ 후보 추가</button>
+          </div>
+        </section>
+
+        <section class="section" data-title="추천 결과">
+          <h3>5. 추천 결과와 실행 초안</h3>
+          <p class="hint">입력 내용을 기반으로 먼저 해결할 업무 문제와 KPI 연결 방식을 정리합니다.</p>
+          <div id="results" class="results"></div>
+          <div class="field" style="margin-top:16px">
+            <label for="report">제출/보고용 요약</label>
+            <textarea id="report" style="min-height:360px"></textarea>
+          </div>
+        </section>
+
+        <div class="actions">
+          <div class="left">
+            <button type="button" class="secondary" id="prevBtn">이전</button>
+            <button type="button" class="secondary" id="saveBtn">임시 저장</button>
+          </div>
+          <div class="right">
+            <button type="button" class="warn" id="resetBtn">초기화</button>
+            <button type="button" class="primary" id="nextBtn">다음</button>
+            <button type="button" class="primary" id="analyzeBtn">분석하기</button>
+            <button type="button" class="secondary" id="copyBtn">요약 복사</button>
+            <button type="button" class="secondary" id="printBtn">인쇄/PDF</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const sections = Array.from(document.querySelectorAll(".section"));
+    const navList = document.getElementById("navList");
+    const progressText = document.getElementById("progressText");
+    const progressBar = document.getElementById("progressBar");
+    const candidateList = document.getElementById("candidateList");
+    const results = document.getElementById("results");
+    const report = document.getElementById("report");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const analyzeBtn = document.getElementById("analyzeBtn");
+    const copyBtn = document.getElementById("copyBtn");
+    const printBtn = document.getElementById("printBtn");
+    const saveBtn = document.getElementById("saveBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const addCandidateBtn = document.getElementById("addCandidate");
+
+    let current = 0;
+
+    const baseCandidates = [
+      {
+        name: "일일 설비/불량 현황 보고서 자동 작성",
+        type: "보고 자동화",
+        repeat: 5,
+        time: 5,
+        impact: 4,
+        access: 5,
+        difficulty: 2,
+        memo: "엑셀/CSV와 수기 메모를 넣으면 완료 업무, 이슈, 원인 후보, 조치 계획을 자동 정리"
+      },
+      {
+        name: "설비 알람 Pareto 및 반복 알람 분류",
+        type: "설비 데이터 분석",
+        repeat: 4,
+        time: 4,
+        impact: 5,
+        access: 4,
+        difficulty: 3,
+        memo: "라인 PC에서 다운로드한 알람 파일을 기준으로 설비, 시간대, 알람명별 집중도를 정리"
+      },
+      {
+        name: "불량 코드별 원인 후보 및 조치 이력 정리",
+        type: "품질/수율 개선",
+        repeat: 4,
+        time: 4,
+        impact: 5,
+        access: 4,
+        difficulty: 3,
+        memo: "불량 코드, 설비, 작업 조건, 조치 이력을 묶어 반복 이슈를 찾는 용도"
+      },
+      {
+        name: "회의록 액션아이템 자동 추출",
+        type: "협업 자동화",
+        repeat: 3,
+        time: 3,
+        impact: 3,
+        access: 5,
+        difficulty: 1,
+        memo: "회의 메모에서 담당자, 기한, 확인 항목을 자동 분리"
+      }
+    ];
+
+    const weights = {
+      repeat: 0.22,
+      time: 0.24,
+      impact: 0.28,
+      access: 0.16,
+      difficulty: 0.10
+    };
+
+    function fieldValue(id) {
+      return (document.getElementById(id)?.value || "").trim();
+    }
+
+    function setField(id, value) {
+      const el = document.getElementById(id);
+      if (el) el.value = value || "";
+    }
+
+    function selectedMethods() {
+      return Array.from(document.querySelectorAll(".method:checked")).map(item => item.value);
+    }
+
+    function renderNav() {
+      navList.innerHTML = sections.map((section, index) => {
+        const title = section.dataset.title;
+        return `<div class="nav-item ${index === current ? "active" : ""}">${index + 1}. ${title}</div>`;
+      }).join("");
+    }
+
+    function showSection(index) {
+      current = Math.max(0, Math.min(index, sections.length - 1));
+      sections.forEach((section, i) => section.classList.toggle("active", i === current));
+      progressText.textContent = `${current + 1} / ${sections.length}`;
+      progressBar.style.width = `${((current + 1) / sections.length) * 100}%`;
+      prevBtn.disabled = current === 0;
+      nextBtn.style.display = current === sections.length - 1 ? "none" : "inline-flex";
+      analyzeBtn.style.display = current === sections.length - 1 ? "inline-flex" : "none";
+      copyBtn.style.display = current === sections.length - 1 ? "inline-flex" : "none";
+      printBtn.style.display = current === sections.length - 1 ? "inline-flex" : "none";
+      renderNav();
+    }
+
+    function candidateTemplate(item = {}) {
+      const id = crypto.randomUUID ? crypto.randomUUID() : String(Date.now() + Math.random());
+      return `
+        <div class="candidate" data-id="${id}">
+          <div class="candidate-head">
+            <div class="field">
+              <label>자동화 후보 업무</label>
+              <input class="c-name" value="${escapeHtml(item.name || "")}" placeholder="예: 주간 설비 알람 분석 자동화">
+            </div>
+            <div class="field">
+              <label>분류</label>
+              <input class="c-type" value="${escapeHtml(item.type || "")}" placeholder="예: 설비 데이터 분석">
+            </div>
+          </div>
+          <div class="score-grid">
+            ${scoreInput("repeat", "반복성", item.repeat || 3)}
+            ${scoreInput("time", "시간 절감", item.time || 3)}
+            ${scoreInput("impact", "KPI 영향", item.impact || 3)}
+            ${scoreInput("access", "데이터 접근성", item.access || 3)}
+            ${scoreInput("difficulty", "구현 난이도", item.difficulty || 3)}
+          </div>
+          <div class="field">
+            <label>설명 또는 기대 효과 <span class="mini">선택</span></label>
+            <textarea class="c-memo">${escapeHtml(item.memo || "")}</textarea>
+          </div>
+          <button type="button" class="secondary remove">삭제</button>
+        </div>
+      `;
+    }
+
+    function scoreInput(key, label, value) {
+      return `
+        <div class="score">
+          <label>${label}</label>
+          <input class="c-${key}" type="number" min="1" max="5" value="${value}">
+        </div>
+      `;
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function renderCandidates(items = baseCandidates) {
+      candidateList.innerHTML = items.map(candidateTemplate).join("");
+      bindCandidateRemove();
+    }
+
+    function bindCandidateRemove() {
+      candidateList.querySelectorAll(".remove").forEach(button => {
+        button.addEventListener("click", event => {
+          event.currentTarget.closest(".candidate").remove();
+        });
+      });
+    }
+
+    function readCandidates() {
+      return Array.from(candidateList.querySelectorAll(".candidate")).map(card => {
+        const read = selector => card.querySelector(selector).value.trim();
+        const num = selector => Math.min(5, Math.max(1, Number(card.querySelector(selector).value || 1)));
+        const item = {
+          name: read(".c-name") || "이름 없는 자동화 후보",
+          type: read(".c-type") || "미분류",
+          repeat: num(".c-repeat"),
+          time: num(".c-time"),
+          impact: num(".c-impact"),
+          access: num(".c-access"),
+          difficulty: num(".c-difficulty"),
+          memo: read(".c-memo")
+        };
+        item.score = scoreCandidate(item);
+        return item;
+      });
+    }
+
+    function scoreCandidate(item) {
+      const raw =
+        item.repeat * weights.repeat +
+        item.time * weights.time +
+        item.impact * weights.impact +
+        item.access * weights.access +
+        (6 - item.difficulty) * weights.difficulty;
+      return Math.round((raw / 5) * 100);
+    }
+
+    function recommendationLabel(score) {
+      if (score >= 82) return "즉시 추진";
+      if (score >= 68) return "단기 후보";
+      if (score >= 52) return "검토 필요";
+      return "후순위";
+    }
+
+    function buildActionGuide(top) {
+      if (!top) return "";
+      const dataMode = top.access >= 4 ? "라인 PC에서 내려받은 엑셀/CSV 또는 수기 메모를 입력값으로 사용" : "데이터 반출 제한을 고려하여 샘플 양식과 수기 입력부터 사용";
+      const difficultyMode = top.difficulty <= 2 ? "1~2주 안에 파일 기반 자동화 초안을 만들기 적합" : "작은 범위의 PoC로 시작한 뒤 확장하는 방식이 적합";
+      return `${dataMode}. ${difficultyMode}.`;
+    }
+
+    function analyze() {
+      const list = readCandidates().sort((a, b) => b.score - a.score);
+      if (!list.length) {
+        results.innerHTML = `<div class="empty">자동화 후보가 없습니다. 후보 평가 단계에서 하나 이상 추가해주세요.</div>`;
+        report.value = "";
+        return;
+      }
+
+      results.innerHTML = list.slice(0, 3).map((item, index) => `
+        <div class="result-card">
+          <div class="result-title">
+            <span class="rank">${index + 1}</span>
+            <span>${escapeHtml(item.name)}</span>
+            <span class="badge ${index === 0 ? "green" : "orange"}">${recommendationLabel(item.score)}</span>
+          </div>
+          <div class="metrics">
+            <div class="metric"><strong>${item.score}</strong><span>추천 점수</span></div>
+            <div class="metric"><strong>${item.time}/5</strong><span>시간 절감</span></div>
+            <div class="metric"><strong>${item.impact}/5</strong><span>KPI 영향</span></div>
+            <div class="metric"><strong>${item.access}/5</strong><span>데이터 접근성</span></div>
+          </div>
+          <p><strong>판단:</strong> ${escapeHtml(buildActionGuide(item))}</p>
+          <p><strong>메모:</strong> ${escapeHtml(item.memo || "추가 설명 없음")}</p>
+        </div>
+      `).join("");
+
+      report.value = buildReport(list);
+    }
+
+    function buildReport(list) {
+      const top = list[0];
+      const methods = selectedMethods();
+      const name = fieldValue("name") || "모듈공정팀 담당자";
+      const role = fieldValue("role") || "한화큐셀 모듈공정팀";
+      const line = fieldValue("line") || "담당 공정 미입력";
+      const kpi = fieldValue("kpi") || "AI 자동화 성과, 업무시간 절감, 품질/수율 개선";
+
+      return `AI 업무 자동화 과제 선정 인터뷰 요약
+
+1. 인터뷰 대상
+- 대상: ${name}
+- 역할: ${role}
+- 담당 라인/공정: ${line}
+- 회사 KPI 관점: ${kpi}
+
+2. 현재 업무 요약
+${fieldValue("workSummary") || "- 입력 필요"}
+
+3. 반복 업무 및 Pain Point
+- 반복 업무:
+${fieldValue("repeatTasks") || "  입력 필요"}
+
+- 시간이 오래 걸리는 업무:
+${fieldValue("painPoints") || "  입력 필요"}
+
+- 실수/누락 위험:
+${fieldValue("mistakeRisk") || "  입력 필요"}
+
+- 결과물을 받는 이해관계자:
+${fieldValue("stakeholders") || "  입력 필요"}
+
+4. 데이터 및 보안 조건
+- 사용 가능한 데이터:
+${fieldValue("dataSources") || "  입력 필요"}
+
+- 제약 조건:
+${fieldValue("dataLimits") || "  라인 설비 데이터는 인트라넷망에서만 접근 가능하며 외부 접속/인터넷 검색 기반 자동화는 제외한다."}
+
+- 가능한 자동화 방식: ${methods.length ? methods.join(", ") : "엑셀/CSV 파일 분석, 수기 메모 요약, 보고서 자동 작성 우선 검토"}
+
+5. 우선 추진 과제
+- 1순위: ${top.name}
+- 유형: ${top.type}
+- 추천 점수: ${top.score}/100
+- 선정 이유: 반복성 ${top.repeat}/5, 시간 절감 ${top.time}/5, KPI 영향 ${top.impact}/5, 데이터 접근성 ${top.access}/5로 평가되어 성과 창출 가능성이 높다.
+- 실행 방향: ${buildActionGuide(top)}
+
+6. KPI 연결 방식
+- 정량 KPI: 월간 자동화 처리 건수, 보고서 작성 시간 절감, 수작업 집계 시간 절감, 반복 오류 감소 건수
+- 품질 KPI: 불량/알람 원인 후보 도출 리드타임 단축, 보고 누락 감소, 이슈 대응 속도 향상
+- 보안/현장 적합성: 설비 원본 데이터는 외부로 보내지 않고, 인트라넷에서 다운로드한 파일 또는 비식별 샘플을 로컬에서 처리한다.
+
+7. 첫 실행 계획
+- 1단계: 현재 사용 중인 보고서/엑셀 양식과 수기 정리 절차를 수집한다.
+- 2단계: 민감 정보를 제거한 샘플 데이터로 자동 분류 규칙과 출력 양식을 만든다.
+- 3단계: 1주일간 기존 방식과 자동화 방식을 병행하여 시간 절감 효과를 측정한다.
+- 4단계: 절감 시간, 오류 감소, 보고 품질 개선을 KPI 근거로 정리한다.
+
+8. 추가 인터뷰 질문
+- 하루 또는 일주일 기준으로 가장 많은 시간을 쓰는 반복 작업은 무엇인가?
+- 그 작업의 결과물은 누가 보고, 어떤 의사결정에 사용하는가?
+- 현재 수작업으로 복사/붙여넣기 하는 데이터 항목은 무엇인가?
+- 자동화 결과가 틀렸을 때 사람이 쉽게 검증할 수 있는가?
+- 회사 보안 기준상 로컬 PC에서만 처리해야 하는 데이터는 무엇인가?`;
+    }
+
+    function saveState() {
+      const data = {
+        current,
+        fields: {},
+        methods: selectedMethods(),
+        candidates: readCandidates()
+      };
+      document.querySelectorAll("input[id], textarea[id]").forEach(el => {
+        data.fields[el.id] = el.value;
+      });
+      localStorage.setItem("day3-ai-interview", JSON.stringify(data));
+      alert("현재 입력 내용을 이 브라우저에 저장했습니다.");
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem("day3-ai-interview");
+      if (!raw) {
+        renderCandidates();
+        return;
+      }
+      try {
+        const data = JSON.parse(raw);
+        Object.entries(data.fields || {}).forEach(([id, value]) => setField(id, value));
+        document.querySelectorAll(".method").forEach(item => {
+          item.checked = (data.methods || []).includes(item.value);
+        });
+        renderCandidates(data.candidates && data.candidates.length ? data.candidates : baseCandidates);
+        current = data.current || 0;
+      } catch (error) {
+        renderCandidates();
+      }
+    }
+
+    function resetState() {
+      if (!confirm("입력 내용을 초기화할까요?")) return;
+      localStorage.removeItem("day3-ai-interview");
+      document.querySelectorAll("input[id], textarea[id]").forEach(el => {
+        if (el.id === "role") {
+          el.value = "한화큐셀 모듈공정팀";
+        } else {
+          el.value = "";
+        }
+      });
+      document.querySelectorAll(".method").forEach(item => item.checked = false);
+      renderCandidates();
+      results.innerHTML = "";
+      report.value = "";
+      showSection(0);
+    }
+
+    prevBtn.addEventListener("click", () => showSection(current - 1));
+    nextBtn.addEventListener("click", () => showSection(current + 1));
+    analyzeBtn.addEventListener("click", analyze);
+    addCandidateBtn.addEventListener("click", () => {
+      candidateList.insertAdjacentHTML("beforeend", candidateTemplate());
+      bindCandidateRemove();
+    });
+    saveBtn.addEventListener("click", saveState);
+    resetBtn.addEventListener("click", resetState);
+    copyBtn.addEventListener("click", async () => {
+      if (!report.value.trim()) analyze();
+      await navigator.clipboard.writeText(report.value);
+      alert("요약 내용을 클립보드에 복사했습니다.");
+    });
+    printBtn.addEventListener("click", () => window.print());
+
+    loadState();
+    showSection(current);
+  </script>
+</body>
+</html>

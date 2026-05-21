@@ -1,0 +1,10 @@
+alarm_time,line,equipment_id,alarm_code,alarm_name,severity,duration_sec,ack_user,note
+2026-05-20 08:14:02,MODULE-A,LAM-02,ALM-110,Vacuum pump warning,LOW,42,operator_a,Recovered
+2026-05-20 10:31:44,MODULE-A,LAM-01,ALM-203,Heater zone deviation,LOW,35,operator_b,Within limit after check
+2026-05-20 13:58:21,MODULE-A,LAM-03,ALM-301,Vacuum pressure deviation,HIGH,310,operator_c,Before crack concentration
+2026-05-20 14:06:09,MODULE-A,LAM-03,ALM-304,Press pressure fluctuation,HIGH,188,operator_c,During crack concentration
+2026-05-20 14:29:33,MODULE-A,LAM-03,ALM-208,Upper heater deviation,MEDIUM,124,operator_c,During crack concentration
+2026-05-20 15:02:41,MODULE-A,LAM-03,ALM-301,Vacuum pressure deviation,MEDIUM,95,operator_c,Recovery phase
+2026-05-20 17:52:18,MODULE-A,LAM-01,ALM-115,Cooling water flow warning,LOW,53,operator_a,Recovered
+2026-05-21 00:46:57,MODULE-A,LAM-02,ALM-120,Door interlock check,LOW,21,operator_d,Night shift
+2026-05-21 06:12:10,MODULE-A,LAM-03,ALM-110,Vacuum pump warning,LOW,44,operator_d,End window

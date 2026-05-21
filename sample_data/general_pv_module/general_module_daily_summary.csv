@@ -1,0 +1,6 @@
+date,line,process_step,module_model,total_modules,inspected_modules,ng_modules,ng_rate_pct,top_failure_mode,top_defect_code,note
+2026-05-20,MODULE-A,Lamination,GEN-MOD-01,4200,4188,31,0.74,Cell crack,CRACK,General sample based on PV module failure modes
+2026-05-20,MODULE-A,EL Inspection,GEN-MOD-01,4200,4188,24,0.57,Cell crack,CRACK,EL-visible dark-line defects
+2026-05-20,MODULE-A,Visual Inspection,GEN-MOD-01,4200,4188,13,0.31,Bubble/Delamination,BUBBLE,Encapsulant void or adhesion suspicion
+2026-05-20,MODULE-A,Flash Test,GEN-MOD-01,4200,4188,9,0.21,Low power,LOW_POWER,Possible inactive cell area or interconnect issue
+2026-05-20,MODULE-A,Final QC,GEN-MOD-01,4200,4188,7,0.17,Other visual,OTHER,Manual confirmation required

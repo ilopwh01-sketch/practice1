@@ -1,0 +1,16 @@
+일자: 2026-05-20 07:00 ~ 2026-05-21 07:00
+공정: MODULE-A / Laminator
+
+수기 메모:
+- 14시대 LAM-03에서 EL 기준 CRACK 불량 집중 발생.
+- 13:58~14:30 구간 LAM-03 Vacuum pressure deviation 및 Press pressure fluctuation 알람 확인.
+- LAM-03 14:00-15:00 구간 output_qty 187, inspection_qty 186으로 수량 불일치 1매 발생.
+- 재판정 1건, 재투입 2건 이력이 있어 MES 재조회 필요.
+- 15시 이후 CRACK 불량은 감소했으나 15시대 4건 추가 발생하여 다음 근무조 인계 필요.
+- Profile 확인 시 vacuum_kpa 하락 및 press_pressure_mpa 저하 구간이 CRACK 집중 시간과 겹침.
+
+보고 시 강조:
+1. LAM-03 14시대 CRACK 집중
+2. 설비 알람과 Profile 특이점 동시 발생
+3. 수량 불일치 및 재투입 이력 확인 필요
+4. 익일 동일 시간대 재발 여부 모니터링 필요

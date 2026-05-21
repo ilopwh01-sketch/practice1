@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PV 모듈 불량 전문 RCA 프레임워크</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.56;
+    }
+
+    .wrap {
+      width: min(1220px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, h4, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    h2 { margin-bottom: 8px; font-size: 22px; }
+    .hint { color: var(--muted); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h3 {
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .panel p { color: var(--muted); }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .table tr:last-child td { border-bottom: 0; }
+
+    .badge {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .red { background: var(--red); }
+    .orange { background: var(--orange); }
+    .green { background: var(--green); }
+    .blue { background: var(--blue); }
+
+    .score {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .score li {
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .step {
+      min-height: 98px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      font-size: 14px;
+    }
+
+    .step strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .note {
+      padding: 16px;
+      border-left: 6px solid var(--orange);
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #5c3a16;
+    }
+
+    .print-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    a { color: var(--blue); font-weight: 900; }
+
+    @media (max-width: 980px) {
+      .grid-2, .grid-3, .flow { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      header, section, .panel { box-shadow: none; break-inside: avoid; }
+      .print-row { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">Professional Root Cause Analysis</div>
+      <h1>PV 모듈 불량 원인분석 프레임워크</h1>
+      <p>태양광 모듈 Failure Mode 논문을 기반으로 CRACK, BUBBLE/DELAMINATION, INACTIVE AREA를 현장 데이터와 연결해 분석하는 방법입니다.</p>
+    </header>
+
+    <section>
+      <h2>1. 분석 원칙</h2>
+      <p class="hint">전문적인 RCA는 한 개의 숫자로 원인을 단정하지 않고, 문헌 기반 Failure Mode와 현장 데이터를 묶어 경쟁 가설을 좁혀갑니다.</p>
+      <div class="flow">
+        <div class="step"><strong>현상 정의</strong>불량 코드, EL pattern, 설비, 시간대를 먼저 고정한다.</div>
+        <div class="step"><strong>문헌 매핑</strong>PV Failure Mode별 일반 원인 후보를 연결한다.</div>
+        <div class="step"><strong>공정 근거</strong>Profile, 알람, Recipe, 재투입 이력을 확인한다.</div>
+        <div class="step"><strong>경쟁 가설</strong>가능 원인과 배제해야 할 원인을 같이 둔다.</div>
+        <div class="step"><strong>검증 조치</strong>추가 데이터와 현장 점검으로 확정한다.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 논문 기반 Failure Mode 매트릭스</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Failure Mode</th>
+            <th>문헌 기반 관찰 포인트</th>
+            <th>가능 원인 후보</th>
+            <th>확인해야 할 데이터</th>
+            <th>현장 조치</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Cell crack</strong></td>
+            <td>EL dark line, cross crack, edge crack, inactive area. Crack pattern은 제조/취급/기계적 스트레스와 함께 해석.</td>
+            <td>Handling stress, stringing/tabbing stress, lamination pressure imbalance, pre-existing cell micro-crack propagation.</td>
+            <td>EL 원본/전처리 이미지, crack 위치, module sequence, lamination pressure/cycle, upstream handling log, pre-lamination EL.</td>
+            <td>동일 설비/시간대 재발 확인, 진공/압력 균일성 점검, upstream 공정 이력 대조.</td>
+          </tr>
+          <tr>
+            <td><strong>Bubble / Delamination</strong></td>
+            <td>Encapsulant void, interfacial separation, blister/bubble. 계면 접착, 수분, 온도, 진공, 압력과 함께 검토.</td>
+            <td>Insufficient vacuum, lamination temperature/time window deviation, trapped moisture, contamination, encapsulant adhesion issue.</td>
+            <td>vacuum_kpa, lamination_temp_c, pressure, cooling_time, visual_bubble_count, encapsulant lot, storage humidity.</td>
+            <td>Vacuum pump/seal 점검, Recipe window 확인, EVA/Lot 및 보관 조건 확인, bubble 위치 지도화.</td>
+          </tr>
+          <tr>
+            <td><strong>Inactive cell area</strong></td>
+            <td>EL에서 특정 cell area가 어둡게 나타남. Crack으로 전기적 고립이 생겼거나 interconnect 문제가 있을 수 있음.</td>
+            <td>Crack-induced isolation, interconnect resistance, solder/tabbing issue, local cell damage.</td>
+            <td>EL dark area 면적, Flash low power, IV curve, soldering log, string section pattern.</td>
+            <td>EL-Flash 매칭, string/interconnect continuity 확인, solder 조건 확인.</td>
+          </tr>
+          <tr>
+            <td><strong>Discoloration / PID suspect</strong></td>
+            <td>색 변화, edge darkening, 장기 열화 패턴. 단기 라미네이션 원인과 구분해야 함.</td>
+            <td>UV/thermal aging, humidity/voltage stress, material degradation, PID.</td>
+            <td>장기 노출 이력, IV curve, leakage, humidity/temperature, module edge pattern.</td>
+            <td>단기 공정 이슈에서 분리하고 신뢰도 Low 또는 추가 검사 항목으로 관리.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. LAM-03 14시대 CRACK 사례 전문 분석</h2>
+      <p class="hint">샘플 대시보드의 “LAM-03 14시대 CRACK 집중”을 논문 기반 RCA 방식으로 다시 해석한 결과입니다.</p>
+      <div class="grid-2">
+        <div class="panel">
+          <h3>1차 원인 후보</h3>
+          <ul class="score">
+            <li><span class="badge red">Primary</span> Lamination vacuum/pressure process window disturbance<br>근거: CRACK 시간 집중, vacuum drop, pressure alarm, cycle time 증가가 같은 구간에 발생.</li>
+            <li><span class="badge orange">Secondary</span> Pre-existing cell micro-crack propagation<br>근거: 논문상 micro-crack은 lamination/handling stress에서 확장될 수 있음. 단, pre-lamination EL이 없으면 확정 불가.</li>
+            <li><span class="badge orange">Secondary</span> Upper heater/thermal gradient contribution<br>근거: 상부 온도 상승과 heater deviation 알람이 겹치나, CRACK 직접 원인으로 보려면 위치/패턴 검증 필요.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h3>경쟁 가설과 배제 조건</h3>
+          <ul class="score">
+            <li><strong>Handling 단독 원인</strong><br>여러 설비/시간대에 분산 발생하면 가능성이 높고, LAM-03 14시대에만 집중되면 단독 원인 가능성은 낮아짐.</li>
+            <li><strong>EL 판정 편차</strong><br>특정 검사기/검사관에서만 급증하면 검사 조건을 확인해야 함. 동일 시간대 LAM-03 설비 연계가 강하면 공정 원인 가능성이 커짐.</li>
+            <li><strong>장기 열화/PID</strong><br>일일 생산 직후 특정 설비/시간대 집중과는 성격이 다르므로 본 이슈의 1차 원인으로 보기는 어려움.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>4. 전문 RCA 점수화 기준</h2>
+      <p class="hint">AI 원인 후보는 점수화하되, 최종 확정은 담당자가 승인합니다.</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>근거 항목</th>
+            <th>점수</th>
+            <th>설명</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>동일 설비/동일 시간대 집중</td>
+            <td>+2</td>
+            <td>설비 또는 시간대 특정성이 강할수록 공정 원인 가능성이 증가.</td>
+          </tr>
+          <tr>
+            <td>Failure Mode와 논문 관찰 포인트 일치</td>
+            <td>+2</td>
+            <td>EL crack pattern, bubble location, inactive area 등 문헌 기반 패턴과 맞는 경우.</td>
+          </tr>
+          <tr>
+            <td>Profile 이상 동시 발생</td>
+            <td>+2</td>
+            <td>진공도, 온도, 압력, cycle time 이상이 불량 집중 시간과 겹침.</td>
+          </tr>
+          <tr>
+            <td>설비 알람 동시 발생</td>
+            <td>+1</td>
+            <td>알람 전후 30분 내 불량 집중이 있으면 보조 근거.</td>
+          </tr>
+          <tr>
+            <td>대체 가설 배제</td>
+            <td>+1</td>
+            <td>검사기 편차, upstream handling, 장기 열화 가능성을 비교해 낮아진 경우.</td>
+          </tr>
+          <tr>
+            <td>수량 불일치/재투입 존재</td>
+            <td>-1</td>
+            <td>데이터 신뢰성 검증 전까지 원인 후보 신뢰도를 낮춤.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 샘플 사례 결론 문장</h2>
+      <div class="note">
+        LAM-03 14시대 CRACK 집중은 단순한 불량 건수 증가가 아니라, EL 기반 cell crack Failure Mode와 라미네이션 공정 Profile 이상이 시간적으로 겹친 케이스이다. 현재 근거만으로 원인을 확정할 수는 없지만, vacuum/pressure process window disturbance를 1차 원인 후보로 두고, pre-existing micro-crack propagation과 upper heater/thermal gradient를 경쟁 가설로 검증하는 것이 타당하다. 다음 조치는 진공 펌프/Seal, 압력 균일성, Recipe 변경 이력, pre-lamination EL 또는 upstream handling log 확인이다.
+      </div>
+    </section>
+
+    <section>
+      <h2>6. 사용한 주요 레퍼런스</h2>
+      <ul class="score">
+        <li><a href="https://iea-pvps.org/key-topics/review-of-failures-of-photovoltaic-modules-final/" target="_blank" rel="noreferrer">IEA PVPS Task 13, Review of Failures of Photovoltaic Modules</a></li>
+        <li><a href="https://www.epj-pv.org/articles/epjpv/full_html/2024/01/pv20240039/pv20240039.html" target="_blank" rel="noreferrer">EPJ Photovoltaics, EL observations nomenclature</a></li>
+        <li><a href="https://arxiv.org/abs/1807.02894" target="_blank" rel="noreferrer">Deitsch et al., Automatic classification of defective PV module cells in EL images</a></li>
+        <li><a href="https://www.sciencedirect.com/science/article/pii/S136403212300802X" target="_blank" rel="noreferrer">Review on interfacial delamination in PV modules</a></li>
+        <li><a href="https://www.sciencedirect.com/science/article/abs/pii/S0038092X19302798" target="_blank" rel="noreferrer">Multiphysics analysis of backsheet blistering in PV modules</a></li>
+      </ul>
+      <div class="print-row">
+        <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

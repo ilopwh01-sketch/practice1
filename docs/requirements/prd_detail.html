@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PRD 상세 - Laminator AI 업무 자동화</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.56;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 286px minmax(0, 1fr);
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 28px 22px;
+      background: var(--navy);
+      color: #f8fbfd;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .brand h1 { margin: 0; font-size: 18px; line-height: 1.25; }
+    nav { display: grid; gap: 8px; }
+    nav a { display: block; padding: 10px 12px; border-radius: 8px; color: #dce7ee; text-decoration: none; }
+    nav a:hover, nav a:focus { outline: none; background: rgba(255,255,255,0.08); }
+
+    main { padding: 34px; }
+    .shell { width: min(1160px, 100%); margin: 0 auto; }
+
+    header,
+    section,
+    .card,
+    .feature {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header { padding: 30px; margin-bottom: 18px; }
+    .eyebrow { margin-bottom: 10px; color: var(--blue); font-size: 13px; font-weight: 900; }
+    h2, h3, h4, p { margin-top: 0; }
+    header h2 { margin-bottom: 10px; font-size: 31px; line-height: 1.24; letter-spacing: 0; }
+    header p, .hint { color: var(--muted); }
+
+    section { padding: 24px; margin-bottom: 16px; }
+    section h3 { margin-bottom: 8px; font-size: 22px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .grid-2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+
+    .card { padding: 16px; min-height: 118px; }
+    .card strong { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; }
+    .card p { margin-bottom: 0; font-weight: 800; }
+
+    .feature { padding: 16px; }
+    .feature h4 { margin-bottom: 8px; font-size: 17px; }
+    .feature p { color: var(--muted); }
+
+    .list { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+    .list li { padding: 10px; border-radius: 8px; background: var(--soft); border: 1px solid var(--line); }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .table th, .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th { background: var(--navy); color: #ffffff; }
+    .table tr:last-child td { border-bottom: 0; }
+
+    .badge {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .red { background: var(--red); }
+    .orange { background: var(--orange); }
+    .green { background: var(--green); }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .step {
+      min-height: 86px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .print-row { display: flex; justify-content: flex-end; margin-top: 16px; }
+    button { border: 0; border-radius: 8px; padding: 11px 14px; background: var(--blue); color: #ffffff; font: inherit; font-weight: 900; cursor: pointer; }
+
+    @media (max-width: 980px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 22px; }
+      .grid-3, .grid-2, .flow { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      .app { display: block; }
+      aside, .print-row { display: none; }
+      main { padding: 0; }
+      header, section, .card, .feature { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">P</div>
+        <h1>PRD 상세<br>제품 요구사항</h1>
+      </div>
+      <nav aria-label="PRD 목차">
+        <a href="#overview">제품 개요</a>
+        <a href="#data">입력 데이터</a>
+        <a href="#features">기능 요구사항</a>
+        <a href="#screens">화면 요구사항</a>
+        <a href="#logic">이상 탐지 로직</a>
+        <a href="#output">출력물</a>
+        <a href="#acceptance">수용 기준</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="shell">
+        <header id="overview">
+          <div class="eyebrow">Product Requirements Document</div>
+          <h2>AI 일일 설비/불량 현황 보고서 자동 작성 도구</h2>
+          <p>PRD는 자동화 도구가 어떤 데이터를 입력받고, 어떤 기능을 수행하며, 어떤 화면과 결과물을 제공해야 하는지 정의한다.</p>
+        </header>
+
+        <section>
+          <h3>1. 제품 개요</h3>
+          <div class="grid-3">
+            <div class="card"><strong>주요 입력</strong><p>생산 실적, 불량 이벤트, 설비 알람, Profile, 수기 메모</p></div>
+            <div class="card"><strong>주요 출력</strong><p>팀장 보고용 HTML, 데이터 분석용 엑셀</p></div>
+            <div class="card"><strong>핵심 가치</strong><p>CRACK/BUBBLE 조기 탐지, 원인 후보 도출</p></div>
+          </div>
+        </section>
+
+        <section id="data">
+          <h3>2. 입력 데이터 요구사항</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>데이터</th>
+                <th>파일 예시</th>
+                <th>주요 컬럼</th>
+                <th>사용 목적</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>생산 요약</td>
+                <td>daily_production_summary</td>
+                <td>time_bucket, equipment_id, inspection_qty, ng_qty</td>
+                <td>07-07 집계, NG율, 설비/시간 집중</td>
+              </tr>
+              <tr>
+                <td>불량 이벤트</td>
+                <td>defect_events</td>
+                <td>event_time, defect_code, inspection_tool</td>
+                <td>불량 Pareto, 동일 불량 집중 탐지</td>
+              </tr>
+              <tr>
+                <td>설비 알람</td>
+                <td>equipment_alarm</td>
+                <td>alarm_time, alarm_code, severity</td>
+                <td>알람과 NG 집중 시간 연계</td>
+              </tr>
+              <tr>
+                <td>Profile</td>
+                <td>laminator_profile_snapshot</td>
+                <td>sample_time, cycle_time, temperature, vacuum</td>
+                <td>공정 time, 온도, 진공도 이상 확인</td>
+              </tr>
+              <tr>
+                <td>수기 메모</td>
+                <td>manual_memo</td>
+                <td>자유 텍스트</td>
+                <td>현장 맥락, 조치 사항, 인계 항목 반영</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="features">
+          <h3>3. 기능 요구사항</h3>
+          <div class="grid-2">
+            <article class="feature">
+              <h4>FR-01 파일 업로드 및 검증</h4>
+              <p>필수 컬럼, 날짜/시간, 숫자 컬럼, 07-07 범위를 검증한다.</p>
+              <ul class="list"><li>컬럼 누락 오류</li><li>시간 파싱 오류</li><li>데이터 기간 불일치 경고</li></ul>
+            </article>
+            <article class="feature">
+              <h4>FR-02 07-07 기준 집계</h4>
+              <p>총 생산량, 검사량, NG 수량, NG율을 현장 기준으로 계산한다.</p>
+              <ul class="list"><li>input/output/inspection 합계</li><li>설비별 NG율</li><li>시간대별 NG 수량</li></ul>
+            </article>
+            <article class="feature">
+              <h4>FR-03 불량 Pareto</h4>
+              <p>CRACK, BUBBLE을 우선 관리 불량으로 표시하고 비중을 계산한다.</p>
+              <ul class="list"><li>불량 코드 내림차순</li><li>전체 NG 대비 비중</li><li>40% 이상 주요 불량 강조</li></ul>
+            </article>
+            <article class="feature">
+              <h4>FR-04 설비/시간 집중 분석</h4>
+              <p>동일 설비/동일 불량 집중, 평균 대비 급증, 시간대 집중을 탐지한다.</p>
+              <ul class="list"><li>설비별 Bar Chart</li><li>시간 Heatmap</li><li>P1/P2/P3 배지</li></ul>
+            </article>
+            <article class="feature">
+              <h4>FR-05 Profile 이상 탐지</h4>
+              <p>공정 time, 온도, 진공도 이상을 불량 집중 시간과 연결한다.</p>
+              <ul class="list"><li>공정 time 10% 이상 증가</li><li>온도 기준 이탈</li><li>진공도 하락</li></ul>
+            </article>
+            <article class="feature">
+              <h4>FR-06 AI 원인 후보</h4>
+              <p>불량 집중, Profile, 알람, 수량 검증 근거로 원인 후보를 제시한다.</p>
+              <ul class="list"><li>High/Medium/Low 신뢰도</li><li>근거 3개 이상 표시</li><li>담당자 최종 승인</li></ul>
+            </article>
+          </div>
+        </section>
+
+        <section id="screens">
+          <h3>4. 화면 요구사항</h3>
+          <div class="flow">
+            <div class="step">1. Overview KPI</div>
+            <div class="step">2. 금일 핵심 이슈</div>
+            <div class="step">3. 불량 Pareto</div>
+            <div class="step">4. 설비/시간 Heatmap</div>
+            <div class="step">5. Profile/알람 Timeline</div>
+          </div>
+          <p class="hint" style="margin-top:14px;">첫 화면은 금일 핵심 이슈, P1 이상 징후, 최우선 AI 원인 후보, 조치 필요 사항을 가장 위에 배치한다.</p>
+        </section>
+
+        <section id="logic">
+          <h3>5. 이상 탐지 및 신뢰도 로직</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>등급</th>
+                <th>기준</th>
+                <th>예시</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge red">High</span></td>
+                <td>불량 집중, Profile 이상, 설비 알람이 같은 시간대에 동시 확인</td>
+                <td>LAM-03 14시대 CRACK 집중 + 진공도 하락 + 압력 알람</td>
+              </tr>
+              <tr>
+                <td><span class="badge orange">Medium</span></td>
+                <td>불량 집중과 Profile 이상 또는 알람 중 2개 근거 연결</td>
+                <td>상부 온도 상승과 CRACK 집중 일부 겹침</td>
+              </tr>
+              <tr>
+                <td><span class="badge green">Low</span></td>
+                <td>단일 근거만 있거나 수량 검증이 필요한 상태</td>
+                <td>재판정/재투입으로 인한 수량 불일치</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="output">
+          <h3>6. 출력물 요구사항</h3>
+          <div class="grid-2">
+            <div class="feature">
+              <h4>팀장 보고용 HTML</h4>
+              <ul class="list">
+                <li>Overview KPI 카드</li>
+                <li>금일 핵심 이슈와 P1/P2/P3 표시</li>
+                <li>AI 원인 후보와 근거 데이터</li>
+                <li>후속 조치 및 익일 확인 항목</li>
+              </ul>
+            </div>
+            <div class="feature">
+              <h4>분석 엑셀</h4>
+              <ul class="list">
+                <li>Overview</li>
+                <li>Defect_Pareto</li>
+                <li>Equipment_NG_Rate</li>
+                <li>Time_Heatmap</li>
+                <li>Profile_Anomaly</li>
+                <li>Alarm_Link</li>
+                <li>Quantity_Validation</li>
+                <li>Evidence_Log</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="acceptance">
+          <h3>7. 수용 기준</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>수용 기준</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>AC-01</td><td>07시-익일 07시 기준으로 데이터가 필터링된다.</td></tr>
+              <tr><td>AC-02</td><td>NG 수량, 불량 종류, 불량률이 자동 계산된다.</td></tr>
+              <tr><td>AC-03</td><td>설비별/시간대별 NG 집중 구간이 표시된다.</td></tr>
+              <tr><td>AC-04</td><td>동일 설비/동일 불량 1시간 5건 이상 발생 시 P1 경고가 표시된다.</td></tr>
+              <tr><td>AC-05</td><td>공정 time, 온도, 진공도 이상이 Profile 화면에 표시된다.</td></tr>
+              <tr><td>AC-06</td><td>AI 원인 후보마다 근거 데이터와 High/Medium/Low 신뢰도가 표시된다.</td></tr>
+              <tr><td>AC-07</td><td>CRACK, BUBBLE 불량이 우선 관리 대상으로 표시된다.</td></tr>
+              <tr><td>AC-08</td><td>팀장 보고용 HTML과 분석 엑셀이 생성된다.</td></tr>
+            </tbody>
+          </table>
+          <div class="print-row">
+            <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

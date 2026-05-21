@@ -1,0 +1,471 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>논문 레퍼런스 - PV 모듈 불량 원인분석</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.56;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section,
+    .ref-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    h2 { margin-bottom: 8px; font-size: 22px; }
+    .hint { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .figure-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .figure-card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      overflow: hidden;
+    }
+
+    .figure-card img {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #ffffff;
+    }
+
+    .figure-caption {
+      padding: 14px 16px;
+      border-top: 1px solid var(--line);
+      background: #ffffff;
+    }
+
+    .figure-caption strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .ref-card {
+      padding: 18px;
+      min-height: 238px;
+    }
+
+    .ref-card h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .ref-card p { color: var(--muted); }
+
+    .ref-card a {
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .tag {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag.red { background: #f7d7d7; color: #842525; }
+    .tag.orange { background: #fff0d4; color: #70420f; }
+    .tag.green { background: #dff3e9; color: #135b3b; }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .table tr:last-child td { border-bottom: 0; }
+
+    .explain {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .explain li {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .note {
+      margin-top: 14px;
+      padding: 14px;
+      border-left: 5px solid var(--orange);
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #5c3a16;
+    }
+
+    .print-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @media (max-width: 820px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      header, section, .ref-card { box-shadow: none; break-inside: avoid; }
+      .print-row { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">PV Module Literature Reference</div>
+      <h1>태양광 모듈 불량 원인분석 논문 레퍼런스</h1>
+      <p>CRACK, BUBBLE, Delamination, EL 검사, Profile/공정 조건을 대시보드 원인 후보와 연결하기 위한 외부 논문 근거입니다.</p>
+    </header>
+
+    <section>
+      <h2>1. 핵심 레퍼런스</h2>
+      <p class="hint">대시보드의 원인 후보는 아래 논문/리뷰에서 공통적으로 제시하는 Failure Mode와 검사 방식을 현장 데이터에 연결하는 방식으로 구성합니다.</p>
+      <div class="grid">
+        <article class="ref-card">
+          <h3>IEA PVPS Task 13: Review of Failures of Photovoltaic Modules</h3>
+          <p>PV 모듈 Failure Mode, EL 검사로 식별 가능한 Crack/Inactive area, Crack pattern과 원인 추정을 체계적으로 정리한 보고서입니다.</p>
+          <p><a href="https://iea-pvps.org/wp-content/uploads/2020/01/IEA-PVPS_T13-01_2014_Review_of_Failures_of_Photovoltaic_Modules_Final.pdf" target="_blank" rel="noreferrer">원문 보기</a></p>
+          <div class="tags"><span class="tag red">CRACK</span><span class="tag">EL</span><span class="tag orange">Failure Mode</span></div>
+        </article>
+
+        <article class="ref-card">
+          <h3>Deitsch et al.: Automatic Classification of Defective PV Module Cells in EL Images</h3>
+          <p>EL 이미지는 PV 모듈의 미세 결함을 볼 수 있지만 수동 분석은 시간과 전문성이 많이 필요하다는 점을 제시합니다. 자동 분류/보조 분석의 필요성 근거입니다.</p>
+          <p><a href="https://arxiv.org/abs/1807.02894" target="_blank" rel="noreferrer">원문 보기</a></p>
+          <div class="tags"><span class="tag">EL Image</span><span class="tag green">AI Classification</span></div>
+        </article>
+
+        <article class="ref-card">
+          <h3>EPJ Photovoltaics: EL Observations Nomenclature</h3>
+          <p>EL 이미지에서 Cell crack과 기타 관찰 항목을 어떻게 명명하고 분류할지 정리한 자료입니다. 대시보드에서 defect_code와 pattern_hint를 분리하는 근거입니다.</p>
+          <p><a href="https://www.epj-pv.org/articles/epjpv/full_html/2024/01/pv20240039/pv20240039.html" target="_blank" rel="noreferrer">원문 보기</a></p>
+          <div class="tags"><span class="tag red">EL Crack</span><span class="tag">Nomenclature</span></div>
+        </article>
+
+        <article class="ref-card">
+          <h3>Comprehensive Review on Interfacial Delamination in PV Modules</h3>
+          <p>PV 모듈의 유리, Encapsulant, Cell, Backsheet 계면 박리 현상을 정리한 리뷰입니다. Bubble/Delamination을 공정 조건과 연결하는 근거로 사용합니다.</p>
+          <p><a href="https://www.sciencedirect.com/science/article/pii/S136403212300802X" target="_blank" rel="noreferrer">원문 보기</a></p>
+          <div class="tags"><span class="tag orange">Delamination</span><span class="tag">Interface</span></div>
+        </article>
+
+        <article class="ref-card">
+          <h3>Multiphysics Analysis of Backsheet Blistering in PV Modules</h3>
+          <p>Encapsulant 내부 결함, 수분 확산, 온도, 압력 변화가 Blister/Bubble 형성에 영향을 줄 수 있음을 설명합니다.</p>
+          <p><a href="https://www.sciencedirect.com/science/article/abs/pii/S0038092X19302798" target="_blank" rel="noreferrer">원문 보기</a></p>
+          <div class="tags"><span class="tag orange">Bubble</span><span class="tag">Moisture</span><span class="tag">Temperature</span></div>
+        </article>
+
+        <article class="ref-card">
+          <h3>PV Module Failure and Degradation Mechanisms Review</h3>
+          <p>PV 모듈 구성요소별 열화/고장 메커니즘을 정리한 리뷰입니다. Discoloration, Delamination, Bubble, PID 등을 일반 샘플 데이터에 반영했습니다.</p>
+          <p><a href="https://www.mdpi.com/2673-9941/4/1/3" target="_blank" rel="noreferrer">원문 보기</a></p>
+          <div class="tags"><span class="tag">Degradation</span><span class="tag green">Review</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 논문 기반 설명 이미지</h2>
+      <p class="hint">아래 이미지는 논문 원본 Figure를 복사한 것이 아니라, 논문에서 말하는 Failure Mode 해석을 현장 대시보드에 맞게 다시 그린 설명 도식입니다.</p>
+      <div class="figure-grid">
+        <article class="figure-card">
+          <img src="assets/el_crack_patterns.svg" alt="EL Crack Pattern 설명 이미지">
+          <div class="figure-caption">
+            <strong>EL Crack Pattern 해석</strong>
+            EL 이미지에서 보이는 Edge crack, Cross crack, Inactive area를 defect_code와 pattern_hint로 분리해 기록하고, Handling stress, Lamination stress, Interconnect issue 후보로 연결합니다.
+          </div>
+        </article>
+        <article class="figure-card">
+          <img src="assets/delamination_bubble_stack.svg" alt="Bubble Delamination Stack 설명 이미지">
+          <div class="figure-caption">
+            <strong>Bubble / Delamination 해석</strong>
+            Bubble과 Delamination은 단순 외관 NG가 아니라 Encapsulant 계면, 진공도, 온도, 압력, 냉각 시간 데이터를 함께 봐야 하는 Failure Mode로 다룹니다.
+          </div>
+        </article>
+        <article class="figure-card">
+          <img src="assets/literature_to_dashboard_map.svg" alt="논문 근거와 대시보드 매핑 이미지">
+          <div class="figure-caption">
+            <strong>논문 근거 → 현장 데이터 → 원인 후보</strong>
+            논문에서 정의한 Failure Mode를 현장 CSV 컬럼과 연결하고, 대시보드에서는 근거 데이터 3개 이상과 High/Medium/Low 신뢰도로 표시합니다.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>3. 논문별 핵심 설명</h2>
+      <ul class="explain">
+        <li><strong>IEA PVPS Failure Review</strong><br>PV 모듈 Failure Mode를 체계적으로 정리한 자료입니다. Crack은 EL에서 dark line, inactive area, 반복 pattern으로 관찰될 수 있고, 기계적 응력이나 공정 중 스트레스와 함께 검토해야 합니다.</li>
+        <li><strong>Deitsch et al. EL 이미지 자동 분류</strong><br>EL 이미지는 미세 Crack을 확인하는 데 유용하지만, 사람이 수동으로 분류하면 시간이 오래 걸리고 판정 편차가 생길 수 있습니다. 그래서 대시보드에서는 EL 이미지 판정을 AI 보조 분석 대상으로 두고 최종 확정은 담당자가 하도록 설계했습니다.</li>
+        <li><strong>EPJ Photovoltaics EL Nomenclature</strong><br>EL 관찰 항목을 일관된 이름으로 분류해야 데이터 분석이 가능합니다. 이 자료를 근거로 defect_code와 pattern_hint를 나누어 샘플 데이터를 설계했습니다.</li>
+        <li><strong>PV Delamination / Blistering 논문</strong><br>Bubble이나 Delamination은 Encapsulant void, 접착 저하, 수분, 온도, 진공, 압력 조건과 연결될 수 있습니다. 그래서 Bubble 원인 후보는 visual_bubble_count만 보지 않고 vacuum_kpa, lamination_temp_c, pressure, cooling_time을 함께 확인합니다.</li>
+        <li><strong>PV Degradation Review</strong><br>Discoloration, PID suspect, 장기 열화 이슈는 단기 라미네이션 공정 문제와 구분해야 합니다. 대시보드에서는 이런 항목을 Low confidence 또는 추가 검사 필요 항목으로 분리합니다.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. 원인분석에 반영하는 방식</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>불량/현상</th>
+            <th>문헌 기반 해석 방향</th>
+            <th>현장 데이터 연결</th>
+            <th>대시보드 표시</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Cell crack</td>
+            <td>EL dark line, inactive area, 반복 crack pattern은 handling, mechanical load, stringing/lamination stress와 연결 가능</td>
+            <td>EL event, equipment_id, lamination pressure, cycle time, handling/rework log</td>
+            <td>CRACK 원인 후보 High/Medium/Low</td>
+          </tr>
+          <tr>
+            <td>Bubble/Delamination</td>
+            <td>Encapsulant void, adhesion loss, moisture/temperature/vacuum condition이 Bubble/Blister와 연결 가능</td>
+            <td>vacuum_kpa, lamination_temp_c, pressure, cooling_time, visual_bubble_count</td>
+            <td>BUBBLE 원인 후보와 Profile 근거</td>
+          </tr>
+          <tr>
+            <td>Inactive cell area</td>
+            <td>Crack 또는 interconnect 문제로 특정 영역이 전기적으로 고립될 수 있음</td>
+            <td>EL image dark isolated area, flash low power, interconnect/solder log</td>
+            <td>EL/Flash 연계 원인 후보</td>
+          </tr>
+          <tr>
+            <td>Discoloration/PID suspect</td>
+            <td>장기 열화, 습도, 전압, UV 영향 가능성이 있어 단기 공정 이슈와 분리 필요</td>
+            <td>visual inspection, IV curve, humidity/temperature exposure, module edge pattern</td>
+            <td>Low confidence, 추가 검사 필요</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 강화된 RCA 분석 프레임</h2>
+      <p class="hint">논문은 원인을 바로 말해주는 정답지가 아니라, 현장 데이터를 어떤 순서로 의심하고 검증할지 정리하는 기준으로 사용합니다.</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>단계</th>
+            <th>분석 질문</th>
+            <th>필요 데이터</th>
+            <th>AI 출력</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1. 현상 분류</td>
+            <td>CRACK인지, BUBBLE/Delamination인지, Inactive area인지 먼저 분리했는가?</td>
+            <td>defect_code, defect_name, EL/AOI 판정, visual inspection</td>
+            <td>Failure Mode 태그와 우선 분석 트랙 지정</td>
+          </tr>
+          <tr>
+            <td>2. 패턴 해석</td>
+            <td>EL 관찰 항목의 위치와 모양이 일정한가, 특정 셀/모듈 영역에 반복되는가?</td>
+            <td>image_ref, cell_position, crack_pattern, inactive_area_flag</td>
+            <td>Handling, stringing, lamination stress, interconnect 후보 분리</td>
+          </tr>
+          <tr>
+            <td>3. 공정 조건 연결</td>
+            <td>불량 발생 시간과 진공도, 온도, 압력, cycle time 이상이 겹치는가?</td>
+            <td>vacuum_kpa, lamination_temp_c, pressure, process_time, alarm_time</td>
+            <td>Process window disturbance 후보와 신뢰도</td>
+          </tr>
+          <tr>
+            <td>4. 자재/Recipe 반복성</td>
+            <td>같은 BOM/Recipe 조합에서 평균 대비 몇 표준편차 이상 반복되는가?</td>
+            <td>BOM, recipe_id, lot_id, 7일 평균, 표준편차, 동일 조건 이력</td>
+            <td>BOM/Recipe sensitivity 후보와 재발 모니터링 항목</td>
+          </tr>
+          <tr>
+            <td>5. 경쟁 가설 관리</td>
+            <td>현재 데이터로 배제할 수 없는 대안 원인은 무엇인가?</td>
+            <td>pre-lamination EL, upstream handling log, rejudge/reinput, 검사자/검사기 이력</td>
+            <td>1차 후보, 경쟁 가설, 추가 검증 항목 분리 표시</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>6. 원인 후보별 전문 해석 예시</h2>
+      <div class="grid">
+        <article class="ref-card">
+          <h3>CRACK: Lamination Stress 후보</h3>
+          <p>설비/시간대 집중, pressure fluctuation, cycle time 증가가 같이 나타나면 라미네이션 중 stress 변화 가능성을 우선 검토합니다. 단, upstream micro-crack을 배제하려면 pre-lamination EL과 handling log가 필요합니다.</p>
+          <div class="tags"><span class="tag red">High 후보</span><span class="tag">경쟁 가설 필요</span></div>
+        </article>
+        <article class="ref-card">
+          <h3>CRACK: Pre-existing Micro-crack 후보</h3>
+          <p>EL pattern이 특정 cell edge나 string 방향으로 반복되고, 라미네이션 Profile 이상이 약하면 기존 micro-crack이 공정 중 확대됐을 가능성으로 분리합니다.</p>
+          <div class="tags"><span class="tag orange">Medium 후보</span><span class="tag">EL 원본 필요</span></div>
+        </article>
+        <article class="ref-card">
+          <h3>BUBBLE: Encapsulant / Vacuum 후보</h3>
+          <p>Bubble/Delamination은 외관 수량만으로 판단하지 않고 encapsulant lot, 진공 유지, 온도 균일성, pressure, cooling time을 함께 봅니다. Delamination 리뷰에서 제시하는 interface 관점을 데이터 컬럼으로 변환합니다.</p>
+          <div class="tags"><span class="tag orange">BUBBLE</span><span class="tag">Vacuum</span><span class="tag">Interface</span></div>
+        </article>
+        <article class="ref-card">
+          <h3>검사 편차 / 과검 후보</h3>
+          <p>특정 검사기나 검사자, 재판정 이력이 집중되면 설비 원인과 별도로 판정 편차 가능성을 분리합니다. 이 경우 AI는 설비 조치보다 EL/AOI 원본 재검증 액션을 우선 제안합니다.</p>
+          <div class="tags"><span class="tag green">검증 항목</span><span class="tag">Rejudge</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>7. 대시보드 신뢰도 산식 예시</h2>
+      <p class="hint">신뢰도는 논문 근거만으로 결정하지 않고, 현장 데이터와 겹치는 정도를 점수화합니다.</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>항목</th>
+            <th>가중치</th>
+            <th>High 판정 조건</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>불량 집중성</td><td>30%</td><td>동일 설비/동일 불량이 1시간 기준 5건 이상 또는 평균 대비 3배 이상</td></tr>
+          <tr><td>Profile 이상</td><td>25%</td><td>불량 집중 전후 30분 내 진공/온도/압력/time 이상 확인</td></tr>
+          <tr><td>설비 알람</td><td>15%</td><td>동일 시간대 HIGH 알람 또는 반복 알람 발생</td></tr>
+          <tr><td>문헌 Failure Mode 일치</td><td>20%</td><td>불량 관찰 형태와 문헌상 Failure Mode 해석 방향이 일치</td></tr>
+          <tr><td>BOM/Recipe 반복성</td><td>10%</td><td>동일 조건에서 최근 7일 중 2회 이상 반복 또는 3σ 초과</td></tr>
+        </tbody>
+      </table>
+      <div class="note">중요: 점수는 설비 자동 제어의 근거가 아니라, 사람이 어떤 데이터를 먼저 확인할지 정하는 우선순위입니다.</div>
+      <div class="print-row">
+        <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

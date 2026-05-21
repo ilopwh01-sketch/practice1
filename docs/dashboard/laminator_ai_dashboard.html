@@ -1,0 +1,1833 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laminator AI 불량 원인 분석 대시보드</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --soft: #f5f7f9;
+      --panel: #ffffff;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 292px minmax(0, 1fr);
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 28px 22px;
+      background: var(--navy);
+      color: #f8fbfd;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .side-card {
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #dce7ee;
+      font-size: 13px;
+    }
+
+    .side-card strong {
+      display: block;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    nav a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      color: #dce7ee;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.16);
+    }
+
+    main {
+      padding: 34px;
+    }
+
+    .shell {
+      width: min(1240px, 100%);
+      margin: 0 auto;
+    }
+
+    header,
+    section,
+    .card,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 28px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h2,
+    h3,
+    h4,
+    p {
+      margin-top: 0;
+    }
+
+    header h2 {
+      margin-bottom: 10px;
+      font-size: 31px;
+      line-height: 1.24;
+      letter-spacing: 0;
+    }
+
+    header p,
+    .hint {
+      color: var(--muted);
+    }
+
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      min-height: 30px;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .chip.red {
+      background: #f7d7d7;
+      color: #842525;
+    }
+
+    .chip.orange {
+      background: #fff0d4;
+      color: #70420f;
+    }
+
+    .chip.green {
+      background: #dff3e9;
+      color: #135b3b;
+    }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    section h3 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      min-height: 128px;
+      padding: 16px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .value {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h4 {
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .alert {
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      margin-bottom: 10px;
+    }
+
+    .priority {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 30px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .p1 {
+      background: var(--red);
+    }
+
+    .p2 {
+      background: var(--orange);
+    }
+
+    .p3 {
+      background: var(--green);
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .alert p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status {
+      color: var(--red);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .bars {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr) 72px;
+      gap: 10px;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .track {
+      height: 14px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e4ebf1;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--blue);
+    }
+
+    .fill.red {
+      background: var(--red);
+    }
+
+    .fill.orange {
+      background: var(--orange);
+    }
+
+    .fill.green {
+      background: var(--green);
+    }
+
+    .bar strong {
+      text-align: right;
+    }
+
+    .heatmap {
+      display: grid;
+      grid-template-columns: 76px repeat(9, minmax(0, 1fr));
+      gap: 5px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .cell {
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-weight: 900;
+      padding: 4px;
+    }
+
+    .cell.head {
+      background: #ffffff;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .cell.warn {
+      background: #fff0d4;
+      color: #70420f;
+    }
+
+    .cell.critical {
+      background: #f7d7d7;
+      color: #842525;
+    }
+
+    .timeline {
+      position: relative;
+      display: grid;
+      gap: 12px;
+      padding-left: 20px;
+    }
+
+    .timeline::before {
+      content: "";
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      left: 6px;
+      width: 2px;
+      background: #c8d4df;
+    }
+
+    .event {
+      position: relative;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .event::before {
+      content: "";
+      position: absolute;
+      top: 16px;
+      left: -19px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--orange);
+    }
+
+    .event.critical::before {
+      background: var(--red);
+    }
+
+    .event strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .evidence-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      gap: 14px;
+    }
+
+    .cause {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      margin-bottom: 12px;
+    }
+
+    .cause-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .cause h4 {
+      margin: 0;
+    }
+
+    .confidence {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 10px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .high {
+      background: var(--red);
+    }
+
+    .medium {
+      background: var(--orange);
+    }
+
+    .low {
+      background: #415161;
+    }
+
+    .evidence-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .evidence-list li {
+      padding: 10px;
+      border-radius: 8px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      font-size: 14px;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-size: 14px;
+      background: #ffffff;
+    }
+
+    .table th,
+    .table td {
+      padding: 11px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .metric-table td:nth-child(2),
+    .metric-table td:nth-child(3),
+    .metric-table td:nth-child(4) {
+      text-align: right;
+    }
+
+    .profile-row {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) 74px;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+    }
+
+    .spark {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 4px;
+      align-items: end;
+      min-height: 68px;
+      padding: 8px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .spark span {
+      display: block;
+      min-height: 8px;
+      border-radius: 5px 5px 0 0;
+      background: var(--blue);
+    }
+
+    .spark .warn {
+      background: var(--orange);
+    }
+
+    .spark .critical {
+      background: var(--red);
+    }
+
+    .actions {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .actions li {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr);
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .tag {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 28px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .sources a {
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .print-row {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .upload-box {
+      display: grid;
+      gap: 12px;
+      padding: 18px;
+      border: 2px dashed #b7c6d4;
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .file-input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      font: inherit;
+    }
+
+    .upload-summary {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .upload-chip {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      font-size: 13px;
+    }
+
+    .upload-chip strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .file-list {
+      display: grid;
+      gap: 8px;
+      margin: 12px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .file-list li {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1080px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+        height: auto;
+      }
+
+      main {
+        padding: 22px;
+      }
+
+      .kpi-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .grid-2,
+      .grid-3,
+      .evidence-grid,
+      .upload-summary {
+        grid-template-columns: 1fr;
+      }
+
+      .heatmap {
+        grid-template-columns: 76px repeat(4, minmax(0, 1fr));
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .alert,
+      .bar,
+      .profile-row,
+      .actions li {
+        grid-template-columns: 1fr;
+      }
+
+      .bar strong {
+        text-align: left;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .app {
+        display: block;
+      }
+
+      aside,
+      .print-row {
+        display: none;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      header,
+      section,
+      .card,
+      .panel {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">AI</div>
+        <h1>Laminator<br>불량 분석</h1>
+      </div>
+
+      <div class="side-card">
+        <strong>분석 기준</strong>
+        2026-05-20 07:00 ~ 2026-05-21 07:00
+      </div>
+
+      <div class="side-card">
+        <strong>우선 감소 대상</strong>
+        1순위 CRACK<br>
+        2순위 BUBBLE
+      </div>
+
+      <nav aria-label="대시보드 목차">
+        <a href="#overview">Overview</a>
+        <a href="#data-import">CSV 불러오기</a>
+        <a href="#alerts">핵심 이슈</a>
+        <a href="#defect">불량 Pareto</a>
+        <a href="#equipment">설비/시간 집중</a>
+        <a href="#profile">Profile/알람</a>
+        <a href="#cause">AI 원인 후보</a>
+        <a href="#validation">검증/조치</a>
+        <a href="#research">논문 근거</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="shell">
+        <header id="overview">
+          <div class="eyebrow">팀장 보고용 HTML 대시보드</div>
+          <h2>LAM-03 14시대 CRACK 집중 및 Profile 이상 연계 확인</h2>
+          <p>
+            샘플 데이터 기반 시연 화면입니다. AI는 원인을 확정하지 않고, 불량 집중·Profile 이상·설비 알람·수량 검증 근거를 묶어 원인 후보와 조치 필요 사항을 제안합니다.
+          </p>
+          <div class="topline">
+            <div class="chips">
+              <span class="chip red">P1 CRACK 집중</span>
+              <span class="chip red">P1 Profile 동시 이탈</span>
+              <span class="chip orange">P2 수량 불일치</span>
+              <span class="chip green">담당자 승인 필요</span>
+            </div>
+            <span class="chip" id="data-source-chip">데이터: sample_data</span>
+          </div>
+        </header>
+
+        <section id="data-import">
+          <h3>0. 프로젝트 CSV 불러오기</h3>
+          <p class="hint">이 영역에 CSV를 넣으면 아래 KPI, Pareto, 설비/시간 집중, 검증 숫자가 현재 파일 기준으로 다시 계산됩니다. 파일은 외부로 업로드되지 않고 브라우저 안에서만 읽습니다.</p>
+          <div class="upload-box">
+            <label for="dashboardCsvFiles"><strong>프로젝트 CSV 선택</strong></label>
+            <input class="file-input" id="dashboardCsvFiles" type="file" accept=".csv,text/csv" multiple>
+            <p class="hint">권장 파일: daily_production_summary, defect_events, equipment_alarm, laminator_profile_snapshot CSV를 함께 선택하세요.</p>
+          </div>
+          <div class="upload-summary" id="uploadSummary">
+            <div class="upload-chip"><strong>생산 실적</strong>샘플 데이터 대기</div>
+            <div class="upload-chip"><strong>불량 이벤트</strong>샘플 데이터 대기</div>
+            <div class="upload-chip"><strong>설비 알람</strong>샘플 데이터 대기</div>
+            <div class="upload-chip"><strong>Profile</strong>샘플 데이터 대기</div>
+          </div>
+          <ul class="file-list" id="fileList"></ul>
+        </section>
+
+        <div class="kpi-grid">
+          <div class="card">
+            <strong>총 생산 투입</strong>
+            <p class="value" id="kpiInput">8,524</p>
+            <p class="sub" id="kpiInputSub">input_qty 합계</p>
+          </div>
+          <div class="card">
+            <strong>총 검사 수량</strong>
+            <p class="value" id="kpiInspection">8,463</p>
+            <p class="sub" id="kpiInspectionSub">inspection_qty 합계</p>
+          </div>
+          <div class="card">
+            <strong>총 NG 수량</strong>
+            <p class="value" id="kpiNg">55</p>
+            <p class="sub" id="kpiNgSub">daily summary 기준</p>
+          </div>
+          <div class="card">
+            <strong>전체 NG율</strong>
+            <p class="value" id="kpiNgRate">0.65%</p>
+            <p class="sub" id="kpiNgRateSub">55 / 8,463</p>
+          </div>
+          <div class="card">
+            <strong>최우선 설비</strong>
+            <p class="value" id="kpiTopEquipment">LAM-03</p>
+            <p class="sub" id="kpiTopEquipmentSub">NG율 1.04%</p>
+          </div>
+        </div>
+
+        <section id="alerts">
+          <h3>1. 금일 핵심 이슈</h3>
+          <p class="hint">팀장 보고 첫 화면에는 오늘의 위험 신호와 조치 필요 사항을 먼저 표시한다.</p>
+          <div id="alertList">
+            <div class="alert">
+              <span class="priority p1">P1</span>
+              <div>
+                <strong>LAM-03 14:00-15:00 CRACK 10건 집중</strong>
+                <p>동일 설비/동일 불량이 1시간 내 5건 이상 발생 기준을 초과했다.</p>
+              </div>
+              <span class="status">즉시 확인</span>
+            </div>
+            <div class="alert">
+              <span class="priority p1">P1</span>
+              <div>
+                <strong>진공도 하락 및 압력 변동 알람이 CRACK 집중 시간과 겹침</strong>
+                <p>13:58 Vacuum pressure deviation, 14:06 Press pressure fluctuation 알람 발생.</p>
+              </div>
+              <span class="status">원인 후보</span>
+            </div>
+            <div class="alert">
+              <span class="priority p2">P2</span>
+              <div>
+                <strong>LAM-03 14시대 수량 불일치 및 재투입 이력</strong>
+                <p>output 187, inspection 186, 재판정 1건, 재투입 2건으로 MES 재확인 필요.</p>
+              </div>
+              <span class="status">검증 필요</span>
+            </div>
+          </div>
+        </section>
+
+        <section id="defect">
+          <h3>2. 불량 Pareto</h3>
+          <p class="hint" id="defectHint">불량 이벤트 상세 파일 기준으로 CRACK이 16건이며 우선 감소 대상 1순위로 표시한다.</p>
+          <div class="grid-2">
+            <div class="panel">
+              <h4>불량 코드별 발생 비중</h4>
+              <div class="bars" id="defectBars">
+                <div class="bar">
+                  <span>CRACK</span>
+                  <div class="track"><div class="fill red" style="width: 53.3%"></div></div>
+                  <strong>16건</strong>
+                </div>
+                <div class="bar">
+                  <span>BUBBLE</span>
+                  <div class="track"><div class="fill orange" style="width: 16.7%"></div></div>
+                  <strong>5건</strong>
+                </div>
+                <div class="bar">
+                  <span>EDGE</span>
+                  <div class="track"><div class="fill" style="width: 16.7%"></div></div>
+                  <strong>5건</strong>
+                </div>
+                <div class="bar">
+                  <span>FOREIGN</span>
+                  <div class="track"><div class="fill green" style="width: 13.3%"></div></div>
+                  <strong>4건</strong>
+                </div>
+              </div>
+            </div>
+            <div class="panel">
+              <h4>우선 관리 판단</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>순위</th>
+                    <th>불량</th>
+                    <th>판단</th>
+                  </tr>
+                </thead>
+                <tbody id="priorityBody">
+                  <tr>
+                    <td>1</td>
+                    <td>CRACK</td>
+                    <td>14시대 LAM-03 집중 및 Profile 이상 동시 발생</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>BUBBLE</td>
+                    <td>우선 감소 대상이나 금일 집중성은 CRACK보다 낮음</td>
+                  </tr>
+                  <tr>
+                    <td>3</td>
+                    <td>EDGE/FOREIGN</td>
+                    <td>상시 모니터링 대상으로 유지</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="equipment">
+          <h3>3. 설비/시간 집중</h3>
+          <p class="hint" id="equipmentHint">LAM-03은 검사 2,790매, NG 29매, NG율 1.04%로 LAM-01/02 대비 약 2.3배 높다.</p>
+          <div class="grid-2">
+            <div class="panel">
+              <h4>설비별 NG율</h4>
+              <table class="table metric-table">
+                <thead>
+                  <tr>
+                    <th>설비</th>
+                    <th>검사</th>
+                    <th>NG</th>
+                    <th>NG율</th>
+                  </tr>
+                </thead>
+                <tbody id="equipmentBody">
+                  <tr>
+                    <td>LAM-03</td>
+                    <td>2,790</td>
+                    <td>29</td>
+                    <td><strong>1.04%</strong></td>
+                  </tr>
+                  <tr>
+                    <td>LAM-01</td>
+                    <td>2,850</td>
+                    <td>13</td>
+                    <td>0.46%</td>
+                  </tr>
+                  <tr>
+                    <td>LAM-02</td>
+                    <td>2,823</td>
+                    <td>13</td>
+                    <td>0.46%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel">
+              <h4>시간대별 NG Heatmap</h4>
+              <div class="heatmap" id="timeHeatmap" aria-label="설비별 시간대 NG 히트맵">
+                <div class="cell head">설비/시간</div>
+                <div class="cell head">12</div>
+                <div class="cell head">13</div>
+                <div class="cell head">14</div>
+                <div class="cell head">15</div>
+                <div class="cell head">16</div>
+                <div class="cell head">17</div>
+                <div class="cell head">18</div>
+                <div class="cell head">19</div>
+                <div class="cell head">20</div>
+                <div class="cell head">LAM-01</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">0</div>
+                <div class="cell">1</div>
+                <div class="cell">0</div>
+                <div class="cell head">LAM-02</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">0</div>
+                <div class="cell">1</div>
+                <div class="cell head">LAM-03</div>
+                <div class="cell">1</div>
+                <div class="cell warn">2</div>
+                <div class="cell critical">10</div>
+                <div class="cell warn">4</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+                <div class="cell">1</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="profile">
+          <h3>4. Profile/알람 Timeline</h3>
+          <p class="hint" id="profileHint">공정 time, 온도, 진공도 변화가 14시대 CRACK 집중과 같은 시간대에 나타난다.</p>
+          <div class="grid-2">
+            <div class="panel">
+              <h4>Profile 변화</h4>
+              <div class="profile-row">
+                <strong>진공도</strong>
+                <div class="spark" aria-label="진공도 스파크라인">
+                  <span style="height: 52px"></span><span style="height: 50px"></span><span class="warn" style="height: 36px"></span><span class="critical" style="height: 28px"></span><span class="critical" style="height: 22px"></span><span class="critical" style="height: 18px"></span><span class="critical" style="height: 24px"></span><span class="warn" style="height: 32px"></span><span class="warn" style="height: 40px"></span><span style="height: 46px"></span><span style="height: 50px"></span><span style="height: 52px"></span>
+                </div>
+                <span id="profileVacuum">-89.1 kPa</span>
+              </div>
+              <div class="profile-row">
+                <strong>상부 온도</strong>
+                <div class="spark" aria-label="상부 온도 스파크라인">
+                  <span style="height: 24px"></span><span style="height: 26px"></span><span class="warn" style="height: 42px"></span><span class="warn" style="height: 48px"></span><span class="critical" style="height: 54px"></span><span class="critical" style="height: 58px"></span><span class="critical" style="height: 56px"></span><span class="warn" style="height: 46px"></span><span class="warn" style="height: 34px"></span><span style="height: 28px"></span><span style="height: 25px"></span><span style="height: 24px"></span>
+                </div>
+                <span id="profileTemp">150.2 C</span>
+              </div>
+              <div class="profile-row">
+                <strong>Cycle</strong>
+                <div class="spark" aria-label="공정 time 스파크라인">
+                  <span style="height: 24px"></span><span style="height: 25px"></span><span class="warn" style="height: 40px"></span><span class="warn" style="height: 48px"></span><span class="critical" style="height: 54px"></span><span class="critical" style="height: 60px"></span><span class="critical" style="height: 57px"></span><span class="warn" style="height: 44px"></span><span class="warn" style="height: 34px"></span><span style="height: 28px"></span><span style="height: 25px"></span><span style="height: 24px"></span>
+                </div>
+                <span id="profileCycle">99.0 sec</span>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h4>알람/불량 시간 흐름</h4>
+              <div class="timeline" id="profileTimeline">
+                <div class="event">
+                  <strong>13:58:21 · ALM-301</strong>
+                  Vacuum pressure deviation, HIGH, 310 sec
+                </div>
+                <div class="event">
+                  <strong>14:00~14:20 · Profile WARN/ABNORMAL</strong>
+                  진공도 하락, 압력 저하, 상부 온도 상승 구간
+                </div>
+                <div class="event critical">
+                  <strong>14:04~14:56 · CRACK 10건</strong>
+                  동일 설비/동일 불량 집중 기준 초과
+                </div>
+                <div class="event">
+                  <strong>14:06:09 · ALM-304</strong>
+                  Press pressure fluctuation, HIGH, 188 sec
+                </div>
+                <div class="event">
+                  <strong>15:02:41 · Recovery phase</strong>
+                  Vacuum pressure deviation, MEDIUM, 이후 CRACK 감소
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="cause">
+          <h3>5. AI 원인 후보와 근거</h3>
+          <p class="hint">논문 기반 원칙에 따라 AI 결론은 확정이 아니라 근거와 신뢰도를 가진 원인 후보로 표시한다. 상세한 경쟁 가설과 점수화 기준은 <a href="../references/pv_root_cause_framework.html">전문 RCA 프레임워크</a>를 기준으로 한다.</p>
+          <div class="evidence-grid">
+            <div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4 id="primaryCauseTitle">후보 1. Lamination vacuum/pressure process window disturbance</h4>
+                  <span class="confidence high">High</span>
+                </div>
+                <ul class="evidence-list" id="primaryCauseEvidence">
+                  <li>불량 집중: LAM-03 14:00-15:00 CRACK 10건</li>
+                  <li>설비 알람: 13:58 ALM-301 Vacuum pressure deviation, 14:06 ALM-304 Press pressure fluctuation</li>
+                  <li>Profile: vacuum_kpa -96.2에서 -89.1까지 하락, cycle_time_sec 92.4에서 99.0까지 증가</li>
+                  <li>전문 해석: EL 기반 Cell crack Failure Mode가 특정 설비/시간대와 공정 Profile 이상에 동시에 연결되어 1차 공정 원인 후보로 판단</li>
+                </ul>
+              </div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4>후보 2. Pre-existing micro-crack propagation 또는 thermal gradient 기여</h4>
+                  <span class="confidence medium">Medium</span>
+                </div>
+                <ul class="evidence-list">
+                  <li>Profile: upper_temp_c 146.5에서 150.2까지 상승</li>
+                  <li>설비 알람: 14:29 ALM-208 Upper heater deviation</li>
+                  <li>경쟁 가설: 이미 존재하던 micro-crack이 라미네이션 스트레스에서 확장되었을 가능성</li>
+                  <li>검증 필요: pre-lamination EL, upstream handling/stringing log, crack 위치가 edge/cross/inactive area 중 어디인지 확인</li>
+                </ul>
+              </div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4>후보 3. 재판정/재투입으로 인한 수량 검증 필요</h4>
+                  <span class="confidence low">Low</span>
+                </div>
+                <ul class="evidence-list">
+                  <li>LAM-03 14시대 output 187, inspection 186으로 1매 차이</li>
+                  <li>재판정 1건, 재투입 2건 이력 존재</li>
+                  <li>불량 원인보다는 데이터 검증 필요 항목으로 분리 관리</li>
+                </ul>
+              </div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4>후보 4. PV 모듈 Failure Mode 관점의 Bubble/Delamination 리스크</h4>
+                  <span class="confidence medium">Medium</span>
+                </div>
+                <ul class="evidence-list">
+                  <li>문헌 매핑: Bubble/Delamination은 Encapsulant void, 접착 저하, 수분/온도/진공 조건과 함께 검토</li>
+                  <li>현장 데이터: LAM-03 14시대 진공도 하락과 온도 상승이 함께 나타남</li>
+                  <li>확인 필요: Visual bubble count, 냉각 시간, Encapsulant Lot, Recipe 변경 이력</li>
+                </ul>
+              </div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4>배제/분리해야 할 가설. 장기 열화/PID 또는 검사 편차</h4>
+                  <span class="confidence low">Low</span>
+                </div>
+                <ul class="evidence-list">
+                  <li>장기 열화/PID는 특정 설비 1시간 구간 집중보다 현장 사용 환경, 습도, 전압, 장기 노출과 더 관련이 큼</li>
+                  <li>검사기/검사관 편차는 동일 시간대 다른 설비에서도 유사하게 증가하는지 확인해야 함</li>
+                  <li>현재 샘플에서는 LAM-03 14시대에 집중되어 공정/설비 원인 후보가 더 우선</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="panel">
+              <h4>근거 표시 원칙</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>신뢰도</th>
+                    <th>표시 기준</th>
+                  </tr>
+                </thead>
+                <tbody id="validationBody">
+                  <tr>
+                    <td><strong>High</strong></td>
+                    <td>불량 집중, Profile 이상, 설비 알람이 같은 시간대에 동시에 확인됨</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Medium</strong></td>
+                    <td>불량 집중과 Profile 이상 또는 알람 중 2개 근거가 연결됨</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Low</strong></td>
+                    <td>단일 근거만 있거나 수량 검증이 필요한 상태</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <section id="validation">
+          <h3>6. 검증 및 후속 조치</h3>
+          <p class="hint">사람이 최종 승인해야 할 항목을 분리해 AI 결과 과신을 막는다.</p>
+          <div class="grid-2">
+            <div class="panel">
+              <h4>필수 검증 숫자</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>항목</th>
+                    <th>값</th>
+                    <th>상태</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>07-07 기준 적용</td>
+                    <td>2026-05-20 07:00 ~ 2026-05-21 07:00</td>
+                    <td>확인</td>
+                  </tr>
+                  <tr>
+                    <td>NG 수량/종류</td>
+                    <td>55매 / CRACK, BUBBLE, EDGE, FOREIGN</td>
+                    <td>확인</td>
+                  </tr>
+                  <tr>
+                    <td>불량률</td>
+                    <td>0.65%</td>
+                    <td>확인</td>
+                  </tr>
+                  <tr>
+                    <td>수량 불일치</td>
+                    <td>LAM-03 14시대 output-inspection 1매 차이</td>
+                    <td>MES 확인 필요</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="panel">
+              <h4>보고 후 조치</h4>
+              <ul class="actions">
+                <li>
+                  <span class="tag">설비</span>
+                  <div>LAM-03 진공/압력 계통 점검 및 14시대 알람 이력 상세 확인</div>
+                </li>
+                <li>
+                  <span class="tag">Recipe</span>
+                  <div>CRACK 발생 전후 Recipe 조건 및 공정 time 변경 여부 확인</div>
+                </li>
+                <li>
+                  <span class="tag">모니터링</span>
+                  <div>익일 동일 시간대 CRACK/BUBBLE 재발 여부 집중 모니터링</div>
+                </li>
+                <li>
+                  <span class="tag">승인</span>
+                  <div>원인 후보 확정, 조치 계획, 팀장 보고 문구는 담당자가 최종 승인</div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3>7. 분석 엑셀 구성안</h3>
+          <p class="hint">사용자가 “알아서” 요청한 항목은 현장 검증 흐름에 맞춰 아래 시트로 구성한다.</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>시트명</th>
+                <th>목적</th>
+                <th>주요 컬럼</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Overview</td>
+                <td>일일 생산/NG 요약</td>
+                <td>input, output, inspection, NG, NG율</td>
+              </tr>
+              <tr>
+                <td>Defect_Pareto</td>
+                <td>CRACK/BUBBLE 우선 관리</td>
+                <td>defect_code, count, ratio, priority</td>
+              </tr>
+              <tr>
+                <td>Equipment_NG_Rate</td>
+                <td>설비별 집중 확인</td>
+                <td>equipment_id, inspection, NG, NG율</td>
+              </tr>
+              <tr>
+                <td>Time_Heatmap</td>
+                <td>시간대 집중 확인</td>
+                <td>time_bucket, equipment_id, NG</td>
+              </tr>
+              <tr>
+                <td>Profile_Anomaly</td>
+                <td>공정 time, 온도, 진공도 이상 확인</td>
+                <td>sample_time, equipment_id, cycle_time, temp, vacuum</td>
+              </tr>
+              <tr>
+                <td>Alarm_Link</td>
+                <td>알람과 불량 집중 연계</td>
+                <td>alarm_time, alarm_code, severity, linked_defect</td>
+              </tr>
+              <tr>
+                <td>Quantity_Validation</td>
+                <td>수량 불일치 검증</td>
+                <td>output, inspection, NG, rejudge, reinput</td>
+              </tr>
+              <tr>
+                <td>Evidence_Log</td>
+                <td>AI 원인 후보 근거 보관</td>
+                <td>candidate, evidence_type, evidence_value, confidence</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="research" class="sources">
+          <h3>8. 논문 기반 설계 근거</h3>
+          <p class="hint">대시보드의 AI 원인 후보 표시 방식은 제조 RCA/이상탐지 논문에서 공통적으로 강조하는 설명가능성, 다중 데이터 결합, 전문가 검증 원칙을 반영했다. 논문별 설명 이미지는 <a href="../references/paper_reference.html">논문 레퍼런스 화면</a>에서 확인한다.</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>논문 근거</th>
+                <th>대시보드 반영</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="https://www.sciencedirect.com/science/article/pii/S0007850624000283" target="_blank" rel="noreferrer">Calaon et al., 2024</a>: 제조 RCA에서 다중 데이터와 XAI 결합을 제안</td>
+                <td>불량 이벤트, Profile, 알람, 수량 검증을 한 원인 후보에 묶어 표시</td>
+              </tr>
+              <tr>
+                <td><a href="https://iea-pvps.org/wp-content/uploads/2020/01/IEA-PVPS_T13-01_2014_Review_of_Failures_of_Photovoltaic_Modules_Final.pdf" target="_blank" rel="noreferrer">IEA PVPS Task 13</a>: PV 모듈 Failure Mode와 EL 검사에서 Crack/Inactive area 식별 기준 정리</td>
+                <td>EL dark line, inactive area, 반복 crack pattern을 CRACK 원인 후보 근거로 사용</td>
+              </tr>
+              <tr>
+                <td><a href="https://arxiv.org/abs/1807.02894" target="_blank" rel="noreferrer">Deitsch et al., 2019</a>: EL 이미지 수동 분석은 시간과 전문성이 많이 필요하며 자동 분류가 가능함</td>
+                <td>EL 이미지 판단을 AI 보조 분석 대상으로 두고, 최종 확정은 담당자 승인으로 분리</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.sciencedirect.com/science/article/pii/S136403212300802X" target="_blank" rel="noreferrer">PV Delamination Review</a>: 계면 박리와 Encapsulant/Backsheet/Cell 계면 문제 정리</td>
+                <td>Bubble/Delamination 후보를 진공도, 온도, 압력, 냉각 시간 데이터와 연결</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.sciencedirect.com/science/article/abs/pii/S1568494622004069" target="_blank" rel="noreferrer">Choi et al., 2022</a>: 이상 탐지 결과에 센서 영향도/원인 설명 필요</td>
+                <td>진공도, 온도, 공정 time을 근거 데이터로 표시하고 신뢰도 부여</td>
+              </tr>
+              <tr>
+                <td><a href="https://arxiv.org/abs/2402.00043" target="_blank" rel="noreferrer">Wehner et al., 2024</a>: 제조 RCA에서 전문가 지식과 데이터 기반 모델의 피드백 루프 강조</td>
+                <td>AI 결론을 확정하지 않고 담당자 최종 승인 항목을 분리</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.sciencedirect.com/science/article/pii/S0166361524000393" target="_blank" rel="noreferrer">Allen et al., 2024</a>: 도메인 지식 기반 시공간 분석으로 이상 원인을 설명</td>
+                <td>불량 집중 시간과 Profile/알람 타임라인을 함께 시각화</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="print-row">
+            <button class="btn" type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script>
+    const state = {
+      production: [],
+      defects: [],
+      alarms: [],
+      profile: [],
+      files: []
+    };
+
+    const fileInput = document.getElementById("dashboardCsvFiles");
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function fmtNumber(value) {
+      if (!Number.isFinite(value)) return "-";
+      return value.toLocaleString("ko-KR", { maximumFractionDigits: 0 });
+    }
+
+    function fmtRate(value) {
+      if (!Number.isFinite(value)) return "-";
+      return `${value.toFixed(2)}%`;
+    }
+
+    function toNumber(value) {
+      const cleaned = String(value ?? "").replaceAll(",", "").replace("%", "").trim();
+      const parsed = Number(cleaned);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function parseCsv(text) {
+      const rows = [];
+      let row = [];
+      let value = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < text.length; i += 1) {
+        const char = text[i];
+        const next = text[i + 1];
+
+        if (char === '"' && inQuotes && next === '"') {
+          value += '"';
+          i += 1;
+        } else if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === "," && !inQuotes) {
+          row.push(value);
+          value = "";
+        } else if ((char === "\n" || char === "\r") && !inQuotes) {
+          if (char === "\r" && next === "\n") i += 1;
+          row.push(value);
+          if (row.some((cell) => cell.trim() !== "")) rows.push(row);
+          row = [];
+          value = "";
+        } else {
+          value += char;
+        }
+      }
+
+      row.push(value);
+      if (row.some((cell) => cell.trim() !== "")) rows.push(row);
+      return rows;
+    }
+
+    function toObjects(rows) {
+      if (rows.length === 0) return { headers: [], rows: [] };
+      const headers = rows[0].map((header) => header.replace(/^\uFEFF/, "").trim());
+      const objects = rows.slice(1).map((row) => {
+        const object = {};
+        headers.forEach((header, index) => {
+          object[header.toLowerCase()] = row[index] ?? "";
+        });
+        return object;
+      });
+      return { headers, rows: objects };
+    }
+
+    function inferFileType(headers) {
+      const set = new Set(headers.map((header) => header.toLowerCase()));
+      if (set.has("event_time") && set.has("defect_code")) return "defects";
+      if (set.has("alarm_time") && set.has("alarm_code")) return "alarms";
+      if (set.has("sample_time") && set.has("recipe_id")) return "profile";
+      if (set.has("work_date") && set.has("time_bucket")) return "production";
+      return "unknown";
+    }
+
+    function getValue(row, keys) {
+      for (const key of keys) {
+        const value = row[key.toLowerCase()];
+        if (value !== undefined && String(value).trim() !== "") return value;
+      }
+      return "";
+    }
+
+    function hourLabel(value) {
+      const text = String(value ?? "");
+      const timeMatch = text.match(/(?:^|\s)(\d{1,2}):\d{2}/);
+      if (timeMatch) return timeMatch[1].padStart(2, "0");
+      const date = new Date(text);
+      if (!Number.isNaN(date.getTime())) return String(date.getHours()).padStart(2, "0");
+      return text.slice(0, 2) || "--";
+    }
+
+    function aggregateBy(rows, keyFn, valueFn = () => 1) {
+      const map = new Map();
+      rows.forEach((row) => {
+        const key = keyFn(row);
+        if (!key) return;
+        map.set(key, (map.get(key) || 0) + valueFn(row));
+      });
+      return [...map.entries()].map(([key, value]) => ({ key, value }));
+    }
+
+    function groupProductionByEquipment(rows) {
+      const map = new Map();
+      rows.forEach((row) => {
+        const equipment = getValue(row, ["equipment_id"]) || "UNKNOWN";
+        const current = map.get(equipment) || { equipment, inspection: 0, ng: 0 };
+        current.inspection += toNumber(getValue(row, ["inspection_qty"]));
+        current.ng += toNumber(getValue(row, ["ng_qty"]));
+        map.set(equipment, current);
+      });
+      return [...map.values()]
+        .map((item) => ({ ...item, rate: item.inspection ? (item.ng / item.inspection) * 100 : 0 }))
+        .sort((a, b) => b.rate - a.rate || b.ng - a.ng);
+    }
+
+    function defectCounts() {
+      if (state.defects.length > 0) {
+        return aggregateBy(state.defects, (row) => getValue(row, ["defect_code", "defect_name"]) || "UNKNOWN")
+          .sort((a, b) => b.value - a.value);
+      }
+
+      return aggregateBy(
+        state.production,
+        (row) => getValue(row, ["top_defect_code", "top_defect_name"]) || "UNKNOWN",
+        (row) => toNumber(getValue(row, ["ng_qty"]))
+      ).sort((a, b) => b.value - a.value);
+    }
+
+    function concentrationGroups() {
+      const source = state.defects.length > 0 ? state.defects : state.production;
+      const groups = new Map();
+
+      source.forEach((row) => {
+        const equipment = getValue(row, ["equipment_id"]) || "UNKNOWN";
+        const defect = getValue(row, ["defect_code", "top_defect_code", "defect_name", "top_defect_name"]) || "UNKNOWN";
+        const timeValue = getValue(row, ["event_time", "time_bucket"]);
+        const hour = hourLabel(timeValue);
+        const key = `${equipment}|${hour}|${defect}`;
+        const count = state.defects.length > 0 ? 1 : toNumber(getValue(row, ["ng_qty"]));
+        groups.set(key, (groups.get(key) || 0) + count);
+      });
+
+      return [...groups.entries()]
+        .map(([key, count]) => {
+          const [equipment, hour, defect] = key.split("|");
+          return { equipment, hour, defect, count };
+        })
+        .sort((a, b) => b.count - a.count);
+    }
+
+    function quantityMismatches() {
+      return state.production.filter((row) => {
+        const output = toNumber(getValue(row, ["output_qty"]));
+        const inspection = toNumber(getValue(row, ["inspection_qty"]));
+        return output && inspection && output !== inspection;
+      });
+    }
+
+    function profileSummary(equipment) {
+      const rows = state.profile.filter((row) => !equipment || getValue(row, ["equipment_id"]) === equipment);
+      if (rows.length === 0) return null;
+      const vacuumValues = rows.map((row) => toNumber(getValue(row, ["vacuum_kpa"]))).filter(Number.isFinite);
+      const tempValues = rows.map((row) => toNumber(getValue(row, ["upper_temp_c", "temperature_c", "lamination_temp_c"]))).filter(Number.isFinite);
+      const cycleValues = rows.map((row) => toNumber(getValue(row, ["cycle_time_sec", "process_time"]))).filter(Number.isFinite);
+      return {
+        vacuumWorst: vacuumValues.length ? Math.max(...vacuumValues) : 0,
+        tempMax: tempValues.length ? Math.max(...tempValues) : 0,
+        cycleMax: cycleValues.length ? Math.max(...cycleValues) : 0
+      };
+    }
+
+    function alarmsFor(equipment, hour) {
+      return state.alarms.filter((row) => {
+        const alarmEquipment = getValue(row, ["equipment_id"]);
+        const alarmHour = hourLabel(getValue(row, ["alarm_time"]));
+        return (!equipment || alarmEquipment === equipment) && (!hour || alarmHour === hour);
+      });
+    }
+
+    function renderUploadSummary() {
+      const summary = document.getElementById("uploadSummary");
+      const fileList = document.getElementById("fileList");
+      const labels = {
+        production: "생산 실적",
+        defects: "불량 이벤트",
+        alarms: "설비 알람",
+        profile: "Profile"
+      };
+
+      summary.innerHTML = Object.entries(labels).map(([type, label]) => {
+        const count = state[type].length;
+        const status = count ? `${fmtNumber(count)} rows 반영` : "파일 미선택";
+        return `<div class="upload-chip"><strong>${label}</strong>${status}</div>`;
+      }).join("");
+
+      fileList.innerHTML = state.files.map((file) => {
+        return `<li><strong>${escapeHtml(file.name)}</strong> · ${escapeHtml(file.label)} · ${fmtNumber(file.rows)} rows</li>`;
+      }).join("");
+
+      const chip = document.getElementById("data-source-chip");
+      const reflectedCount = state.files.filter((file) => file.type !== "unknown").length;
+      chip.textContent = reflectedCount ? `데이터: 업로드 CSV ${reflectedCount}개 반영` : "데이터: sample_data";
+    }
+
+    function renderKpis() {
+      const totalInput = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["input_qty"])), 0);
+      const totalInspection = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["inspection_qty"])), 0);
+      const totalNgFromProduction = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["ng_qty"])), 0);
+      const totalNg = totalNgFromProduction || state.defects.length;
+      const ngRate = totalInspection ? (totalNg / totalInspection) * 100 : 0;
+      const equipment = groupProductionByEquipment(state.production)[0];
+
+      document.getElementById("kpiInput").textContent = totalInput ? fmtNumber(totalInput) : "-";
+      document.getElementById("kpiInspection").textContent = totalInspection ? fmtNumber(totalInspection) : "-";
+      document.getElementById("kpiNg").textContent = totalNg ? fmtNumber(totalNg) : "-";
+      document.getElementById("kpiNgRate").textContent = totalInspection ? fmtRate(ngRate) : "-";
+      document.getElementById("kpiTopEquipment").textContent = equipment?.equipment || "-";
+      document.getElementById("kpiInputSub").textContent = state.production.length ? "업로드 CSV 기준" : "생산 실적 CSV 필요";
+      document.getElementById("kpiInspectionSub").textContent = state.production.length ? "inspection_qty 합계" : "생산 실적 CSV 필요";
+      document.getElementById("kpiNgSub").textContent = totalNgFromProduction ? "daily summary 기준" : "defect event 기준";
+      document.getElementById("kpiNgRateSub").textContent = totalInspection ? `${fmtNumber(totalNg)} / ${fmtNumber(totalInspection)}` : "검사 수량 필요";
+      document.getElementById("kpiTopEquipmentSub").textContent = equipment ? `NG율 ${fmtRate(equipment.rate)}` : "생산 실적 CSV 필요";
+    }
+
+    function renderDefects() {
+      const counts = defectCounts();
+      const total = counts.reduce((sum, item) => sum + item.value, 0);
+      const max = Math.max(...counts.map((item) => item.value), 1);
+      const colors = ["red", "orange", "", "green"];
+      const top = counts[0];
+
+      document.getElementById("defectHint").textContent = top
+        ? `업로드 CSV 기준으로 ${top.key}이 ${fmtNumber(top.value)}건이며 우선 관리 후보입니다.`
+        : "불량 이벤트 CSV 또는 생산 실적 CSV를 불러오면 Pareto가 계산됩니다.";
+
+      document.getElementById("defectBars").innerHTML = counts.slice(0, 6).map((item, index) => {
+        const ratio = total ? (item.value / total) * 100 : 0;
+        const width = Math.max(8, (item.value / max) * 100);
+        const colorClass = colors[index] || "";
+        return `
+          <div class="bar">
+            <span>${escapeHtml(item.key)}</span>
+            <div class="track"><div class="fill ${colorClass}" style="width: ${width.toFixed(1)}%"></div></div>
+            <strong>${fmtNumber(item.value)}건</strong>
+          </div>
+          <p class="sub">${escapeHtml(item.key)} 비중 ${ratio.toFixed(1)}%</p>
+        `;
+      }).join("") || `<p class="hint">표시할 불량 데이터가 없습니다.</p>`;
+
+      document.getElementById("priorityBody").innerHTML = counts.slice(0, 3).map((item, index) => {
+        const judgment = index === 0
+          ? "최우선 감소 후보. 설비/시간/Profile 중첩 여부 확인"
+          : "우선 감소 후보. 반복 이력과 BOM/Recipe 조건 확인";
+        return `<tr><td>${index + 1}</td><td>${escapeHtml(item.key)}</td><td>${judgment}</td></tr>`;
+      }).join("") || `<tr><td colspan="3">불량 데이터 업로드 필요</td></tr>`;
+    }
+
+    function renderEquipmentAndHeatmap() {
+      const equipmentRows = groupProductionByEquipment(state.production);
+      const top = equipmentRows[0];
+
+      document.getElementById("equipmentHint").textContent = top
+        ? `${top.equipment}은 검사 ${fmtNumber(top.inspection)}매, NG ${fmtNumber(top.ng)}매, NG율 ${fmtRate(top.rate)}로 최우선 확인 설비입니다.`
+        : "생산 실적 CSV를 불러오면 설비별 NG율이 계산됩니다.";
+
+      document.getElementById("equipmentBody").innerHTML = equipmentRows.map((item) => `
+        <tr>
+          <td>${escapeHtml(item.equipment)}</td>
+          <td>${fmtNumber(item.inspection)}</td>
+          <td>${fmtNumber(item.ng)}</td>
+          <td><strong>${fmtRate(item.rate)}</strong></td>
+        </tr>
+      `).join("") || `<tr><td colspan="4">생산 실적 CSV 업로드 필요</td></tr>`;
+
+      const source = state.defects.length ? state.defects : state.production;
+      const equipments = [...new Set(source.map((row) => getValue(row, ["equipment_id"])).filter(Boolean))].slice(0, 5);
+      const hours = [...new Set(source.map((row) => hourLabel(getValue(row, ["event_time", "time_bucket"]))).filter(Boolean))].sort().slice(0, 9);
+      const heatmap = document.getElementById("timeHeatmap");
+
+      if (equipments.length === 0 || hours.length === 0) {
+        heatmap.innerHTML = `<div class="cell head">CSV 필요</div>`;
+        return;
+      }
+
+      const counts = new Map();
+      source.forEach((row) => {
+        const equipment = getValue(row, ["equipment_id"]);
+        const hour = hourLabel(getValue(row, ["event_time", "time_bucket"]));
+        const count = state.defects.length ? 1 : toNumber(getValue(row, ["ng_qty"]));
+        const key = `${equipment}|${hour}`;
+        counts.set(key, (counts.get(key) || 0) + count);
+      });
+
+      const max = Math.max(...counts.values(), 1);
+      heatmap.style.gridTemplateColumns = `76px repeat(${hours.length}, minmax(0, 1fr))`;
+      heatmap.innerHTML = [
+        `<div class="cell head">설비/시간</div>`,
+        ...hours.map((hour) => `<div class="cell head">${hour}</div>`),
+        ...equipments.flatMap((equipment) => [
+          `<div class="cell head">${escapeHtml(equipment)}</div>`,
+          ...hours.map((hour) => {
+            const value = counts.get(`${equipment}|${hour}`) || 0;
+            const level = value >= 5 || value === max ? "critical" : value >= 2 ? "warn" : "";
+            return `<div class="cell ${level}">${fmtNumber(value)}</div>`;
+          })
+        ])
+      ].join("");
+    }
+
+    function renderAlertsAndProfile() {
+      const topGroup = concentrationGroups()[0];
+      const profile = profileSummary(topGroup?.equipment);
+      const alarmMatches = topGroup ? alarmsFor(topGroup.equipment, topGroup.hour) : [];
+      const mismatchRows = quantityMismatches();
+      const alerts = [];
+
+      if (topGroup && topGroup.count >= 5) {
+        alerts.push({
+          priority: "p1",
+          status: "즉시 확인",
+          title: `${topGroup.equipment} ${topGroup.hour}:00-${topGroup.hour}:59 ${topGroup.defect} ${fmtNumber(topGroup.count)}건 집중`,
+          body: "동일 설비/동일 불량이 1시간 내 5건 이상 발생 기준을 초과했다."
+        });
+      }
+
+      if (topGroup && (profile || alarmMatches.length)) {
+        alerts.push({
+          priority: "p1",
+          status: "원인 후보",
+          title: `${topGroup.equipment} ${topGroup.hour}시대 Profile/알람 중첩 확인`,
+          body: `${alarmMatches.length ? `${alarmMatches.length}건의 설비 알람` : "Profile 데이터"}이 불량 집중 시간과 연결된다.`
+        });
+      }
+
+      if (mismatchRows.length) {
+        alerts.push({
+          priority: "p2",
+          status: "검증 필요",
+          title: `수량 불일치 ${fmtNumber(mismatchRows.length)}개 시간대 확인`,
+          body: "output_qty와 inspection_qty 차이가 있어 재판정/재투입 이력 확인이 필요하다."
+        });
+      }
+
+      if (alerts.length === 0) {
+        alerts.push({
+          priority: "p3",
+          status: "모니터링",
+          title: "P1 기준 초과 이슈 없음",
+          body: "CSV 기준으로 즉시 조치가 필요한 집중 구간은 확인되지 않았다."
+        });
+      }
+
+      document.getElementById("alertList").innerHTML = alerts.map((alert) => `
+        <div class="alert">
+          <span class="priority ${alert.priority}">${alert.priority.toUpperCase()}</span>
+          <div>
+            <strong>${escapeHtml(alert.title)}</strong>
+            <p>${escapeHtml(alert.body)}</p>
+          </div>
+          <span class="status">${escapeHtml(alert.status)}</span>
+        </div>
+      `).join("");
+
+      if (profile) {
+        document.getElementById("profileVacuum").textContent = `${profile.vacuumWorst.toFixed(1)} kPa`;
+        document.getElementById("profileTemp").textContent = `${profile.tempMax.toFixed(1)} C`;
+        document.getElementById("profileCycle").textContent = `${profile.cycleMax.toFixed(1)} sec`;
+        document.getElementById("profileHint").textContent = `${topGroup?.equipment || "업로드 설비"} Profile 기준 진공도, 온도, cycle time 최대/이상 값을 반영했다.`;
+      }
+
+      const timeline = [];
+      alarmMatches.slice(0, 4).forEach((row) => {
+        timeline.push({
+          title: `${getValue(row, ["alarm_time"])} · ${getValue(row, ["alarm_code"])}`,
+          body: `${getValue(row, ["alarm_name"])} · ${getValue(row, ["severity"])}`
+        });
+      });
+
+      if (topGroup) {
+        timeline.push({
+          title: `${topGroup.hour}:00대 · ${topGroup.defect} ${fmtNumber(topGroup.count)}건`,
+          body: `${topGroup.equipment} 동일 설비/동일 불량 집중`
+        });
+      }
+
+      document.getElementById("profileTimeline").innerHTML = timeline.map((item, index) => `
+        <div class="event ${index === timeline.length - 1 ? "critical" : ""}">
+          <strong>${escapeHtml(item.title)}</strong>
+          ${escapeHtml(item.body)}
+        </div>
+      `).join("") || `<div class="event"><strong>CSV 업로드 필요</strong>알람 또는 불량 이벤트 CSV를 불러오면 타임라인이 갱신됩니다.</div>`;
+
+      document.getElementById("primaryCauseTitle").textContent = topGroup
+        ? `후보 1. ${topGroup.equipment} ${topGroup.defect} 집중과 Process window disturbance`
+        : "후보 1. CSV 기반 원인 후보 계산 대기";
+
+      const profileText = profile
+        ? `Profile: vacuum ${profile.vacuumWorst.toFixed(1)} kPa, temp ${profile.tempMax.toFixed(1)} C, cycle ${profile.cycleMax.toFixed(1)} sec`
+        : "Profile: CSV 미업로드 또는 해당 설비 데이터 없음";
+      document.getElementById("primaryCauseEvidence").innerHTML = [
+        topGroup ? `불량 집중: ${topGroup.equipment} ${topGroup.hour}시대 ${topGroup.defect} ${fmtNumber(topGroup.count)}건` : "불량 집중: 불량 이벤트 CSV 필요",
+        `설비 알람: 관련 알람 ${fmtNumber(alarmMatches.length)}건`,
+        profileText,
+        "전문 해석: 불량 집중, Profile 이상, 설비 알람이 같은 시간대에 겹치면 공정 원인 후보 신뢰도를 높게 표시"
+      ].map((text) => `<li>${escapeHtml(text)}</li>`).join("");
+    }
+
+    function renderValidation() {
+      const totalInspection = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["inspection_qty"])), 0);
+      const totalNg = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["ng_qty"])), 0) || state.defects.length;
+      const counts = defectCounts();
+      const mismatchRows = quantityMismatches();
+      const ngRate = totalInspection ? fmtRate((totalNg / totalInspection) * 100) : "-";
+
+      document.getElementById("validationBody").innerHTML = `
+        <tr><td>07-07 기준 적용</td><td>업로드 CSV 기준. time_bucket/event_time 확인 필요</td><td>검증</td></tr>
+        <tr><td>NG 수량/종류</td><td>${fmtNumber(totalNg)}매 / ${escapeHtml(counts.map((item) => item.key).slice(0, 6).join(", ") || "-")}</td><td>확인</td></tr>
+        <tr><td>불량률</td><td>${ngRate}</td><td>${totalInspection ? "확인" : "검사 수량 필요"}</td></tr>
+        <tr><td>수량 불일치</td><td>${mismatchRows.length ? `${fmtNumber(mismatchRows.length)}개 시간대 output-inspection 차이` : "확인된 불일치 없음"}</td><td>${mismatchRows.length ? "MES 확인 필요" : "확인"}</td></tr>
+      `;
+    }
+
+    function renderAll() {
+      renderUploadSummary();
+      renderKpis();
+      renderDefects();
+      renderEquipmentAndHeatmap();
+      renderAlertsAndProfile();
+      renderValidation();
+    }
+
+    if (fileInput) {
+      fileInput.addEventListener("change", async (event) => {
+        state.production = [];
+        state.defects = [];
+        state.alarms = [];
+        state.profile = [];
+        state.files = [];
+
+        const files = Array.from(event.target.files || []);
+        for (const file of files) {
+          const text = await file.text();
+          const parsed = toObjects(parseCsv(text));
+          const type = inferFileType(parsed.headers);
+          const labelMap = {
+            production: "생산 실적",
+            defects: "불량 이벤트",
+            alarms: "설비 알람",
+            profile: "Profile",
+            unknown: "미분류"
+          };
+
+          if (state[type]) state[type] = state[type].concat(parsed.rows);
+          state.files.push({ name: file.name, type, label: labelMap[type], rows: parsed.rows.length });
+        }
+
+        renderAll();
+      });
+    }
+  </script>
+</body>
+</html>

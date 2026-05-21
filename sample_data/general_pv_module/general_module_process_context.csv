@@ -1,0 +1,8 @@
+sample_time,line,equipment_id,process_step,module_model,recipe_id,lamination_temp_c,vacuum_kpa,lamination_pressure_mpa,cycle_time_sec,cooling_time_sec,el_current_a,visual_bubble_count,profile_status,note
+2026-05-20 13:30:00,MODULE-A,LAM-03,Lamination,GEN-MOD-01,RCP-GEN-01,145.8,-96.5,0.82,92.0,180,9.5,0,NORMAL,Baseline
+2026-05-20 13:45:00,MODULE-A,LAM-03,Lamination,GEN-MOD-01,RCP-GEN-01,146.1,-96.0,0.82,92.5,180,9.5,0,NORMAL,Baseline
+2026-05-20 14:00:00,MODULE-A,LAM-03,Lamination,GEN-MOD-01,RCP-GEN-01,148.6,-92.4,0.74,96.2,174,9.5,1,WARN,Vacuum drop and longer cycle
+2026-05-20 14:10:00,MODULE-A,LAM-03,Lamination,GEN-MOD-01,RCP-GEN-01,150.1,-89.8,0.69,98.6,171,9.5,2,ABNORMAL,Crack/bubble risk window
+2026-05-20 14:20:00,MODULE-A,LAM-03,Lamination,GEN-MOD-01,RCP-GEN-01,149.8,-90.3,0.70,98.2,170,9.5,2,ABNORMAL,Crack/bubble risk window
+2026-05-20 14:40:00,MODULE-A,LAM-03,Lamination,GEN-MOD-01,RCP-GEN-01,147.6,-94.0,0.78,94.4,176,9.5,1,WARN,Recovery
+2026-05-20 15:00:00,MODULE-A,LAM-03,Lamination,GEN-MOD-01,RCP-GEN-01,146.4,-95.6,0.80,93.0,180,9.5,0,NORMAL,Near baseline

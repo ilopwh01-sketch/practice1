@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2차 짧은 인터뷰 - AI 업무 자동화</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    .wrap {
+      width: min(980px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header {
+      background: var(--navy);
+      color: #ffffff;
+      border-radius: 8px;
+      padding: 28px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: #f0b429;
+      font-weight: 800;
+      font-size: 13px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 29px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p {
+      margin: 0;
+      color: #dce7ee;
+    }
+
+    .info {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .info div {
+      min-height: 88px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .info strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .questions {
+      display: grid;
+      gap: 14px;
+      counter-reset: q;
+    }
+
+    .question {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 12px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .question::before {
+      counter-increment: q;
+      content: counter(q);
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .why {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 86px;
+      resize: vertical;
+      border: 1px solid #c8d4df;
+      border-radius: 8px;
+      padding: 12px;
+      background: var(--soft);
+      color: var(--ink);
+    }
+
+    .actions {
+      position: sticky;
+      bottom: 0;
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      padding: 16px 0 0;
+      margin-top: 6px;
+      background: linear-gradient(rgba(238, 243, 247, 0), #eef3f7 28%);
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: #415161;
+    }
+
+    .btn.success {
+      background: var(--green);
+    }
+
+    .result {
+      display: none;
+      margin-top: 16px;
+      background: #ffffff;
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      padding: 18px;
+      white-space: pre-wrap;
+      box-shadow: var(--shadow);
+    }
+
+    @media (max-width: 760px) {
+      .info {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .question {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .info {
+        grid-template-columns: 1fr;
+      }
+
+      .actions {
+        position: static;
+        display: grid;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .actions {
+        display: none;
+      }
+
+      .question,
+      header,
+      .info div,
+      .result {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">2차 짧은 인터뷰</div>
+      <h1>Laminator 일일 설비/불량 보고 자동화 보강 질문</h1>
+      <p>목표는 BRD/PRD에서 부족한 부분을 빠르게 채우는 것입니다. 각 질문은 한두 문장만 답해도 충분합니다.</p>
+    </header>
+
+    <section class="info" aria-label="과제 기본 정보">
+      <div>
+        <strong>과제명</strong>
+        일일 설비/불량 현황 보고서 자동 작성
+      </div>
+      <div>
+        <strong>공정</strong>
+        MODULE-A / Laminator
+      </div>
+      <div>
+        <strong>기준 시간</strong>
+        07시-익일 07시
+      </div>
+      <div>
+        <strong>목표</strong>
+        수작업 집계와 누락 위험 감소
+      </div>
+    </section>
+
+    <section class="questions" aria-label="인터뷰 질문">
+      <article class="question">
+        <div>
+          <h2>현재 보고서 작성에 실제로 걸리는 시간은 어느 정도인가요?</h2>
+          <p class="why">성과 KPI의 기준값입니다. 평상시와 이슈 발생일을 나눠 적으면 더 좋습니다.</p>
+          <textarea data-title="보고서 작성 시간" placeholder="예: 평상시 40분, 이슈 발생일 70~90분"></textarea>
+        </div>
+      </article>
+
+      <article class="question">
+        <div>
+          <h2>자동화 결과에서 무조건 맞아야 하는 숫자는 무엇인가요?</h2>
+          <p class="why">생산량, 검사량, NG 수량, 불량률 중 사람이 반드시 검증해야 하는 핵심값을 정합니다.</p>
+          <textarea data-title="필수 검증 숫자" placeholder="예: 07시-07시 기준 생산량, 검사량, NG 수량, 불량률"></textarea>
+        </div>
+      </article>
+
+      <article class="question">
+        <div>
+          <h2>어떤 조건이면 AI가 이상 징후라고 표시해야 하나요?</h2>
+          <p class="why">알람을 너무 많이 띄우지 않도록 현장 기준을 간단히 정합니다.</p>
+          <textarea data-title="이상 징후 기준" placeholder="예: 동일 설비에서 1시간 내 동일 불량 5건 이상, 평균 불량률 2배 초과"></textarea>
+        </div>
+      </article>
+
+      <article class="question">
+        <div>
+          <h2>설비 Profile에서 가장 먼저 봐야 할 컬럼 3개는 무엇인가요?</h2>
+          <p class="why">초 단위 대용량 데이터에서 분석 범위를 좁히기 위한 질문입니다.</p>
+          <textarea data-title="핵심 Profile 컬럼" placeholder="예: vacuum_kpa, press_pressure_mpa, upper_temp_c"></textarea>
+        </div>
+      </article>
+
+      <article class="question">
+        <div>
+          <h2>자동 보고서의 최종 형태는 무엇이 가장 편한가요?</h2>
+          <p class="why">엑셀, HTML, 메일 본문, PDF 중 실제 업무에 바로 쓰기 좋은 형태를 정합니다.</p>
+          <textarea data-title="보고서 출력 형태" placeholder="예: 팀장 보고용 HTML 1장 + 엑셀 요약 시트"></textarea>
+        </div>
+      </article>
+
+      <article class="question">
+        <div>
+          <h2>1주일 파일럿 후 성공했다고 판단할 기준은 무엇인가요?</h2>
+          <p class="why">과제 결론에 넣을 성공 기준입니다. 시간 절감, 오류 감소, 대응 속도 중 골라 적어도 됩니다.</p>
+          <textarea data-title="성공 기준" placeholder="예: 보고서 작성 시간 50% 이상 절감, 수량 불일치 자동 탐지, 주요 이슈 누락 0건"></textarea>
+        </div>
+      </article>
+    </section>
+
+    <section class="actions" aria-label="도구 버튼">
+      <button class="btn success" type="button" id="makeSummary">답변 요약 만들기</button>
+      <button class="btn" type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+      <button class="btn secondary" type="button" id="clearAnswers">답변 지우기</button>
+    </section>
+
+    <section class="result" id="result" aria-live="polite"></section>
+  </main>
+
+  <script>
+    const result = document.getElementById("result");
+
+    document.getElementById("makeSummary").addEventListener("click", () => {
+      const answers = Array.from(document.querySelectorAll("textarea")).map((textarea) => {
+        const title = textarea.dataset.title;
+        const value = textarea.value.trim() || "(미작성)";
+        return `${title}: ${value}`;
+      });
+
+      result.style.display = "block";
+      result.textContent = `2차 인터뷰 요약\n\n${answers.join("\n\n")}`;
+      result.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("clearAnswers").addEventListener("click", () => {
+      document.querySelectorAll("textarea").forEach((textarea) => {
+        textarea.value = "";
+      });
+      result.style.display = "none";
+      result.textContent = "";
+    });
+  </script>
+</body>
+</html>

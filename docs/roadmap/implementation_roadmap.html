@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>구현 로드맵 - Laminator AI 업무 자동화</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section,
+    .phase {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    h2 { margin-bottom: 8px; font-size: 22px; }
+    .hint { color: var(--muted); }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .phase {
+      padding: 18px;
+      min-height: 250px;
+    }
+
+    .phase h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .phase p { color: var(--muted); }
+
+    .badge {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      margin-bottom: 12px;
+    }
+
+    .blue { background: var(--blue); }
+    .green { background: var(--green); }
+    .orange { background: var(--orange); }
+    .red { background: var(--red); }
+
+    .check {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 14px;
+    }
+
+    .check li {
+      padding: 9px;
+      border-radius: 8px;
+      background: var(--soft);
+      border: 1px solid var(--line);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .table tr:last-child td { border-bottom: 0; }
+
+    .print-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @media (max-width: 980px) {
+      .timeline { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .timeline { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      header, section, .phase { box-shadow: none; break-inside: avoid; }
+      .print-row { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">Implementation Roadmap</div>
+      <h1>Laminator AI 업무 자동화 구현 로드맵</h1>
+      <p>파일 기반 MVP에서 시작해 Profile/알람 연계, 이미지 분석 확장까지 단계적으로 구현하는 계획입니다.</p>
+    </header>
+
+    <section>
+      <h2>1. 단계별 구현 계획</h2>
+      <p class="hint">초기 목표는 “완전 자동 원인 확정”이 아니라, 담당자가 빠르게 검증할 수 있는 근거 중심 대시보드를 만드는 것입니다.</p>
+      <div class="timeline">
+        <article class="phase">
+          <span class="badge blue">Phase 0</span>
+          <h3>샘플 데이터/요건 정리</h3>
+          <p>비식별 샘플 데이터와 BRD/PRD를 기반으로 분석 범위를 확정합니다.</p>
+          <ul class="check">
+            <li>샘플 CSV/TXT 준비</li>
+            <li>이상 징후 기준 정의</li>
+            <li>화면 설계서 작성</li>
+          </ul>
+        </article>
+
+        <article class="phase">
+          <span class="badge green">Phase 1</span>
+          <h3>파일 기반 MVP</h3>
+          <p>CSV/엑셀 파일을 읽어 HTML 보고서와 분석 엑셀을 생성합니다.</p>
+          <ul class="check">
+            <li>07-07 기준 집계</li>
+            <li>불량 Pareto</li>
+            <li>설비/시간 Heatmap</li>
+            <li>수량 불일치 탐지</li>
+          </ul>
+        </article>
+
+        <article class="phase">
+          <span class="badge orange">Phase 2</span>
+          <h3>원인 후보 고도화</h3>
+          <p>Profile, 알람, 불량 이벤트를 연결해 AI 원인 후보와 신뢰도를 표시합니다.</p>
+          <ul class="check">
+            <li>공정 time/온도/진공도 분석</li>
+            <li>알람 전후 30분 연계</li>
+            <li>High/Medium/Low 신뢰도</li>
+          </ul>
+        </article>
+
+        <article class="phase">
+          <span class="badge red">Phase 3</span>
+          <h3>이미지 분석 확장</h3>
+          <p>EL/AOI 이미지 유사도와 과검/오검 패턴을 연결합니다.</p>
+          <ul class="check">
+            <li>이미지 참조 연결</li>
+            <li>유사 불량 검색</li>
+            <li>불량 이미지 학습 검토</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 1차 MVP 산출물</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>산출물</th>
+            <th>내용</th>
+            <th>완료 기준</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>팀장 보고용 HTML</td>
+            <td>금일 핵심 이슈, KPI, Pareto, Heatmap, 원인 후보, 조치 사항</td>
+            <td>HTML 파일 1개로 열람 가능</td>
+          </tr>
+          <tr>
+            <td>분석 엑셀</td>
+            <td>Overview, Pareto, 설비별 NG율, 시간 Heatmap, Evidence Log</td>
+            <td>담당자가 숫자 검증 가능</td>
+          </tr>
+          <tr>
+            <td>검증 로그</td>
+            <td>수량 불일치, 재판정, 재투입, 컬럼 누락 경고</td>
+            <td>최종 승인 전 확인 가능</td>
+          </tr>
+          <tr>
+            <td>운영 가이드</td>
+            <td>파일 입력 순서, 결과 확인 순서, 보안 주의사항</td>
+            <td>라인 PC/사내망 PC 기준 실행 가능</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. 운영 시나리오</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>순서</th>
+            <th>작업</th>
+            <th>담당</th>
+            <th>결과</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>라인 PC 또는 사내망 PC에서 데이터 파일 다운로드</td>
+            <td>공정 담당자</td>
+            <td>CSV/엑셀 입력 파일 준비</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>자동화 도구 실행 및 파일 업로드</td>
+            <td>공정 담당자</td>
+            <td>데이터 검증 및 집계</td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>AI 대시보드와 분석 엑셀 확인</td>
+            <td>공정 담당자</td>
+            <td>원인 후보와 근거 검토</td>
+          </tr>
+          <tr>
+            <td>4</td>
+            <td>팀장 보고 전 최종 문구 승인</td>
+            <td>공정 담당자</td>
+            <td>보고 자료 확정</td>
+          </tr>
+          <tr>
+            <td>5</td>
+            <td>설비 점검, Recipe 확인, 재발 모니터링 수행</td>
+            <td>공정/설비 담당자</td>
+            <td>불량 감소 활동 연결</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 보안 및 승인 기준</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>항목</th>
+            <th>기준</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>실행 환경</td>
+            <td>원본 데이터 반출 금지 조건에 맞춰 라인 PC 또는 사내망 PC 실행을 기본으로 한다.</td>
+          </tr>
+          <tr>
+            <td>외부 공유</td>
+            <td>비식별 샘플 데이터와 결과 화면만 과제/발표용으로 사용한다.</td>
+          </tr>
+          <tr>
+            <td>AI 결과 승인</td>
+            <td>원인 후보 확정, 조치 계획, 팀장 보고 문구는 담당자가 최종 승인한다.</td>
+          </tr>
+          <tr>
+            <td>표현 원칙</td>
+            <td>AI는 “원인 확정”이 아니라 “원인 후보”, “확인 필요”, “연관 가능성”으로 표현한다.</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="print-row">
+        <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

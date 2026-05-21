@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="520" viewBox="0 0 960 520" role="img" aria-labelledby="title desc">
+  <title id="title">Literature to Dashboard Mapping</title>
+  <desc id="desc">Schematic showing how PV module literature is mapped to dashboard root cause analysis.</desc>
+  <rect width="960" height="520" fill="#f5f7f9"/>
+  <text x="40" y="54" font-family="Malgun Gothic, Arial" font-size="28" font-weight="700" fill="#17202a">논문 근거 → 현장 데이터 → 원인 후보 매핑</text>
+  <text x="40" y="88" font-family="Malgun Gothic, Arial" font-size="15" fill="#5d6b78">논문 레퍼런스를 대시보드 로직으로 바꾸는 흐름</text>
+
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#5d6b78"/>
+    </marker>
+  </defs>
+
+  <g font-family="Malgun Gothic, Arial">
+    <rect x="42" y="134" width="230" height="250" rx="8" fill="#ffffff" stroke="#d9e1e8"/>
+    <text x="66" y="172" font-size="20" font-weight="700" fill="#17202a">논문/리뷰</text>
+    <text x="66" y="214" font-size="15" fill="#5d6b78">• EL crack pattern</text>
+    <text x="66" y="246" font-size="15" fill="#5d6b78">• Delamination interface</text>
+    <text x="66" y="278" font-size="15" fill="#5d6b78">• Bubble/blister mechanism</text>
+    <text x="66" y="310" font-size="15" fill="#5d6b78">• PID/degradation review</text>
+    <text x="66" y="342" font-size="15" fill="#5d6b78">• XAI/RCA principle</text>
+
+    <rect x="365" y="134" width="230" height="250" rx="8" fill="#ffffff" stroke="#d9e1e8"/>
+    <text x="389" y="172" font-size="20" font-weight="700" fill="#17202a">현장 데이터</text>
+    <text x="389" y="214" font-size="15" fill="#5d6b78">• defect_code / EL pattern</text>
+    <text x="389" y="246" font-size="15" fill="#5d6b78">• equipment_id / time_bucket</text>
+    <text x="389" y="278" font-size="15" fill="#5d6b78">• vacuum / temp / pressure</text>
+    <text x="389" y="310" font-size="15" fill="#5d6b78">• alarm_code / severity</text>
+    <text x="389" y="342" font-size="15" fill="#5d6b78">• rejudge / reinput</text>
+
+    <rect x="688" y="134" width="230" height="250" rx="8" fill="#ffffff" stroke="#d9e1e8"/>
+    <text x="712" y="172" font-size="20" font-weight="700" fill="#17202a">대시보드 결과</text>
+    <text x="712" y="214" font-size="15" fill="#5d6b78">• 원인 후보</text>
+    <text x="712" y="246" font-size="15" fill="#5d6b78">• 근거 데이터 3개 이상</text>
+    <text x="712" y="278" font-size="15" fill="#5d6b78">• High/Medium/Low</text>
+    <text x="712" y="310" font-size="15" fill="#5d6b78">• 후속 조치</text>
+    <text x="712" y="342" font-size="15" fill="#5d6b78">• 담당자 최종 승인</text>
+  </g>
+
+  <line x1="292" y1="258" x2="345" y2="258" stroke="#5d6b78" stroke-width="3" marker-end="url(#arrow)"/>
+  <line x1="615" y1="258" x2="668" y2="258" stroke="#5d6b78" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <g font-family="Malgun Gothic, Arial" font-size="14">
+    <rect x="150" y="422" width="660" height="54" rx="8" fill="#fff7ed" stroke="#b85b18"/>
+    <text x="176" y="454" fill="#5c3a16">주의: AI는 원인을 확정하지 않고, 문헌 + 데이터 근거를 묶은 “원인 후보”로 제시한다.</text>
+  </g>
+</svg>

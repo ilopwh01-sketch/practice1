@@ -1,0 +1,9 @@
+alarm_time,line,equipment_id,alarm_code,alarm_name,severity,duration_sec,ack_user,note
+2026-05-21 13:58:21,MODULE-A,LAM-03,ALM-301,Vacuum pressure deviation,HIGH,340,operator_c,Before crack concentration
+2026-05-21 14:06:09,MODULE-A,LAM-03,ALM-304,Press pressure fluctuation,HIGH,215,operator_c,During crack concentration
+2026-05-21 14:29:18,MODULE-A,LAM-03,ALM-208,Upper heater deviation,MEDIUM,180,operator_c,Thermal gradient suspected
+2026-05-21 15:02:41,MODULE-A,LAM-03,ALM-301,Vacuum pressure deviation,MEDIUM,96,operator_c,Recovery phase
+2026-05-21 15:55:32,MODULE-A,LAM-02,ALM-402,Vacuum hold time short,HIGH,260,operator_b,Before bubble concentration
+2026-05-21 16:04:17,MODULE-A,LAM-02,ALM-415,Cooling time deviation,MEDIUM,190,operator_b,During bubble concentration
+2026-05-21 16:18:44,MODULE-A,LAM-02,ALM-212,Lower heater deviation,MEDIUM,155,operator_b,Bubble condition overlap
+2026-05-21 17:05:02,MODULE-A,LAM-02,ALM-402,Vacuum hold time short,LOW,58,operator_b,Recovery monitoring

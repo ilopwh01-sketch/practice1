@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BRD 상세 - Laminator AI 업무 자동화</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.58;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 286px minmax(0, 1fr);
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 28px 22px;
+      background: var(--navy);
+      color: #f8fbfd;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .brand h1 { margin: 0; font-size: 18px; line-height: 1.25; }
+
+    nav { display: grid; gap: 8px; }
+
+    nav a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #dce7ee;
+      text-decoration: none;
+    }
+
+    nav a:hover, nav a:focus {
+      outline: none;
+      background: rgba(255,255,255,0.08);
+    }
+
+    main { padding: 34px; }
+
+    .shell {
+      width: min(1160px, 100%);
+      margin: 0 auto;
+    }
+
+    header,
+    section,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h2, h3, h4, p { margin-top: 0; }
+
+    header h2 {
+      margin-bottom: 10px;
+      font-size: 31px;
+      line-height: 1.24;
+      letter-spacing: 0;
+    }
+
+    header p, .hint { color: var(--muted); }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    section h3 { margin-bottom: 8px; font-size: 22px; }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      padding: 16px;
+      min-height: 124px;
+    }
+
+    .card strong { display: block; margin-bottom: 8px; color: var(--muted); font-size: 13px; }
+    .card p { margin-bottom: 0; font-weight: 800; }
+
+    .list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .list li {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .table tr:last-child td { border-bottom: 0; }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .red { background: var(--red); }
+    .orange { background: var(--orange); }
+    .green { background: var(--green); }
+
+    .callout {
+      padding: 16px;
+      border-left: 6px solid var(--green);
+      border-radius: 8px;
+      background: #f4fbf7;
+    }
+
+    .print-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @media (max-width: 960px) {
+      .app { grid-template-columns: 1fr; }
+      aside { position: static; height: auto; }
+      main { padding: 22px; }
+      .grid-4, .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      .app { display: block; }
+      aside, .print-row { display: none; }
+      main { padding: 0; }
+      header, section, .card { box-shadow: none; break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">B</div>
+        <h1>BRD 상세<br>업무 필요성</h1>
+      </div>
+      <nav aria-label="BRD 목차">
+        <a href="#overview">과제 개요</a>
+        <a href="#problem">업무 문제</a>
+        <a href="#goal">비즈니스 목표</a>
+        <a href="#scope">범위</a>
+        <a href="#kpi">KPI</a>
+        <a href="#risk">리스크</a>
+        <a href="#success">성공 기준</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="shell">
+        <header id="overview">
+          <div class="eyebrow">Business Requirements Document</div>
+          <h2>Laminator 일일 설비/불량 현황 보고 자동화</h2>
+          <p>BRD는 이 과제가 왜 필요한지, 어떤 업무 문제와 KPI에 연결되는지, 현장에서 어떤 효과를 기대하는지 정의한다.</p>
+        </header>
+
+        <section>
+          <h3>1. 과제 개요</h3>
+          <div class="grid-4">
+            <div class="card"><strong>과제명</strong><p>일일 설비/불량 현황 보고서 자동 작성</p></div>
+            <div class="card"><strong>대상 공정</strong><p>MODULE-A / Laminator</p></div>
+            <div class="card"><strong>기준 시간</strong><p>07시-익일 07시</p></div>
+            <div class="card"><strong>핵심 목표</strong><p>불량 감소, 원인 파악</p></div>
+          </div>
+        </section>
+
+        <section id="problem">
+          <h3>2. 현재 업무 문제</h3>
+          <p class="hint">현재 업무는 반복성과 데이터 확인 부담이 크고, 이슈가 발생하면 원인 추적이 늦어질 수 있다.</p>
+          <div class="grid-2">
+            <ul class="list">
+              <li><strong>수작업 집계 부담</strong><br>07-07 기준 생산량, 검사량, NG 수량, 불량률을 사람이 직접 필터링하고 집계한다.</li>
+              <li><strong>이상 징후 발견 지연</strong><br>LAM-03 14시대 CRACK 집중처럼 설비/시간대 패턴을 담당자가 직접 찾아야 한다.</li>
+              <li><strong>수량 불일치 위험</strong><br>재판정, 재투입, 데이터 누락으로 생산/검사/NG 수량이 맞지 않을 수 있다.</li>
+            </ul>
+            <ul class="list">
+              <li><strong>Profile 분석 어려움</strong><br>공정 time, 온도, 진공도 등 초 단위 설비 데이터에서 특이점을 찾기 어렵다.</li>
+              <li><strong>원인 추적 지연 손실</strong><br>동일 불량이 재발해도 설비 조건과 Recipe가 바뀌면 원인 추적이 어려워진다.</li>
+              <li><strong>보고 후 조치 연결 필요</strong><br>보고서가 설비 점검, Recipe 확인, 재발 모니터링으로 이어져야 한다.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section id="goal">
+          <h3>3. 비즈니스 목표</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>목표</th>
+                <th>설명</th>
+                <th>업무 효과</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CRACK/BUBBLE 우선 감소</td>
+                <td>최종 인터뷰에서 1, 2순위 감소 대상으로 선정</td>
+                <td>수율 개선과 재발 방지</td>
+              </tr>
+              <tr>
+                <td>원인 후보 조기 도출</td>
+                <td>불량 집중, Profile, 알람, 수량 검증을 함께 분석</td>
+                <td>원인 파악 리드타임 단축</td>
+              </tr>
+              <tr>
+                <td>팀장 보고 품질 향상</td>
+                <td>HTML 대시보드와 분석 엑셀로 근거 중심 보고</td>
+                <td>후속 조치 판단 속도 향상</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="scope">
+          <h3>4. 비즈니스 범위</h3>
+          <div class="grid-2">
+            <div class="callout">
+              <h4>포함 범위</h4>
+              <ul>
+                <li>07-07 기준 생산/불량 데이터 분석</li>
+                <li>불량 Pareto, 설비별/시간대별 집중 분석</li>
+                <li>공정 time, 온도, 진공도 Profile 이상 확인</li>
+                <li>설비 알람과 불량 집중 시간 연계</li>
+                <li>팀장 보고용 HTML 및 분석 엑셀 생성</li>
+              </ul>
+            </div>
+            <div class="callout">
+              <h4>제외 범위</h4>
+              <ul>
+                <li>원본 설비 데이터 외부 클라우드 전송</li>
+                <li>AI의 원인 확정 단정</li>
+                <li>설비 제어값 자동 변경</li>
+                <li>초기 MVP 단계의 검사 이미지 딥러닝 자동 판정</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="kpi">
+          <h3>5. KPI 및 성과 측정</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>구분</th>
+                <th>KPI</th>
+                <th>측정 관점</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>정량</td>
+                <td>CRACK/BUBBLE 불량 감소율</td>
+                <td>우선 관리 불량의 발생 건수 변화</td>
+              </tr>
+              <tr>
+                <td>정량</td>
+                <td>동일 불량 재발 건수 감소</td>
+                <td>동일 설비/동일 시간대 재발 여부</td>
+              </tr>
+              <tr>
+                <td>정량</td>
+                <td>원인 후보 도출 리드타임</td>
+                <td>이슈 발생 후 근거 기반 후보 제시까지 시간</td>
+              </tr>
+              <tr>
+                <td>품질</td>
+                <td>보고 누락 감소</td>
+                <td>수량 불일치, 알람, Profile 이상 누락 여부</td>
+              </tr>
+              <tr>
+                <td>품질</td>
+                <td>후속 조치 연결률</td>
+                <td>보고 후 설비 점검, Recipe 확인, 재발 모니터링 수행 여부</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>6. 이상 징후 판단 방향</h3>
+          <ul class="list">
+            <li><span class="badge red">P1</span> 동일 설비에서 동일 불량이 1시간 내 5건 이상 발생</li>
+            <li><span class="badge red">P1</span> 공정 time, 온도, 진공도 이상이 NG 집중 시간과 겹침</li>
+            <li><span class="badge orange">P2</span> 설비 알람 발생 전후 30분 이내 동일 불량 연속 발생</li>
+            <li><span class="badge orange">P2</span> 특정 설비의 시간당 불량률이 전체 평균의 2배 이상 증가</li>
+            <li><span class="badge green">P3</span> 재판정/재투입 이력과 수량 불일치가 동시에 발생</li>
+          </ul>
+        </section>
+
+        <section id="risk">
+          <h3>7. 리스크와 대응</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>리스크</th>
+                <th>영향</th>
+                <th>대응 방향</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>데이터 양식 변경</td>
+                <td>자동 집계 오류</td>
+                <td>컬럼 매핑 검증 단계 추가</td>
+              </tr>
+              <tr>
+                <td>이상 기준 과다 탐지</td>
+                <td>알람 피로도 증가</td>
+                <td>P1/P2/P3 우선순위 표시</td>
+              </tr>
+              <tr>
+                <td>AI 원인 후보 과신</td>
+                <td>잘못된 조치 가능</td>
+                <td>담당자 최종 승인과 근거 표시</td>
+              </tr>
+              <tr>
+                <td>보안 제약</td>
+                <td>데이터 활용 제한</td>
+                <td>라인 PC/사내망 PC 실행, 비식별 샘플 사용</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="success">
+          <h3>8. 성공 기준</h3>
+          <ul class="list">
+            <li>07-07 기준 NG 수량, 불량 종류, 불량률이 정확히 집계된다.</li>
+            <li>CRACK/BUBBLE 불량 집중 설비와 시간대를 자동 탐지한다.</li>
+            <li>공정 time, 온도, 진공도 이상과 불량 집중 시간의 연관성을 표시한다.</li>
+            <li>팀장 보고용 HTML과 분석 엑셀을 출력한다.</li>
+            <li>보고 후 설비 점검, Recipe 확인, 동일 불량 재발 모니터링으로 이어진다.</li>
+          </ul>
+          <div class="print-row">
+            <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

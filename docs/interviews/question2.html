@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Question 2 - AI 업무 자동화 BRD/PRD 질문</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --soft: #f5f7f9;
+      --panel: #ffffff;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --shadow: 0 16px 44px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.58;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      background: var(--navy);
+      color: #f8fbfd;
+      padding: 28px 22px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: #f0b429;
+      color: var(--navy);
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin-top: 0;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .meta {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+      color: #dce7ee;
+    }
+
+    .meta strong {
+      display: block;
+      color: #ffffff;
+      font-size: 12px;
+      letter-spacing: 0;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a {
+      color: #dce7ee;
+      text-decoration: none;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+    }
+
+    .nav a:hover,
+    .nav a:focus {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.16);
+      outline: none;
+    }
+
+    main {
+      padding: 36px;
+    }
+
+    .shell {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.65fr);
+      gap: 24px;
+      align-items: stretch;
+      margin-bottom: 24px;
+    }
+
+    .title-block,
+    .summary-panel,
+    .section {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .title-block {
+      padding: 30px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .title-block h2 {
+      margin-bottom: 12px;
+      font-size: 31px;
+      line-height: 1.24;
+      letter-spacing: 0;
+    }
+
+    .title-block p {
+      margin-bottom: 0;
+      color: var(--muted);
+    }
+
+    .summary-panel {
+      padding: 22px;
+    }
+
+    .summary-panel h3 {
+      margin-bottom: 14px;
+      font-size: 18px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      display: inline-flex;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .section {
+      padding: 24px;
+    }
+
+    .section h3 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .hint {
+      margin-bottom: 18px;
+      color: var(--muted);
+    }
+
+    .question-list {
+      display: grid;
+      gap: 14px;
+      counter-reset: item;
+    }
+
+    .question {
+      display: grid;
+      grid-template-columns: 38px minmax(0, 1fr);
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .question::before {
+      counter-increment: item;
+      content: counter(item);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      background: var(--navy);
+      color: #ffffff;
+      font-weight: 800;
+    }
+
+    .question strong {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 16px;
+    }
+
+    .question span {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .answer-box {
+      margin-top: 12px;
+      width: 100%;
+      min-height: 72px;
+      resize: vertical;
+      border: 1px solid #c8d4df;
+      border-radius: 8px;
+      padding: 12px;
+      background: #ffffff;
+      color: var(--ink);
+    }
+
+    .rubric {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .metric {
+      min-height: 118px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .metric strong {
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .metric p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .prompt {
+      margin: 0;
+      padding: 18px;
+      border-radius: 8px;
+      background: #17202a;
+      color: #f8fbfd;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .btn {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .btn.secondary {
+      background: #415161;
+    }
+
+    .btn:hover {
+      filter: brightness(0.95);
+    }
+
+    @media (max-width: 900px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+        height: auto;
+      }
+
+      main {
+        padding: 22px;
+      }
+
+      .hero,
+      .rubric {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      aside,
+      .actions,
+      textarea {
+        display: none;
+      }
+
+      .app {
+        display: block;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      .title-block,
+      .summary-panel,
+      .section {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">Q2</div>
+        <h1>AI 업무 자동화<br>질문지</h1>
+      </div>
+
+      <div class="meta">
+        <div>
+          <strong>대상</strong>
+          MJ / 모듈공정기술
+        </div>
+        <div>
+          <strong>공정</strong>
+          Laminator
+        </div>
+        <div>
+          <strong>선정 과제</strong>
+          일일 설비/불량 현황 보고서 자동 작성
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="질문 목차">
+        <a href="#summary">과제 요약</a>
+        <a href="#business">BRD 질문</a>
+        <a href="#product">PRD 질문</a>
+        <a href="#data">데이터/보안 질문</a>
+        <a href="#kpi">KPI 검증 질문</a>
+        <a href="#prompt">AI 질문 프롬프트</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="shell">
+        <section class="hero" id="summary">
+          <div class="title-block">
+            <div class="eyebrow">Question 2 · BRD/PRD 기반 추가 질문</div>
+            <h2>Laminator 공정의 일일 설비/불량 보고 자동화를 더 구체화하기 위한 질문</h2>
+            <p>
+              아래 질문은 인터뷰 요약과 BRD/PRD 초안을 바탕으로 만들었습니다.
+              답변을 채우면 자동화 대상, 입력 데이터, 출력 보고서, KPI 검증 방식이 더 명확해집니다.
+            </p>
+          </div>
+
+          <div class="summary-panel">
+            <h3>핵심 키워드</h3>
+            <div class="chips">
+              <span class="chip">07시-07시 기준</span>
+              <span class="chip">Laminator</span>
+              <span class="chip">불량 Pareto</span>
+              <span class="chip">설비 Profile</span>
+              <span class="chip">수량 불일치</span>
+              <span class="chip">로컬 처리</span>
+              <span class="chip">보고 자동화</span>
+            </div>
+          </div>
+        </section>
+
+        <div class="grid">
+          <section class="section" id="business">
+            <h3>1. BRD 보완 질문</h3>
+            <p class="hint">비즈니스 관점에서 왜 이 과제가 필요한지, 어떤 의사결정에 쓰이는지 확인하는 질문입니다.</p>
+            <div class="question-list">
+              <div class="question">
+                <div>
+                  <strong>현재 일일 설비/불량 현황 보고서를 작성하는 데 평균 몇 분 또는 몇 시간이 걸리나요?</strong>
+                  <span>시간 절감 KPI를 계산하기 위한 기준값입니다.</span>
+                  <textarea class="answer-box" placeholder="예: 매일 약 60분, 이슈가 많으면 90분 이상"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>팀장님과 공정팀원이 보고서에서 가장 먼저 확인하는 항목은 무엇인가요?</strong>
+                  <span>보고서 자동 생성 시 우선순위를 정하기 위한 질문입니다.</span>
+                  <textarea class="answer-box" placeholder="예: 설비별 불량률, 상위 불량 유형, 전일 대비 증가 항목"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>이 보고서가 실제로 어떤 조치나 의사결정으로 이어지나요?</strong>
+                  <span>AI 자동화의 비즈니스 효과를 설명하는 근거가 됩니다.</span>
+                  <textarea class="answer-box" placeholder="예: 특정 설비 점검, 작업 조건 확인, 재검사 요청, 원인 분석 회의"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>현재 가장 자주 놓치는 이슈는 설비 이상, 불량 집중, 수량 불일치 중 무엇인가요?</strong>
+                  <span>자동화 기능의 우선순위를 정하는 데 사용합니다.</span>
+                  <textarea class="answer-box" placeholder="예: 특정 시간대 불량 집중을 늦게 발견하는 경우가 많음"></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="product">
+            <h3>2. PRD 보완 질문</h3>
+            <p class="hint">제품 기능 관점에서 어떤 입력을 받고 어떤 결과물을 내야 하는지 구체화하는 질문입니다.</p>
+            <div class="question-list">
+              <div class="question">
+                <div>
+                  <strong>자동 보고서에 반드시 포함되어야 하는 표 또는 그래프는 무엇인가요?</strong>
+                  <span>예: 불량 Pareto, 설비별 불량률, 시간대별 추이, 수량 불일치 표.</span>
+                  <textarea class="answer-box" placeholder="예: 설비별 불량률 표, 상위 5개 불량 Pareto, 시간대별 크랙 발생 추이"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>AI가 이상 징후로 판단해야 하는 기준은 어떻게 잡는 것이 좋나요?</strong>
+                  <span>규칙 기반 자동화의 기준값을 정하는 질문입니다.</span>
+                  <textarea class="answer-box" placeholder="예: 특정 설비 불량률이 평균 대비 2배 이상, 동일 불량 1시간 내 5건 이상"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>설비 Profile에서 가장 중요하게 보는 컬럼은 무엇인가요?</strong>
+                  <span>데이터 컬럼이 많을 때 우선 분석 대상을 좁히기 위한 질문입니다.</span>
+                  <textarea class="answer-box" placeholder="예: 온도, 압력, 진공도, 속도, Cycle time"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>자동 생성된 보고서는 어떤 형태가 가장 사용하기 편한가요?</strong>
+                  <span>엑셀, HTML, PDF, 메일 본문 등 현장에서 바로 쓰기 좋은 출력 형태를 고릅니다.</span>
+                  <textarea class="answer-box" placeholder="예: 엑셀 요약 시트 + HTML 보고서, 또는 메일에 붙여넣을 수 있는 텍스트"></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="data">
+            <h3>3. 데이터/보안 확인 질문</h3>
+            <p class="hint">외부 반출 금지 조건을 지키면서 로컬 자동화를 설계하기 위한 질문입니다.</p>
+            <div class="question-list">
+              <div class="question">
+                <div>
+                  <strong>현재 내려받을 수 있는 파일의 이름과 컬럼 구조는 어느 정도 고정되어 있나요?</strong>
+                  <span>파일 기반 자동화가 안정적으로 작동할 수 있는지 확인합니다.</span>
+                  <textarea class="answer-box" placeholder="예: 매일 같은 양식의 생산실적.xlsx, 설비알람.csv 사용"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>비식별 처리 후에도 과제 샘플로 사용할 수 없는 민감 항목은 무엇인가요?</strong>
+                  <span>보안 제약을 먼저 정리해야 과제 설계가 안전해집니다.</span>
+                  <textarea class="answer-box" placeholder="예: 제품 코드, 고객명, 세부 설비 Recipe, 원본 이미지 파일"></textarea>
+                </div>
+              </div>
+              <div class="question">
+                <div>
+                  <strong>수량 불일치가 발생했을 때 확인해야 하는 이력 데이터는 어디에 있나요?</strong>
+                  <span>재판정, 재투입, 검사 재처리 데이터를 연결할 수 있는지 확인합니다.</span>
+                  <textarea class="answer-box" placeholder="예: 재판정 이력 엑셀, MES 조회 화면, 검사 재투입 로그"></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="section" id="kpi">
+            <h3>4. KPI 검증 질문</h3>
+            <p class="hint">자동화 결과를 과제 성과로 설명하기 위한 측정 질문입니다.</p>
+            <div class="rubric">
+              <div class="metric">
+                <strong>시간 절감</strong>
+                <p>기존 작성 시간과 자동화 후 검토 시간을 비교할 수 있나요?</p>
+              </div>
+              <div class="metric">
+                <strong>오류 감소</strong>
+                <p>수량 불일치, 보고 누락, 복사/붙여넣기 오류를 기록할 수 있나요?</p>
+              </div>
+              <div class="metric">
+                <strong>이슈 대응</strong>
+                <p>불량 집중 또는 설비 이상을 발견하는 시간이 줄어드는지 볼 수 있나요?</p>
+              </div>
+              <div class="metric">
+                <strong>확장성</strong>
+                <p>Laminator 외 다른 공정에도 같은 양식을 적용할 수 있나요?</p>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn" type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+              <button class="btn secondary" type="button" id="clearAnswers">답변 칸 비우기</button>
+            </div>
+          </section>
+
+          <section class="section" id="prompt">
+            <h3>5. AI에게 바로 물어볼 질문 프롬프트</h3>
+            <p class="hint">아래 문장을 복사해서 AI에게 주면, 답변을 기반으로 BRD/PRD를 더 다듬을 수 있습니다.</p>
+            <pre class="prompt">다음은 Laminator 공정의 AI 업무 자동화 과제입니다.
+
+과제명: 일일 설비/불량 현황 보고서 자동 작성
+대상 업무: 07시-07시 기준 생산량, 불량 수율, 설비 Profile, 검사 NG 이미지, 시간대별 불량 집중성 확인
+핵심 Pain Point: 수작업 집계, 이상 징후 누락, 수량 불일치, 보고서 작성 시간 소요
+사용 데이터: 설비 알람 CSV, 생산 실적 엑셀, DB 추출 엑셀, 수기 메모
+보안 조건: 원본 데이터 외부 반출 금지, 로컬 PC 또는 비식별 샘플 데이터 활용
+
+위 내용을 바탕으로 아래 질문에 답변해 주세요.
+
+1. 이 과제가 BRD 관점에서 왜 필요한가?
+2. 이 과제가 PRD 관점에서 어떤 기능을 가져야 하는가?
+3. 가장 먼저 구현해야 할 MVP 기능은 무엇인가?
+4. 자동화 결과가 틀렸을 때 사람이 검증해야 할 항목은 무엇인가?
+5. 성과 KPI는 어떻게 측정하면 좋은가?</pre>
+          </section>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const clearButton = document.getElementById("clearAnswers");
+    clearButton.addEventListener("click", () => {
+      document.querySelectorAll("textarea").forEach((textarea) => {
+        textarea.value = "";
+      });
+    });
+  </script>
+</body>
+</html>

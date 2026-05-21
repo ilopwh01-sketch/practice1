@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laminator AI 업무 자동화 문서 포털</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section,
+    .doc {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 31px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    section h2 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .hint { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .doc {
+      display: grid;
+      min-height: 190px;
+      padding: 18px;
+      text-decoration: none;
+      color: var(--ink);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+
+    .doc:hover,
+    .doc:focus {
+      outline: none;
+      transform: translateY(-2px);
+      box-shadow: 0 18px 44px rgba(23, 32, 42, 0.12);
+    }
+
+    .doc h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .doc p {
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: auto;
+    }
+
+    .tag {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag.green { background: #dff3e9; color: #135b3b; }
+    .tag.orange { background: #fff0d4; color: #70420f; }
+    .tag.red { background: #f7d7d7; color: #842525; }
+
+    .order {
+      display: grid;
+      gap: 10px;
+      counter-reset: step;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .order li {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .order li::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .order strong { display: block; margin-bottom: 4px; }
+    .order a { color: var(--blue); font-weight: 900; text-decoration: none; }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 620px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">문서 포털</div>
+      <h1>Laminator AI 업무 자동화 제출 패키지</h1>
+      <p>BRD, PRD, 대시보드, 화면 설계서, 데이터 설명서, 인터뷰 자료를 한 곳에서 열람하는 시작 화면입니다.</p>
+    </header>
+
+    <section>
+      <h2>추천 열람 순서</h2>
+      <p class="hint">과제를 설명하거나 발표할 때는 아래 순서로 열면 흐름이 자연스럽습니다.</p>
+      <ol class="order">
+        <li>
+          <div><strong><a href="docs/requirements/requirements_portal.html">Requirements 관리 포털</a></strong>BRD, PRD, 화면, 데이터, 논문 RCA 요구사항을 한 곳에서 먼저 확인합니다.</div>
+        </li>
+        <li>
+          <div><strong><a href="docs/requirements/brd_detail.html">BRD 상세 HTML</a></strong>왜 이 자동화가 필요한지, 비즈니스 문제와 KPI를 먼저 설명합니다.</div>
+        </li>
+        <li>
+          <div><strong><a href="docs/requirements/prd_detail.html">PRD 상세 HTML</a></strong>도구가 어떤 기능과 화면을 가져야 하는지 제품 요구사항을 설명합니다.</div>
+        </li>
+        <li>
+          <div><strong><a href="docs/design/screen_visualization_design.html">화면 시각화 설계서</a></strong>보고 화면의 구조와 차트 구성을 보여줍니다.</div>
+        </li>
+        <li>
+          <div><strong><a href="docs/dashboard/laminator_ai_dashboard.html">AI 원인 분석 대시보드</a></strong>샘플 데이터를 바탕으로 실제 결과 화면을 시연합니다.</div>
+        </li>
+        <li>
+          <div><strong><a href="docs/roadmap/implementation_roadmap.html">구현 로드맵</a></strong>MVP부터 확장까지 실행 계획을 정리합니다.</div>
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>HTML 문서 목록</h2>
+      <div class="grid">
+        <a class="doc" href="docs/requirements/requirements_portal.html">
+          <h3>Requirements 관리 포털</h3>
+          <p>BRD, PRD, 화면설계, 논문 RCA, 데이터 요구사항을 ID 기준으로 추적하는 전용 관리 화면입니다.</p>
+          <div class="tag-row"><span class="tag red">Requirements</span><span class="tag green">Traceability</span><span class="tag">BRD/PRD</span></div>
+        </a>
+
+        <a class="doc" href="docs/presentation/final_10q_fqc_summary.html">
+          <h3>최종 10문항 발표 요약</h3>
+          <p>FQC 수율, BOM/Recipe 조건, AI 액션아이템, DB 활용 범위까지 반영한 최종 발표용 답변입니다.</p>
+          <div class="tag-row"><span class="tag red">Final</span><span class="tag green">FQC</span><span class="tag">10Q</span></div>
+        </a>
+
+        <a class="doc" href="codex_project_requirements.html">
+          <h3>Codex 프로젝트 탭</h3>
+          <p>day3 프로젝트 기준, 작업 원칙, 미확정 항목, 프로젝트 CSV 불러오기 기능을 관리합니다.</p>
+          <div class="tag-row"><span class="tag red">Codex</span><span class="tag green">CSV</span><span class="tag">Project</span></div>
+        </a>
+
+        <a class="doc" href="OTHER_COMPUTER_SETUP.md">
+          <h3>다른 컴퓨터 실행 가이드</h3>
+          <p>GitHub clone, HTML 실행, CSV 테스트, Codex skill 설치 방법을 정리한 이관 문서입니다.</p>
+          <div class="tag-row"><span class="tag green">Setup</span><span class="tag">GitHub</span><span class="tag orange">Skill</span></div>
+        </a>
+
+        <a class="doc" href="docs/requirements/brd_detail.html">
+          <h3>BRD 상세</h3>
+          <p>비즈니스 필요성, Pain Point, KPI, 성공 기준, 리스크를 정리한 문서입니다.</p>
+          <div class="tag-row"><span class="tag red">Why</span><span class="tag">KPI</span><span class="tag green">수율 개선</span></div>
+        </a>
+
+        <a class="doc" href="docs/requirements/prd_detail.html">
+          <h3>PRD 상세</h3>
+          <p>기능 요구사항, 데이터 입력, 화면, 이상 탐지 기준, 수용 기준을 정리한 문서입니다.</p>
+          <div class="tag-row"><span class="tag orange">What</span><span class="tag">Feature</span><span class="tag green">MVP</span></div>
+        </a>
+
+        <a class="doc" href="docs/dashboard/laminator_ai_dashboard.html">
+          <h3>AI 대시보드</h3>
+          <p>LAM-03 CRACK 집중, Profile 이상, 알람 연계를 샘플 데이터로 보여주는 시연 화면입니다.</p>
+          <div class="tag-row"><span class="tag red">P1</span><span class="tag">Dashboard</span><span class="tag orange">RCA</span></div>
+        </a>
+
+        <a class="doc" href="docs/dashboard/final_output_example.html">
+          <h3>최종 산출물 예시</h3>
+          <p>FQC 수율, BOM/Recipe, 알람, 액션아이템, 히스토리까지 포함한 최종 결과물 Mock Report입니다.</p>
+          <div class="tag-row"><span class="tag red">Final</span><span class="tag green">Mock</span><span class="tag">Feedback</span></div>
+        </a>
+
+        <a class="doc" href="docs/design/screen_visualization_design.html">
+          <h3>화면 시각화 설계서</h3>
+          <p>Overview, Pareto, Heatmap, Timeline 등 화면 구성과 시각화 기준을 정의합니다.</p>
+          <div class="tag-row"><span class="tag">UI</span><span class="tag green">Design</span></div>
+        </a>
+
+        <a class="doc" href="docs/data/data_dictionary.html">
+          <h3>샘플 데이터 설명서</h3>
+          <p>샘플 CSV/TXT 파일 구성, 컬럼 의미, 분석 목적, 이상 케이스를 설명합니다.</p>
+          <div class="tag-row"><span class="tag">CSV</span><span class="tag">Data</span><span class="tag orange">검증</span></div>
+        </a>
+
+        <a class="doc" href="docs/references/paper_reference.html">
+          <h3>논문 레퍼런스</h3>
+          <p>태양광 모듈 Crack, Bubble, Delamination, EL 검사 논문을 설명 이미지와 함께 원인분석 로직에 연결합니다.</p>
+          <div class="tag-row"><span class="tag red">PV Module</span><span class="tag">Paper</span><span class="tag green">RCA</span></div>
+        </a>
+
+        <a class="doc" href="docs/references/pv_root_cause_framework.html">
+          <h3>전문 RCA 프레임워크</h3>
+          <p>논문 분석을 바탕으로 불량 원인 후보, 경쟁 가설, 검증 데이터, 조치까지 전문적으로 정리합니다.</p>
+          <div class="tag-row"><span class="tag red">RCA</span><span class="tag">Failure Mode</span><span class="tag green">Professional</span></div>
+        </a>
+
+        <a class="doc" href="docs/roadmap/implementation_roadmap.html">
+          <h3>구현 로드맵</h3>
+          <p>1차 MVP, 2차 확장, 3차 이미지 분석 확장까지 실행 계획을 정리합니다.</p>
+          <div class="tag-row"><span class="tag green">Plan</span><span class="tag">MVP</span></div>
+        </a>
+
+        <a class="doc" href="docs/interviews/final_interview_brd_prd.html">
+          <h3>최종 추가 인터뷰</h3>
+          <p>BRD/PRD 작성 전 마지막 보강 질문을 한 번에 정리한 HTML 질문지입니다.</p>
+          <div class="tag-row"><span class="tag">Interview</span><span class="tag orange">보강</span></div>
+        </a>
+
+        <a class="doc" href="docs/interviews/interview2_summary.html">
+          <h3>2차 인터뷰 요약</h3>
+          <p>불량 감소와 원인 파악 중심으로 과제 방향을 재정의한 인터뷰 요약입니다.</p>
+          <div class="tag-row"><span class="tag">Interview</span><span class="tag green">Summary</span></div>
+        </a>
+
+        <a class="doc" href="docs/interviews/question2.html">
+          <h3>질문 2 기반 질문지</h3>
+          <p>BRD/PRD를 더 구체화하기 위한 추가 질문과 AI 프롬프트를 담은 HTML입니다.</p>
+          <div class="tag-row"><span class="tag">Question</span><span class="tag">Prompt</span></div>
+        </a>
+
+        <a class="doc" href="docs/interviews/question_memo.txt">
+          <h3>질문 메모장</h3>
+          <p>추가 질문, 수정 요청, 최종 제출용 요청을 한 번에 적어두는 메모 파일입니다.</p>
+          <div class="tag-row"><span class="tag">Memo</span><span class="tag green">TXT</span></div>
+        </a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

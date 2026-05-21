@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>2차 인터뷰 요약 - Laminator AI 업무 자동화</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.56;
+    }
+
+    .wrap {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: #f0b429;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    h1,
+    h2,
+    p {
+      margin-top: 0;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p {
+      margin-bottom: 0;
+      color: #dce7ee;
+    }
+
+    section {
+      margin-bottom: 16px;
+      padding: 22px;
+      background: var(--panel);
+    }
+
+    h2 {
+      margin-bottom: 12px;
+      font-size: 21px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      min-height: 112px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .card p {
+      margin-bottom: 0;
+      font-weight: 700;
+    }
+
+    .criteria {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .criteria li {
+      display: grid;
+      grid-template-columns: 12px minmax(0, 1fr);
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .criteria li::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      margin-top: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .criteria strong {
+      color: var(--ink);
+    }
+
+    .note {
+      padding: 14px;
+      border-left: 5px solid var(--orange);
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #5c3a16;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 18px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    @media (max-width: 800px) {
+      .cards,
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      header,
+      section {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .btn-row {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">2차 인터뷰 요약</div>
+      <h1>Laminator 일일 설비/불량 보고 자동화 보강 결과</h1>
+      <p>2차 인터뷰에서는 단순 보고서 작성 시간보다 불량 감소와 원인 파악을 핵심 성과로 재정의했습니다.</p>
+    </header>
+
+    <section>
+      <h2>인터뷰 답변 요약</h2>
+      <div class="cards">
+        <div class="card">
+          <strong>보고서 작성 시간</strong>
+          <p>평상시 30분, 이슈 발생 시 90분</p>
+        </div>
+        <div class="card">
+          <strong>필수 검증 숫자</strong>
+          <p>07-07시 기준, NG 수량/종류, 불량률</p>
+        </div>
+        <div class="card">
+          <strong>핵심 Profile 컬럼</strong>
+          <p>공정 time, 온도, 진공도</p>
+        </div>
+        <div class="card">
+          <strong>출력 형태</strong>
+          <p>팀장 보고용 HTML + 데이터 분석 엑셀</p>
+        </div>
+        <div class="card">
+          <strong>성공 기준</strong>
+          <p>불량 감소, 원인 파악 정확도</p>
+        </div>
+        <div class="card">
+          <strong>과제 방향</strong>
+          <p>보고 자동화에서 원인 후보 도출 자동화로 확장</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>제안 이상 징후 기준</h2>
+      <ul class="criteria">
+        <li>
+          <div>
+            <strong>동일 설비/동일 불량 집중</strong><br>
+            동일 설비에서 같은 불량 코드가 1시간 내 5건 이상 발생하면 이상 징후로 표시한다.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>설비별 불량률 급증</strong><br>
+            특정 설비의 시간당 불량률이 전체 평균의 2배 이상이면 설비 집중 이슈로 표시한다.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>시간대별 NG 급증</strong><br>
+            특정 시간대 NG 수량이 직전 3시간 평균 대비 3배 이상 증가하면 시간 집중 이슈로 표시한다.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>불량 Pareto 쏠림</strong><br>
+            특정 불량 코드가 일일 전체 NG의 40% 이상을 차지하면 주요 불량 이슈로 표시한다.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>설비 알람 연계</strong><br>
+            설비 알람 발생 전후 30분 이내 동일 불량이 연속 발생하면 알람 연계 원인 후보로 표시한다.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Profile 동시 이탈</strong><br>
+            공정 time 증가, 온도 급변, 진공도 하락이 NG 집중 시간과 겹치면 Profile 원인 후보로 표시한다.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>수량 불일치</strong><br>
+            생산량, 검사량, NG 수량이 맞지 않고 재판정/재투입 이력이 있으면 데이터 검증 필요 항목으로 표시한다.
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>BRD/PRD 반영 방향</h2>
+      <div class="two-col">
+        <div class="note">
+          <strong>BRD 관점</strong><br>
+          이 과제는 단순히 보고 시간을 줄이는 자동화가 아니라, 불량 원인 후보를 빠르게 좁혀 수율 개선에 기여하는 업무 자동화로 정의한다.
+        </div>
+        <div class="note">
+          <strong>PRD 관점</strong><br>
+          MVP는 07-07 기준 집계, 불량 집중 탐지, Profile 이상 연계, 팀장 보고용 HTML, 분석 엑셀 출력까지 포함한다.
+        </div>
+      </div>
+    </section>
+
+    <div class="btn-row">
+      <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+    </div>
+  </main>
+</body>
+</html>

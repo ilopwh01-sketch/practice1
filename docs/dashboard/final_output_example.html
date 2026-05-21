@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>최종 산출물 예시 - FQC 수율 AI Report</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 292px minmax(0, 1fr);
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      padding: 28px 22px;
+      background: var(--navy);
+      color: #f8fbfd;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--yellow);
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .side-card {
+      padding: 14px;
+      margin-bottom: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #dce7ee;
+      font-size: 13px;
+    }
+
+    .side-card strong {
+      display: block;
+      margin-bottom: 4px;
+      color: #ffffff;
+    }
+
+    nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    nav a {
+      display: block;
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #dce7ee;
+      text-decoration: none;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    main {
+      padding: 34px;
+    }
+
+    .shell {
+      width: min(1280px, 100%);
+      margin: 0 auto;
+    }
+
+    header,
+    section,
+    .card,
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--blue);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h2,
+    h3,
+    h4,
+    p {
+      margin-top: 0;
+    }
+
+    header h2 {
+      margin-bottom: 10px;
+      font-size: 31px;
+      line-height: 1.24;
+      letter-spacing: 0;
+    }
+
+    header p,
+    .hint {
+      color: var(--muted);
+    }
+
+    .topline {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip,
+    .badge {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .chip.red,
+    .badge.red {
+      background: #f7d7d7;
+      color: #842525;
+    }
+
+    .chip.orange,
+    .badge.orange {
+      background: #fff0d4;
+      color: #70420f;
+    }
+
+    .chip.green,
+    .badge.green {
+      background: #dff3e9;
+      color: #135b3b;
+    }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    section h3 {
+      margin-bottom: 8px;
+      font-size: 22px;
+    }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .card {
+      min-height: 128px;
+      padding: 16px;
+    }
+
+    .card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .value {
+      margin: 0;
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+
+    .sub {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel h4 {
+      margin-bottom: 12px;
+      font-size: 18px;
+    }
+
+    .alert {
+      display: grid;
+      grid-template-columns: 76px minmax(0, 1fr) 120px;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      margin-bottom: 10px;
+    }
+
+    .priority {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 30px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .p1 {
+      background: var(--red);
+    }
+
+    .p2 {
+      background: var(--orange);
+    }
+
+    .p3 {
+      background: var(--green);
+    }
+
+    .alert strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .alert p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .status {
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      padding: 11px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .table tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .bars {
+      display: grid;
+      gap: 10px;
+    }
+
+    .bar {
+      display: grid;
+      grid-template-columns: 116px minmax(0, 1fr) 76px;
+      gap: 10px;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .track {
+      height: 14px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e4ebf1;
+    }
+
+    .fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--blue);
+    }
+
+    .fill.red {
+      background: var(--red);
+    }
+
+    .fill.orange {
+      background: var(--orange);
+    }
+
+    .fill.green {
+      background: var(--green);
+    }
+
+    .bar strong {
+      text-align: right;
+    }
+
+    .heatmap {
+      display: grid;
+      grid-template-columns: 88px repeat(8, minmax(0, 1fr));
+      gap: 5px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .cell {
+      min-height: 36px;
+      display: grid;
+      place-items: center;
+      border-radius: 6px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-weight: 900;
+      padding: 4px;
+    }
+
+    .cell.head {
+      background: #ffffff;
+      color: var(--muted);
+      border: 1px solid var(--line);
+    }
+
+    .cell.warn {
+      background: #fff0d4;
+      color: #70420f;
+    }
+
+    .cell.critical {
+      background: #f7d7d7;
+      color: #842525;
+    }
+
+    .timeline {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .timeline li {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .timeline strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .cause {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      margin-bottom: 12px;
+    }
+
+    .cause-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .cause h4 {
+      margin: 0;
+    }
+
+    .evidence-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .evidence-list li {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .action-list {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .action-list li {
+      display: grid;
+      grid-template-columns: 90px minmax(0, 1fr) 116px;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .note {
+      padding: 14px;
+      border-left: 5px solid var(--orange);
+      border-radius: 8px;
+      background: #fff7ed;
+      color: #5c3a16;
+    }
+
+    .feedback {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .feedback li {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .print-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @media (max-width: 1100px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+        height: auto;
+      }
+
+      main {
+        padding: 22px;
+      }
+
+      .kpi-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .heatmap {
+        overflow-x: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .kpi-grid,
+      .alert,
+      .bar,
+      .action-list li {
+        grid-template-columns: 1fr;
+      }
+
+      .status,
+      .bar strong {
+        text-align: left;
+      }
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+
+      .app {
+        display: block;
+      }
+
+      aside,
+      .print-row {
+        display: none;
+      }
+
+      main {
+        padding: 0;
+      }
+
+      header,
+      section,
+      .card,
+      .panel {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="mark">FQC</div>
+        <h1>최종 산출물<br>예시 Report</h1>
+      </div>
+      <div class="side-card">
+        <strong>보고 기준</strong>
+        2026-05-20 07:00 ~ 2026-05-21 07:00
+      </div>
+      <div class="side-card">
+        <strong>대상</strong>
+        MODULE-A / Laminator<br>
+        FQC 수율 개선
+      </div>
+      <nav aria-label="최종 산출물 목차">
+        <a href="#summary">요약</a>
+        <a href="#alerts">알람</a>
+        <a href="#yield">FQC 수율</a>
+        <a href="#bom">BOM/Recipe</a>
+        <a href="#equipment">설비/시간</a>
+        <a href="#rca">AI 원인 후보</a>
+        <a href="#literature">논문 근거</a>
+        <a href="#actions">액션아이템</a>
+        <a href="#history">히스토리</a>
+        <a href="#feedback">피드백</a>
+      </nav>
+    </aside>
+
+    <main>
+      <div class="shell">
+        <header id="summary">
+          <div class="eyebrow">예시 화면 · 피드백용 Mock Report</div>
+          <h2>FQC 수율 Loss 주요 원인 후보: LAM-03 / Recipe RCP-A1 / CRACK 집중</h2>
+          <p>
+            이 화면은 최종적으로 자동 생성될 산출물의 예시입니다. 실제 값은 샘플 데이터 기반이며, 피드백 후 BRD/PRD/화면설계/대시보드 스펙에 반영합니다.
+          </p>
+          <div class="topline">
+            <div class="chips">
+              <span class="chip red">P1 CRACK 집중</span>
+              <span class="chip orange">BOM/Recipe 반복 패턴</span>
+              <span class="chip orange">DB 연동 일부 미확인</span>
+              <span class="chip green">담당자 승인 필요</span>
+            </div>
+            <span class="chip">출력: HTML + Excel + Checklist + History</span>
+          </div>
+        </header>
+
+        <div class="kpi-grid">
+          <div class="card">
+            <strong>FQC Yield</strong>
+            <p class="value">99.35%</p>
+            <p class="sub">전일 대비 -0.18%p</p>
+          </div>
+          <div class="card">
+            <strong>Yield Loss</strong>
+            <p class="value">0.65%</p>
+            <p class="sub">NG 55 / 검사 8,463</p>
+          </div>
+          <div class="card">
+            <strong>Top Defect</strong>
+            <p class="value">CRACK</p>
+            <p class="sub">이벤트 16건</p>
+          </div>
+          <div class="card">
+            <strong>Top Equipment</strong>
+            <p class="value">LAM-03</p>
+            <p class="sub">NG율 1.04%</p>
+          </div>
+          <div class="card">
+            <strong>AI Action</strong>
+            <p class="value">5건</p>
+            <p class="sub">P1 2건 / P2 3건</p>
+          </div>
+          <div class="card">
+            <strong>Data Coverage</strong>
+            <p class="value">82%</p>
+            <p class="sub">DB 미연동 항목 존재</p>
+          </div>
+        </div>
+
+        <section id="alerts">
+          <h3>1. 오늘의 자동 알람</h3>
+          <p class="hint">AI가 설비/불량/Profile/BOM/Recipe 데이터를 종합해 생성한 알람 예시입니다.</p>
+          <div class="alert">
+            <span class="priority p1">P1</span>
+            <div>
+              <strong>LAM-03 14:00-15:00 CRACK 10건 집중</strong>
+              <p>동일 설비/동일 불량 1시간 5건 이상 기준 초과. FQC Loss 영향도 높음.</p>
+            </div>
+            <span class="status">즉시 확인</span>
+          </div>
+          <div class="alert">
+            <span class="priority p1">P1</span>
+            <div>
+              <strong>진공도 하락 + 압력 알람 + Cycle time 증가 동시 발생</strong>
+              <p>vacuum_kpa -89.1, pressure fluctuation HIGH alarm, cycle_time 99.0 sec.</p>
+            </div>
+            <span class="status">원인 후보</span>
+          </div>
+          <div class="alert">
+            <span class="priority p2">P2</span>
+            <div>
+              <strong>BOM-A / Recipe RCP-A1 조건에서 CRACK 반복 이력</strong>
+              <p>최근 7일 중 3일, 동일 BOM/Recipe 조합에서 CRACK 상위 발생.</p>
+            </div>
+            <span class="status">히스토리 확인</span>
+          </div>
+        </section>
+
+        <section id="yield">
+          <h3>2. FQC 수율 / Loss 요약</h3>
+          <div class="grid-2">
+            <div class="panel">
+              <h4>불량 Loss 구성</h4>
+              <div class="bars">
+                <div class="bar"><span>CRACK</span><div class="track"><div class="fill red" style="width: 53%"></div></div><strong>53%</strong></div>
+                <div class="bar"><span>BUBBLE</span><div class="track"><div class="fill orange" style="width: 17%"></div></div><strong>17%</strong></div>
+                <div class="bar"><span>EDGE</span><div class="track"><div class="fill" style="width: 17%"></div></div><strong>17%</strong></div>
+                <div class="bar"><span>FOREIGN</span><div class="track"><div class="fill green" style="width: 13%"></div></div><strong>13%</strong></div>
+              </div>
+            </div>
+            <div class="panel">
+              <h4>AI 요약 코멘트</h4>
+              <p>
+                금일 FQC Loss의 가장 큰 기여 항목은 CRACK이며, 발생 위치가 LAM-03 14시대에 집중되어 있습니다. 같은 구간에서 진공도 하락과 압력 알람이 겹쳐 공정 조건 이탈 가능성을 우선 검토해야 합니다.
+              </p>
+              <div class="note">주의: AI는 원인을 확정하지 않고, 현장 점검 우선순위를 제안합니다.</div>
+            </div>
+          </div>
+        </section>
+
+        <section id="bom">
+          <h3>3. BOM / Recipe 조건별 반복 패턴</h3>
+          <p class="hint">BOM 자재 종류와 Recipe 조건이 다양하므로, 조건별 평균/표준편차와 반복 이력을 함께 보여줍니다.</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>BOM</th>
+                <th>Recipe</th>
+                <th>검사 수량</th>
+                <th>CRACK NG율</th>
+                <th>7일 평균</th>
+                <th>표준편차</th>
+                <th>AI 판단</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>BOM-A</td>
+                <td>RCP-A1</td>
+                <td>2,790</td>
+                <td><strong>0.57%</strong></td>
+                <td>0.21%</td>
+                <td>0.08%</td>
+                <td><span class="badge red">3σ 초과</span></td>
+              </tr>
+              <tr>
+                <td>BOM-B</td>
+                <td>RCP-A1</td>
+                <td>2,823</td>
+                <td>0.14%</td>
+                <td>0.16%</td>
+                <td>0.05%</td>
+                <td><span class="badge green">정상</span></td>
+              </tr>
+              <tr>
+                <td>BOM-A</td>
+                <td>RCP-B2</td>
+                <td>2,850</td>
+                <td>0.18%</td>
+                <td>0.19%</td>
+                <td>0.06%</td>
+                <td><span class="badge green">정상</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="equipment">
+          <h3>4. 설비 / 시간대 집중 분석</h3>
+          <div class="grid-2">
+            <div class="panel">
+              <h4>설비별 NG율</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>설비</th>
+                    <th>검사</th>
+                    <th>NG</th>
+                    <th>NG율</th>
+                    <th>판정</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>LAM-03</td><td>2,790</td><td>29</td><td><strong>1.04%</strong></td><td><span class="badge red">High</span></td></tr>
+                  <tr><td>LAM-01</td><td>2,850</td><td>13</td><td>0.46%</td><td><span class="badge green">Normal</span></td></tr>
+                  <tr><td>LAM-02</td><td>2,823</td><td>13</td><td>0.46%</td><td><span class="badge green">Normal</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="panel">
+              <h4>시간대 Heatmap</h4>
+              <div class="heatmap">
+                <div class="cell head">설비/시간</div><div class="cell head">11</div><div class="cell head">12</div><div class="cell head">13</div><div class="cell head">14</div><div class="cell head">15</div><div class="cell head">16</div><div class="cell head">17</div><div class="cell head">18</div>
+                <div class="cell head">LAM-01</div><div class="cell">0</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">0</div>
+                <div class="cell head">LAM-02</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div>
+                <div class="cell head">LAM-03</div><div class="cell">1</div><div class="cell">1</div><div class="cell warn">2</div><div class="cell critical">10</div><div class="cell warn">4</div><div class="cell">1</div><div class="cell">1</div><div class="cell">1</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="rca">
+          <h3>5. AI 원인 후보 분석</h3>
+          <p class="hint">논문 기반 Failure Mode + 현장 데이터 + 경쟁 가설 방식으로 원인 후보를 제시합니다.</p>
+          <div class="note">
+            분석 원칙: AI는 “원인 확정”이 아니라 문헌에서 알려진 Failure Mode를 현장 데이터 신호와 매칭해 검증 우선순위를 제안합니다.
+            CRACK은 EL pattern과 공정 stress를 함께 보고, BUBBLE/Delamination은 encapsulant 계면, 진공, 온도, 압력 조건을 함께 확인합니다.
+          </div>
+          <div class="grid-2">
+            <div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4>1차 후보: Vacuum / Pressure Process Window Disturbance</h4>
+                  <span class="badge red">High</span>
+                </div>
+                <ul class="evidence-list">
+                  <li><strong>현장 신호</strong>: CRACK이 LAM-03 14시대에 10건 집중되고, 동일 시간대 vacuum_kpa 하락과 pressure fluctuation 알람이 겹침</li>
+                  <li><strong>문헌 연결</strong>: PV Failure review와 EL 관찰 문헌은 crack/inactive area를 단순 불량명이 아니라 mechanical/process stress와 함께 해석할 것을 제안</li>
+                  <li><strong>판단</strong>: defect concentration + profile anomaly + alarm overlap + 반복 recipe 이력까지 4개 근거가 맞물려 High 후보로 표시</li>
+                </ul>
+              </div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4>경쟁 가설: Pre-existing Micro-crack Propagation</h4>
+                  <span class="badge orange">Medium</span>
+                </div>
+                <ul class="evidence-list">
+                  <li><strong>현장 신호</strong>: CRACK이 특정 설비에서 집중됐지만, crack이 라미네이션 이전에 이미 존재했는지는 아직 미확인</li>
+                  <li><strong>문헌 연결</strong>: EL image 분류 연구는 crack pattern, inactive area, cell 단위 defect probability를 분리해 봐야 함을 보여줌</li>
+                  <li><strong>검증 조건</strong>: Pre-lamination EL, stringing/handling log, rework 이력이 연결되면 1차 후보와 경쟁 가설의 우선순위를 재계산</li>
+                </ul>
+              </div>
+              <div class="cause">
+                <div class="cause-head">
+                  <h4>별도 후보: Bubble / Delamination Process Sensitivity</h4>
+                  <span class="badge orange">Medium</span>
+                </div>
+                <ul class="evidence-list">
+                  <li><strong>현장 신호</strong>: BUBBLE은 금일 Top defect는 아니지만 BOM-A/RCP-A1 조건에서 전주 대비 증가</li>
+                  <li><strong>문헌 연결</strong>: Delamination/Blistering 문헌은 encapsulant 계면, void, 수분, 온도, 압력 조건을 함께 확인하도록 설명</li>
+                  <li><strong>검증 조건</strong>: visual bubble count, cooling time, encapsulant lot, 진공 유지 시간 데이터를 추가하면 CRACK 분석과 별도 트랙으로 관리</li>
+                </ul>
+              </div>
+            </div>
+            <div class="panel">
+              <h4>RCA 신뢰도 산정 예시</h4>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th>평가 항목</th>
+                    <th>가중치</th>
+                    <th>현재 점수</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>불량 집중성: 설비/시간/불량코드</td><td>30%</td><td><strong>28</strong></td></tr>
+                  <tr><td>Profile 중첩: 진공/온도/압력/time</td><td>25%</td><td><strong>21</strong></td></tr>
+                  <tr><td>설비 알람 중첩</td><td>15%</td><td><strong>13</strong></td></tr>
+                  <tr><td>문헌 Failure Mode와의 일치</td><td>20%</td><td><strong>16</strong></td></tr>
+                  <tr><td>BOM/Recipe 반복 이력</td><td>10%</td><td><strong>8</strong></td></tr>
+                </tbody>
+              </table>
+              <p class="sub">총점 86/100: High. 단, 원인 확정은 담당자 검증 후 가능.</p>
+              <h4>추가 검증 필요 데이터</h4>
+              <ul class="timeline">
+                <li><strong>DB/MES 확인</strong>module_id 기준으로 BOM, Recipe, Equipment, Defect 연결 가능 여부</li>
+                <li><strong>설비 확인</strong>Vacuum pump, Seal, pressure uniformity, alarm detail</li>
+                <li><strong>검사 확인</strong>EL 원본 이미지, crack 위치, inactive area 여부</li>
+                <li><strong>히스토리 확인</strong>최근 7일 동일 BOM/Recipe 조건 반복 발생 여부</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section id="literature">
+          <h3>6. 논문 기반 분석 근거</h3>
+          <p class="hint">아래 표는 논문/리뷰 내용을 그대로 복사하는 것이 아니라, 현장 대시보드에서 사용할 판단 기준으로 변환한 예시입니다.</p>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>문헌/자료</th>
+                <th>전문 분석 관점</th>
+                <th>필요 데이터</th>
+                <th>대시보드 적용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><a href="../references/paper_reference.html">IEA PVPS Task 13 Failure Review</a></td>
+                <td>Crack, inactive area, delamination 등 Failure Mode를 분리해 보고, 관찰 현상과 가능한 stress 요인을 연결</td>
+                <td>defect_code, EL pattern, equipment_id, profile anomaly, alarm time</td>
+                <td>“CRACK 집중”을 단순 수량이 아니라 공정 stress 후보와 함께 표시</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.epj-pv.org/articles/epjpv/full_html/2024/01/pv20240039/pv20240039.html" target="_blank" rel="noreferrer">EPJ Photovoltaics EL Nomenclature</a></td>
+                <td>EL 관찰 항목은 이름과 위치를 표준화해야 비교 가능하므로 defect_code와 pattern_hint를 분리</td>
+                <td>EL image_ref, crack location, inactive area 여부, cell position</td>
+                <td>검사 이미지를 “CRACK” 하나로 묶지 않고 edge/cross/inactive pattern으로 세분화</td>
+              </tr>
+              <tr>
+                <td><a href="https://arxiv.org/abs/1807.02894" target="_blank" rel="noreferrer">Deitsch et al. EL Defect Classification</a></td>
+                <td>EL 이미지는 수동 판정 편차와 시간 부담이 있어 AI 보조 분류의 가치가 있음</td>
+                <td>EL image crop, cell-level defect probability, judge/rejudge result</td>
+                <td>AI가 EL 원본을 바로 확정 판정하지 않고 “검사 확인 필요” 액션으로 연결</td>
+              </tr>
+              <tr>
+                <td><a href="https://www.sciencedirect.com/science/article/pii/S136403212300802X" target="_blank" rel="noreferrer">Interfacial Delamination Review</a></td>
+                <td>Bubble/Delamination은 계면 위치와 encapsulant/backsheet/cell interface 관점으로 분류</td>
+                <td>visual_bubble_count, vacuum_kpa, temperature, pressure, cooling_time, material lot</td>
+                <td>BUBBLE은 외관 수량만 보지 않고 진공/온도/압력 profile과 함께 별도 RCA 트랙으로 표시</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="note">보고 표현 기준: “논문상 가능 원인”과 “현장 데이터에서 확인된 신호”를 분리해 표시해 과잉 단정을 막습니다.</div>
+        </section>
+
+        <section id="actions">
+          <h3>7. AI 액션아이템 / 체크리스트</h3>
+          <ul class="action-list">
+            <li><span class="badge red">P1</span><div>LAM-03 진공/압력 계통 점검 및 14시대 알람 상세 확인</div><strong>설비 담당</strong></li>
+            <li><span class="badge red">P1</span><div>RCP-A1 조건의 온도/압력/진공도 관리 범위 재확인</div><strong>공정 담당</strong></li>
+            <li><span class="badge orange">P2</span><div>BOM-A + RCP-A1 조합의 최근 7일 CRACK 반복 이력 확인</div><strong>공정 담당</strong></li>
+            <li><span class="badge orange">P2</span><div>EL 원본 이미지에서 crack 위치 pattern 분류</div><strong>검사 담당</strong></li>
+            <li><span class="badge green">승인</span><div>팀장 보고 전 원인 후보 표현과 조치 계획 최종 승인</div><strong>담당자</strong></li>
+          </ul>
+        </section>
+
+        <section id="history">
+          <h3>8. 반복 이슈 히스토리</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>날짜</th>
+                <th>조건</th>
+                <th>불량</th>
+                <th>원인 후보</th>
+                <th>조치</th>
+                <th>결과</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2026-05-14</td><td>BOM-A / RCP-A1 / LAM-03</td><td>CRACK 증가</td><td>Vacuum fluctuation</td><td>점검 요청</td><td>미완료</td></tr>
+              <tr><td>2026-05-18</td><td>BOM-A / RCP-A1 / LAM-03</td><td>CRACK 7건</td><td>Pressure variation</td><td>Recipe 확인</td><td>관찰 지속</td></tr>
+              <tr><td>2026-05-20</td><td>BOM-A / RCP-A1 / LAM-03</td><td>CRACK 10건</td><td>Vacuum/Pressure window</td><td>P1 알람</td><td>진행 중</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section>
+          <h3>9. 자동 생성되는 분석 Excel 시트</h3>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>시트</th>
+                <th>내용</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Overview</td><td>FQC 수율, Loss, Top defect, Top equipment</td></tr>
+              <tr><td>Defect_Pareto</td><td>CRACK/BUBBLE 등 불량별 점유율</td></tr>
+              <tr><td>BOM_Recipe_History</td><td>BOM/Recipe 조건별 평균, 표준편차, 반복 발생 이력</td></tr>
+              <tr><td>Profile_Anomaly</td><td>공정 time, 온도, 진공도, 압력 이상 구간</td></tr>
+              <tr><td>Evidence_Log</td><td>AI 원인 후보별 근거 데이터와 신뢰도</td></tr>
+              <tr><td>Literature_Evidence_Matrix</td><td>논문 Failure Mode와 현장 데이터 신호 매핑</td></tr>
+              <tr><td>RCA_Hypothesis_Test</td><td>1차 후보, 경쟁 가설, 배제 가설별 검증 결과</td></tr>
+              <tr><td>Action_Items</td><td>설비 점검, Recipe 확인, 모니터링 체크리스트</td></tr>
+            </tbody>
+          </table>
+        </section>
+
+        <section id="feedback">
+          <h3>10. 피드백 받고 싶은 항목</h3>
+          <p class="hint">이 예시 화면을 보고 피드백을 주면, 해당 내용을 BRD/PRD/화면 설계서/대시보드 스펙에 반영합니다.</p>
+          <ul class="feedback">
+            <li>첫 화면의 KPI 카드가 충분한가? FQC 수율 외에 추가해야 할 지표가 있는가?</li>
+            <li>BOM/Recipe 분석 테이블의 컬럼이 현장 기준에 맞는가?</li>
+            <li>AI 원인 후보 표현이 너무 단정적이거나, 반대로 너무 약하지 않은가?</li>
+            <li>액션아이템의 담당/우선순위/완료 상태가 필요한 수준으로 보이는가?</li>
+            <li>알람 시스템은 어떤 기준에서 P1/P2/P3로 나누는 것이 적절한가?</li>
+            <li>분석 Excel 시트 구성에서 빠진 시트나 컬럼이 있는가?</li>
+          </ul>
+          <div class="print-row">
+            <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

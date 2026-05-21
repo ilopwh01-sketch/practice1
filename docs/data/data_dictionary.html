@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>샘플 데이터 설명서 - Laminator AI 업무 자동화</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    .wrap {
+      width: min(1160px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    h2 { margin-bottom: 8px; font-size: 22px; }
+    .hint { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .file-card {
+      min-height: 172px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .file-card h3 { margin-bottom: 8px; font-size: 17px; }
+    .file-card p { color: var(--muted); }
+    .file-card code { color: var(--blue); font-weight: 900; }
+
+    .table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #ffffff;
+      font-size: 14px;
+    }
+
+    .table th,
+    .table td {
+      padding: 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .table th {
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .table tr:last-child td { border-bottom: 0; }
+
+    .scenario {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .scenario li {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 900;
+      margin-right: 8px;
+    }
+
+    .red { background: var(--red); }
+    .orange { background: var(--orange); }
+    .green { background: var(--green); }
+
+    .print-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 8px;
+      padding: 11px 14px;
+      background: var(--blue);
+      color: #ffffff;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      body { background: #ffffff; }
+      header, section { box-shadow: none; break-inside: avoid; }
+      .print-row { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">Data Dictionary</div>
+      <h1>Laminator AI 자동화 샘플 데이터 설명서</h1>
+      <p>대시보드와 BRD/PRD 시연에 사용되는 비식별 샘플 데이터의 구성, 컬럼 의미, 의도된 이상 케이스를 설명합니다.</p>
+    </header>
+
+    <section>
+      <h2>1. 샘플 파일 구성</h2>
+      <div class="grid">
+        <div class="file-card">
+          <h3>생산 요약</h3>
+          <p><code>daily_production_summary_2026-05-20.csv</code></p>
+          <p>07-07 기준 설비별 생산/검사/NG 수량과 대표 불량을 담은 요약 데이터입니다.</p>
+        </div>
+        <div class="file-card">
+          <h3>불량 이벤트</h3>
+          <p><code>defect_events_2026-05-20.csv</code></p>
+          <p>불량 발생 시각, 설비, 모듈 ID, 불량 코드, 검사 장비를 이벤트 단위로 기록합니다.</p>
+        </div>
+        <div class="file-card">
+          <h3>설비 알람</h3>
+          <p><code>equipment_alarm_2026-05-20.csv</code></p>
+          <p>설비 알람 발생 시각, 알람 코드, 심각도, 지속 시간을 기록합니다.</p>
+        </div>
+        <div class="file-card">
+          <h3>Profile 스냅샷</h3>
+          <p><code>laminator_profile_snapshot_2026-05-20.csv</code></p>
+          <p>공정 time, 온도, 진공도, 압력 등 주요 Profile 값을 시간대별로 기록합니다.</p>
+        </div>
+        <div class="file-card">
+          <h3>수기 메모</h3>
+          <p><code>manual_memo_2026-05-20.txt</code></p>
+          <p>담당자가 보고서에 반영할 현장 관찰 사항과 인계 내용을 작성한 텍스트입니다.</p>
+        </div>
+        <div class="file-card">
+          <h3>폴더 설명</h3>
+          <p><code>sample_data/README.md</code></p>
+          <p>샘플 데이터의 의도와 분석 포인트를 간단히 정리한 README입니다.</p>
+        </div>
+        <div class="file-card">
+          <h3>일반 PV 모듈 샘플</h3>
+          <p><code>sample_data/general_pv_module</code></p>
+          <p>실제 데이터가 없을 때 쓰는 일반 Failure Mode 기반 샘플 데이터입니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 주요 컬럼 사전</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>컬럼</th>
+            <th>파일</th>
+            <th>의미</th>
+            <th>대시보드 사용처</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>time_bucket</td>
+            <td>daily_production_summary</td>
+            <td>07-07 기준 시간대 구간</td>
+            <td>시간 Heatmap</td>
+          </tr>
+          <tr>
+            <td>equipment_id</td>
+            <td>공통</td>
+            <td>LAM-01, LAM-02, LAM-03 등 설비 ID</td>
+            <td>설비별 NG율, 원인 후보</td>
+          </tr>
+          <tr>
+            <td>inspection_qty</td>
+            <td>daily_production_summary</td>
+            <td>검사 완료 수량</td>
+            <td>불량률 계산 분모</td>
+          </tr>
+          <tr>
+            <td>ng_qty</td>
+            <td>daily_production_summary</td>
+            <td>NG 수량</td>
+            <td>KPI 카드, Heatmap</td>
+          </tr>
+          <tr>
+            <td>defect_code</td>
+            <td>defect_events</td>
+            <td>CRACK, BUBBLE, EDGE, FOREIGN 등 불량 코드</td>
+            <td>불량 Pareto, 우선 감소 대상</td>
+          </tr>
+          <tr>
+            <td>alarm_code</td>
+            <td>equipment_alarm</td>
+            <td>설비 알람 코드</td>
+            <td>Profile/알람 Timeline</td>
+          </tr>
+          <tr>
+            <td>severity</td>
+            <td>equipment_alarm</td>
+            <td>알람 심각도 LOW/MEDIUM/HIGH</td>
+            <td>P1/P2 우선순위 판단</td>
+          </tr>
+          <tr>
+            <td>upper_temp_c</td>
+            <td>laminator_profile_snapshot</td>
+            <td>상부 온도</td>
+            <td>Profile 이상 탐지</td>
+          </tr>
+          <tr>
+            <td>vacuum_kpa</td>
+            <td>laminator_profile_snapshot</td>
+            <td>진공도</td>
+            <td>CRACK 원인 후보 근거</td>
+          </tr>
+          <tr>
+            <td>cycle_time_sec</td>
+            <td>laminator_profile_snapshot</td>
+            <td>공정 time 또는 Cycle time</td>
+            <td>공정 time 이상 탐지</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. 의도된 이상 케이스</h2>
+      <ul class="scenario">
+        <li><span class="badge red">P1</span><strong>LAM-03 14시대 CRACK 집중</strong><br>동일 설비/동일 불량이 1시간 내 10건 발생하도록 구성했습니다.</li>
+        <li><span class="badge red">P1</span><strong>Profile 동시 이탈</strong><br>14시대 진공도 하락, 압력 저하, 상부 온도 상승, 공정 time 증가가 나타나도록 구성했습니다.</li>
+        <li><span class="badge orange">P2</span><strong>설비 알람 연계</strong><br>13:58, 14:06에 LAM-03 HIGH 알람이 발생해 CRACK 집중 시간과 겹치도록 구성했습니다.</li>
+        <li><span class="badge orange">P2</span><strong>수량 불일치</strong><br>LAM-03 14시대 output_qty 187, inspection_qty 186으로 1매 차이가 발생하도록 구성했습니다.</li>
+        <li><span class="badge green">검증</span><strong>재판정/재투입 이력</strong><br>재판정 1건, 재투입 2건을 넣어 MES 재확인 필요 케이스를 만들었습니다.</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>4. 일반 PV 모듈 샘플 데이터</h2>
+      <p class="hint">메모장 요청에 따라 실제 현장 데이터가 없어도 설명 가능한 일반 샘플 데이터를 추가했습니다. Failure Mode별 그림 설명은 <a href="../references/paper_reference.html">논문 레퍼런스 화면</a>과 연결됩니다.</p>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>파일</th>
+            <th>목적</th>
+            <th>포함 Failure Mode</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>general_module_daily_summary.csv</td>
+            <td>공정 단계별 NG 현황 요약</td>
+            <td>Cell crack, Bubble/Delamination, Low power</td>
+          </tr>
+          <tr>
+            <td>general_module_defect_events.csv</td>
+            <td>일반 불량 이벤트 단위 샘플</td>
+            <td>CRACK, BUBBLE, INACTIVE_AREA, DISCOLOR, PID_SUSPECT</td>
+          </tr>
+          <tr>
+            <td>general_module_process_context.csv</td>
+            <td>라미네이션 공정 조건 샘플</td>
+            <td>온도, 진공도, 압력, Cycle time, Bubble count</td>
+          </tr>
+          <tr>
+            <td>pv_failure_mode_reference.csv</td>
+            <td>논문 기반 Failure Mode 매핑</td>
+            <td>불량-검사방법-가능 원인-확인 데이터-권장 조치</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>5. 보고서에서 확인할 포인트</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>확인 항목</th>
+            <th>샘플 데이터에서 기대되는 결과</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>전체 NG율</td>
+            <td>검사 8,463매, NG 55매, NG율 0.65%</td>
+          </tr>
+          <tr>
+            <td>최우선 설비</td>
+            <td>LAM-03, NG율 1.04%</td>
+          </tr>
+          <tr>
+            <td>우선 불량</td>
+            <td>CRACK 16건, BUBBLE 5건</td>
+          </tr>
+          <tr>
+            <td>원인 후보</td>
+            <td>진공도 하락 및 압력 변동 알람과 CRACK 집중의 시간 연계</td>
+          </tr>
+          <tr>
+            <td>후속 조치</td>
+            <td>설비 점검, Recipe 확인, 동일 시간대 재발 모니터링</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="print-row">
+        <button type="button" onclick="window.print()">인쇄 / PDF 저장</button>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
