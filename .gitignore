@@ -1,0 +1,16 @@
+# Local backup/export copies
+index laminator sheet.html
+
+# OS/editor noise
+Thumbs.db
+.DS_Store
+
+# Python/backend future artifacts
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local secrets
+.env
+*.local

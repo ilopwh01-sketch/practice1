@@ -1,0 +1,2459 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>라미네이터 관리</title>
+  <style>
+    :root {
+      --bg: #f3f6f8;
+      --surface: #ffffff;
+      --surface-2: #eef4f7;
+      --surface-3: #f8fafb;
+      --line: #d5dde2;
+      --line-strong: #8496a2;
+      --ink: #132331;
+      --muted: #60717d;
+      --navy: #102c46;
+      --navy-2: #0b2237;
+      --green: #008a7a;
+      --green-soft: #dff3ef;
+      --amber: #f1b42f;
+      --amber-soft: #fff4d1;
+      --red: #c43c3c;
+      --red-soft: #fde6e4;
+      --blue: #006bb6;
+      --blue-soft: #e3f0fa;
+      --lime: #fff7a8;
+      --focus: #007d8c;
+      --shadow: 0 16px 38px rgba(16, 44, 70, 0.12);
+      font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", "Segoe UI", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-size: 13px;
+      line-height: 1.5;
+      letter-spacing: 0;
+      text-rendering: geometricPrecision;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      letter-spacing: 0;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 244px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: linear-gradient(180deg, var(--navy) 0%, var(--navy-2) 100%);
+      color: #edf6fb;
+      padding: 20px 16px;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      box-shadow: inset -1px 0 0 rgba(255,255,255,0.08);
+    }
+
+    .brand {
+      display: grid;
+      grid-template-columns: 40px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      min-height: 48px;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.92) 0 18%, transparent 18% 100%),
+        linear-gradient(90deg, rgba(255,255,255,0.85) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(255,255,255,0.85) 1px, transparent 1px),
+        #f4c531;
+      background-size: auto, 10px 10px, 10px 10px, auto;
+      border: 1px solid rgba(255,255,255,0.38);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.16);
+    }
+
+    .brand strong {
+      display: block;
+      font-size: 16px;
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand span {
+      color: #b7c8d4;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .nav {
+      display: grid;
+      gap: 6px;
+    }
+
+    .nav button,
+    .side-action {
+      border: 0;
+      background: transparent;
+      color: #dce9f0;
+      text-align: left;
+      min-height: 42px;
+      border-radius: 8px;
+      padding: 10px 11px;
+      cursor: pointer;
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .nav button:hover,
+    .side-action:hover {
+      background: rgba(255,255,255,0.08);
+    }
+
+    .nav button span:nth-child(2) {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .nav button.active {
+      background: #f7fbfd;
+      color: var(--navy);
+      font-weight: 700;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.16);
+    }
+
+    .nav-icon {
+      width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      display: inline-grid;
+      place-items: center;
+      background: rgba(255,255,255,0.12);
+      font-weight: 800;
+      font-size: 12px;
+    }
+
+    .nav button.active .nav-icon {
+      background: var(--blue-soft);
+      color: var(--blue);
+    }
+
+    .side-meta {
+      margin-top: auto;
+      border-top: 1px solid rgba(255,255,255,0.12);
+      padding-top: 14px;
+      display: grid;
+      gap: 8px;
+      color: #bdced9;
+      font-size: 12px;
+    }
+
+    .legend-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .main {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto auto minmax(0, 1fr);
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 20px 14px;
+      display: grid;
+      gap: 12px;
+      box-shadow: 0 2px 14px rgba(16, 44, 70, 0.04);
+    }
+
+    .title-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.2;
+      font-weight: 850;
+      color: var(--navy);
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin-top: 3px;
+      font-size: 12px;
+      max-width: 720px;
+      overflow-wrap: anywhere;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: auto minmax(116px, 1fr);
+      align-items: center;
+      gap: 8px;
+      background: var(--surface-2);
+      border: 1px solid #d5e0e6;
+      border-radius: 8px;
+      padding: 6px 10px;
+      min-height: 40px;
+      max-width: 340px;
+      min-width: 178px;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+      font-weight: 700;
+    }
+
+    .field select,
+    .field input {
+      border: 0;
+      background: transparent;
+      min-width: 0;
+      outline: none;
+      color: var(--ink);
+      height: 26px;
+    }
+
+    .field:focus-within {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgba(0, 125, 140, 0.12);
+      background: #fff;
+    }
+
+    .segmented {
+      display: inline-flex;
+      border: 1px solid #d3dde4;
+      background: var(--surface-2);
+      border-radius: 8px;
+      overflow: hidden;
+      min-height: 40px;
+      flex: 0 0 auto;
+    }
+
+    .segmented button {
+      border: 0;
+      border-right: 1px solid #d1d8d2;
+      background: transparent;
+      min-width: 44px;
+      padding: 9px 11px;
+      cursor: pointer;
+      color: var(--muted);
+      font-weight: 750;
+    }
+
+    .segmented button:last-child {
+      border-right: 0;
+    }
+
+    .segmented button.active {
+      background: var(--navy);
+      color: white;
+      font-weight: 700;
+    }
+
+    .btn {
+      border: 1px solid #cbd3ce;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 40px;
+      padding: 9px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      white-space: nowrap;
+      font-weight: 750;
+      line-height: 1;
+      max-width: 100%;
+      box-shadow: 0 1px 2px rgba(16, 44, 70, 0.04);
+    }
+
+    .btn:focus-visible,
+    .segmented button:focus-visible,
+    .chip-button:focus-visible,
+    .mini-action:focus-visible {
+      outline: 3px solid rgba(0, 125, 140, 0.22);
+      outline-offset: 2px;
+    }
+
+    .btn:hover {
+      border-color: var(--line-strong);
+    }
+
+    .btn.primary {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 8px 18px rgba(0, 138, 122, 0.22);
+    }
+
+    .btn .btn-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      display: inline-grid;
+      place-items: center;
+      background: rgba(255,255,255,0.22);
+      font-size: 11px;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    .summary {
+      padding: 14px 20px;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(180px, 1fr));
+      gap: 12px;
+      background: #f8fbfd;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .metric {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 13px 14px 13px 16px;
+      min-height: 84px;
+      display: grid;
+      gap: 6px;
+      box-shadow: 0 4px 14px rgba(22, 32, 26, 0.04);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .metric::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: var(--green);
+    }
+
+    .metric.warn::before {
+      background: var(--amber);
+    }
+
+    .metric.danger::before {
+      background: var(--red);
+    }
+
+    .metric.info::before {
+      background: var(--blue);
+    }
+
+    .metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--navy);
+    }
+
+    .metric-note {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: normal;
+    }
+
+    .content {
+      min-width: 0;
+      padding: 20px;
+      display: grid;
+      gap: 14px;
+      align-content: start;
+    }
+
+    .workband {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      min-width: 0;
+      border-top: 3px solid var(--blue);
+    }
+
+    .band-head {
+      min-height: 48px;
+      border-bottom: 1px solid var(--line);
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fafc 100%);
+    }
+
+    .band-title {
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      color: var(--navy);
+    }
+
+    .band-title small {
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    .table-wrap {
+      overflow: auto;
+      max-height: calc(100vh - 300px);
+      position: relative;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+    }
+
+    th,
+    td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 7px 8px;
+      min-height: 34px;
+      vertical-align: middle;
+      background: #fff;
+      word-break: keep-all;
+      overflow-wrap: anywhere;
+      line-height: 1.38;
+      font-size: 12px;
+      min-width: 0;
+    }
+
+    tbody tr:hover td {
+      background: #f8fbf9;
+    }
+
+    tbody tr.selected-row td {
+      background: #eaf5f1;
+      box-shadow: inset 3px 0 0 var(--green);
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #e4e8e4;
+      color: var(--navy);
+      font-weight: 800;
+      text-align: center;
+      font-size: 12px;
+      white-space: normal;
+      vertical-align: middle;
+    }
+
+    .sticky-1 {
+      position: sticky;
+      left: 0;
+      z-index: 3;
+    }
+
+    th.sticky-1 {
+      z-index: 4;
+    }
+
+    .sticky-2 {
+      position: sticky;
+      left: 86px;
+      z-index: 3;
+    }
+
+    th.sticky-2 {
+      z-index: 4;
+    }
+
+    .row-head {
+      background: #edf3f6;
+      font-weight: 700;
+    }
+
+    .group-cell {
+      background: #e2eaf0;
+      font-weight: 800;
+      text-align: center;
+      color: var(--navy);
+    }
+
+    .number {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .badge {
+      display: inline-grid;
+      min-width: 32px;
+      min-height: 22px;
+      padding: 4px 8px;
+      place-items: center;
+      border-radius: 999px;
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 800;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      max-width: 100%;
+    }
+
+    .badge.maker-M {
+      background: #dbf1e9;
+      color: #0b6d5a;
+      border-color: #a9d6c8;
+    }
+
+    .badge.maker-S {
+      background: #fff0c7;
+      color: #8c5a00;
+      border-color: #e6c66f;
+    }
+
+    .badge.maker-L {
+      background: #e3edf9;
+      color: #235f91;
+      border-color: #b8d2ec;
+    }
+
+    .badge.q-Q1 {
+      background: #eef6e2;
+      color: #3b7115;
+      border-color: #cce2ae;
+    }
+
+    .badge.q-Q2 {
+      background: #fff4ce;
+      color: #8a5a00;
+      border-color: #e4ca7b;
+    }
+
+    .badge.q-Q3 {
+      background: #fde5e3;
+      color: #a72f2a;
+      border-color: #f0b6b2;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      white-space: nowrap;
+      font-weight: 700;
+      font-size: 12px;
+      min-width: max-content;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 99px;
+      background: var(--muted);
+      flex: 0 0 auto;
+    }
+
+    .ok .dot {
+      background: var(--green);
+    }
+
+    .due .dot {
+      background: var(--amber);
+    }
+
+    .stop .dot,
+    .over .dot {
+      background: var(--red);
+    }
+
+    .calendar {
+      min-width: 1260px;
+    }
+
+    .calendar th.date-col,
+    .calendar td.date-cell {
+      width: 42px;
+      min-width: 42px;
+      max-width: 42px;
+      text-align: center;
+      padding: 4px 2px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .date-title {
+      display: grid;
+      gap: 1px;
+      line-height: 1.1;
+    }
+
+    .date-title span:last-child {
+      font-weight: 500;
+      color: var(--muted);
+      font-size: 10px;
+    }
+
+    .planned {
+      background: var(--lime);
+    }
+
+    .done {
+      background: #e9f7ee;
+      color: #0b6d3d;
+      font-weight: 800;
+    }
+
+    .late {
+      background: var(--red-soft);
+      color: var(--red);
+      font-weight: 800;
+    }
+
+    .focus {
+      outline: 2px solid var(--focus);
+      outline-offset: -2px;
+    }
+
+    .usage-cell {
+      display: grid;
+      gap: 5px;
+    }
+
+    .usage-value {
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      align-items: center;
+      font-variant-numeric: tabular-nums;
+      font-weight: 800;
+    }
+
+    .usage-value small {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .usage {
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: #e6ebe7;
+    }
+
+    .usage-bar {
+      height: 100%;
+      width: var(--pct, 0%);
+      background: var(--green);
+    }
+
+    .usage-bar.warn {
+      background: var(--amber);
+    }
+
+    .usage-bar.danger {
+      background: var(--red);
+    }
+
+    .recipe-layout {
+      display: grid;
+      grid-template-columns: minmax(460px, 0.86fr) minmax(620px, 1.14fr);
+      min-height: 520px;
+      min-width: 0;
+    }
+
+    .recipe-list {
+      border-right: 1px solid var(--line);
+      overflow: auto;
+    }
+
+    .recipe-detail {
+      min-width: 0;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .detail-header {
+      padding: 14px;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      gap: 12px;
+      background: #fbfdfe;
+    }
+
+    .detail-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      min-width: 0;
+    }
+
+    .detail-title strong {
+      font-size: 17px;
+      display: block;
+      color: var(--navy);
+      overflow-wrap: anywhere;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(112px, 1fr));
+      gap: 8px;
+    }
+
+    .mini {
+      border: 1px solid #d7ddd8;
+      background: #fff;
+      border-radius: 8px;
+      padding: 9px 10px;
+      min-height: 58px;
+      min-width: 0;
+    }
+
+    .mini span {
+      display: block;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .mini strong {
+      font-size: 15px;
+      color: var(--navy);
+      overflow-wrap: anywhere;
+    }
+
+    .param-table th:first-child,
+    .param-table td:first-child {
+      width: 110px;
+    }
+
+    .param-table th:nth-child(2),
+    .param-table td:nth-child(2) {
+      width: 180px;
+    }
+
+    .param-value {
+      background: #fffef2;
+      font-weight: 700;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .changed {
+      background: var(--amber-soft);
+      color: #7a4d00;
+      font-weight: 800;
+    }
+
+    .editable-cell {
+      cursor: text;
+      outline: 0;
+      transition: background 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .editable-cell:hover {
+      background: #f7fbf9;
+      box-shadow: inset 0 0 0 1px #c2d8cf;
+    }
+
+    .editable-cell:focus {
+      background: #fff;
+      box-shadow: inset 0 0 0 2px var(--focus);
+    }
+
+    .hidden-param td {
+      color: #8b938d;
+      background: #f2f3f2;
+    }
+
+    .action-cell {
+      text-align: center;
+    }
+
+    .mini-action {
+      border: 1px solid #cbd3ce;
+      background: #fff;
+      color: var(--ink);
+      min-height: 28px;
+      padding: 5px 8px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 11px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .mini-action:hover {
+      border-color: var(--line-strong);
+    }
+
+    .mini-action.restore {
+      background: var(--green-soft);
+      border-color: #a9d6c8;
+      color: var(--green);
+    }
+
+    .recipe-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .chip-button {
+      border: 1px solid #ccd4ce;
+      background: #fff;
+      min-height: 32px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 700;
+      white-space: nowrap;
+      line-height: 1;
+    }
+
+    .chip-button.active {
+      color: #fff;
+      background: var(--green);
+      border-color: var(--green);
+    }
+
+    .recipe-insight {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(100px, 1fr));
+      gap: 8px;
+    }
+
+    .recipe-insight .mini {
+      min-height: 48px;
+      background: #f8fbf9;
+    }
+
+    .param-sections {
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      background: #f3f7f9;
+    }
+
+    .param-group {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      overflow: hidden;
+    }
+
+    .param-group summary {
+      min-height: 42px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      cursor: pointer;
+      background: #f9fbfc;
+      border-bottom: 1px solid var(--line);
+      font-weight: 800;
+      list-style: none;
+      color: var(--navy);
+      min-width: 0;
+    }
+
+    .param-group summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .param-group summary::before {
+      content: "▾";
+      color: var(--green);
+      font-size: 14px;
+      margin-right: 2px;
+    }
+
+    .param-group:not([open]) summary {
+      border-bottom: 0;
+    }
+
+    .param-group:not([open]) summary::before {
+      content: "▸";
+    }
+
+    .param-group-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .param-group-meta {
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .param-mini-table th {
+      top: 0;
+      background: #edf4f8;
+    }
+
+    .param-mini-table th:nth-child(1),
+    .param-mini-table td:nth-child(1) {
+      width: 260px;
+    }
+
+    .param-mini-table th:nth-child(2),
+    .param-mini-table td:nth-child(2) {
+      width: 90px;
+    }
+
+    .param-mini-table th:nth-child(3),
+    .param-mini-table td:nth-child(3) {
+      width: 70px;
+    }
+
+    .param-mini-table th:nth-child(4),
+    .param-mini-table td:nth-child(4) {
+      width: 110px;
+    }
+
+    .param-mini-table th:nth-child(5),
+    .param-mini-table td:nth-child(5) {
+      width: 70px;
+    }
+
+    .param-mini-table th:nth-child(6),
+    .param-mini-table td:nth-child(6) {
+      width: 180px;
+    }
+
+    .param-mini-table th:nth-child(7),
+    .param-mini-table td:nth-child(7) {
+      width: 78px;
+    }
+
+    .empty-state {
+      min-height: 160px;
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      background: #fff;
+      border: 1px dashed #cbd3ce;
+      border-radius: 8px;
+    }
+
+    .panel {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: min(660px, calc(100vw - 36px));
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: none;
+      z-index: 10;
+    }
+
+    .panel.open {
+      display: block;
+    }
+
+    .panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fbfd;
+      font-weight: 800;
+      color: var(--navy);
+    }
+
+    .panel-body {
+      padding: 14px;
+      display: grid;
+      gap: 12px;
+      max-height: min(720px, calc(100vh - 110px));
+      overflow: auto;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .form-grid label {
+      display: grid;
+      gap: 4px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      min-width: 0;
+    }
+
+    .form-grid input,
+    .form-grid select,
+    .form-grid textarea {
+      border: 1px solid #ccd7df;
+      border-radius: 8px;
+      min-height: 38px;
+      padding: 8px 10px;
+      background: white;
+      color: var(--ink);
+      min-width: 0;
+      width: 100%;
+    }
+
+    .form-grid input:focus,
+    .form-grid select:focus,
+    .form-grid textarea:focus {
+      outline: 3px solid rgba(0, 125, 140, 0.13);
+      border-color: var(--focus);
+    }
+
+    .form-grid textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .span-2 {
+      grid-column: 1 / -1;
+    }
+
+    .panel-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 9px;
+      flex-wrap: wrap;
+      padding-top: 2px;
+    }
+
+    .review-list {
+      display: grid;
+      gap: 9px;
+    }
+
+    .review-item {
+      border: 1px solid #d5dde2;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: grid;
+      gap: 4px;
+      min-width: 0;
+    }
+
+    .review-item strong {
+      display: block;
+      color: var(--navy);
+      overflow-wrap: anywhere;
+    }
+
+    .review-item span {
+      color: #3c4d59;
+      overflow-wrap: anywhere;
+    }
+
+    .drawer-text {
+      border: 1px solid #c9dce8;
+      background: linear-gradient(180deg, #f8fcff 0%, #eef7fb 100%);
+      padding: 12px;
+      border-radius: 8px;
+      min-height: 72px;
+      color: #244052;
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .thumb-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      padding: 0 0 2px;
+    }
+
+    .thumb {
+      min-height: 72px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background:
+        linear-gradient(90deg, #e8ebe8 1px, transparent 1px),
+        linear-gradient(0deg, #e8ebe8 1px, transparent 1px),
+        #fff;
+      background-size: 12px 12px;
+      position: relative;
+    }
+
+    .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .thumb span {
+      position: absolute;
+      left: 6px;
+      bottom: 6px;
+      background: rgba(255,255,255,0.9);
+      border: 1px solid #d9dfda;
+      border-radius: 999px;
+      padding: 3px 7px;
+      font-size: 10px;
+      font-weight: 800;
+    }
+
+    .recipe-list table {
+      min-width: 620px;
+    }
+
+    .param-mini-table {
+      min-width: 920px;
+    }
+
+    @media (max-width: 1120px) {
+      .app {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+        height: auto;
+        padding: 14px;
+      }
+
+      .nav {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .side-meta {
+        margin-top: 0;
+      }
+
+      .summary {
+        grid-template-columns: repeat(2, minmax(180px, 1fr));
+      }
+
+      .recipe-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .recipe-list {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .table-wrap {
+        max-height: 620px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .title-row {
+        display: grid;
+        gap: 12px;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .field,
+      .segmented,
+      .btn {
+        width: 100%;
+      }
+
+      .field {
+        max-width: none;
+        grid-template-columns: 76px minmax(0, 1fr);
+      }
+
+      .segmented {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      .segmented button {
+        min-width: 0;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+        padding: 12px;
+      }
+
+      .content {
+        padding: 12px;
+      }
+
+      .nav {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .detail-grid,
+      .form-grid,
+      .thumb-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        right: 10px;
+        bottom: 10px;
+        width: calc(100vw - 20px);
+      }
+
+      .panel-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      h1 {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <strong>라미네이터 관리</strong>
+          <span>Recipe · Sheet · Code</span>
+        </div>
+      </div>
+
+      <nav class="nav" aria-label="관리 메뉴">
+        <button class="active" data-tab="recipe"><span class="nav-icon">R</span><span>레시피</span><span id="recipeNavCount">0</span></button>
+        <button data-tab="membrane"><span class="nav-icon">M</span><span>멤브레인</span><span id="membraneNavCount">0</span></button>
+        <button data-tab="teflon"><span class="nav-icon">T</span><span>테프론</span><span id="teflonNavCount">0</span></button>
+        <button data-tab="history"><span class="nav-icon">H</span><span>변경이력</span><span id="historyNavCount">0</span></button>
+      </nav>
+
+      <div class="side-meta">
+        <div>시트 제조사 코드</div>
+        <div class="legend-line">
+          <span class="badge maker-M">M사</span>
+          <span class="badge maker-S">S사</span>
+          <span class="badge maker-L">L사</span>
+        </div>
+        <div>라인코드</div>
+        <div class="legend-line">
+          <span class="badge q-Q1">Q1</span>
+          <span class="badge q-Q2">Q2</span>
+          <span class="badge q-Q3">Q3</span>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div class="title-row">
+          <div>
+            <h1 id="pageTitle">레시피 관리</h1>
+            <div class="subtitle" id="pageSubtitle">설비라인과 라인코드 기준으로 레시피를 관리합니다.</div>
+          </div>
+          <div class="toolbar">
+            <button class="btn primary" id="addButton"><span class="btn-icon">+</span>신규 등록</button>
+            <button class="btn" id="aiButton"><span class="btn-icon">AI</span>검토</button>
+            <button class="btn" id="excelButton"><span class="btn-icon">XL</span>엑셀로 보내기</button>
+            <button class="btn" id="mailButton"><span class="btn-icon">@</span>메일로 보내기</button>
+          </div>
+        </div>
+
+        <div class="toolbar">
+          <div class="field">
+            <label for="lineFilter">설비라인</label>
+            <select id="lineFilter">
+              <option value="all">전체</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="machineFilter">호기</label>
+            <select id="machineFilter">
+              <option value="all">전체</option>
+            </select>
+          </div>
+          <div class="segmented" id="makerFilter" aria-label="시트 제조사 필터">
+            <button class="active" data-maker="all">전체</button>
+            <button data-maker="M">M</button>
+            <button data-maker="S">S</button>
+            <button data-maker="L">L</button>
+          </div>
+          <div class="segmented" id="qFilter" aria-label="라인코드 필터">
+            <button class="active" data-q="all">전체</button>
+            <button data-q="Q1">Q1</button>
+            <button data-q="Q2">Q2</button>
+            <button data-q="Q3">Q3</button>
+          </div>
+          <div class="field" style="min-width: 240px;">
+            <label for="searchInput">검색</label>
+            <input id="searchInput" type="search" placeholder="모델, 비고, 항목">
+          </div>
+        </div>
+      </header>
+
+      <section class="summary" id="summary"></section>
+
+      <section class="content">
+        <div class="workband" id="workspace"></div>
+      </section>
+    </main>
+  </div>
+
+  <section class="panel" id="sidePanel" aria-live="polite">
+    <div class="panel-head">
+      <span id="panelTitle">신규 등록</span>
+      <button class="btn" id="closePanel" type="button">닫기</button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </section>
+
+  <script>
+    const calendarDays = [
+      ["6/5", "금"], ["6/6", "토"], ["6/7", "일"], ["6/8", "월"], ["6/9", "화"],
+      ["6/10", "수"], ["6/11", "목"], ["6/12", "금"], ["6/13", "토"], ["6/14", "일"],
+      ["6/15", "월"], ["6/16", "화"], ["6/17", "수"], ["6/18", "목"], ["6/19", "금"],
+      ["6/20", "토"], ["6/21", "일"], ["6/22", "월"], ["6/23", "화"], ["6/24", "수"],
+      ["6/25", "목"], ["6/26", "금"], ["6/27", "토"], ["6/28", "일"], ["6/29", "월"],
+      ["6/30", "화"]
+    ];
+
+    function createRecipeParams(overrides = {}) {
+      const base = [
+        ["PRE-HEATING", "UP TEMP", 70, "C", "65~75"],
+        ["PRE-HEATING", "DOWN TEMP", 75, "C", "70~80"],
+        ["PRE-HEATING", "PIN DOWN HOLD TIME #1", 0, "sec", "0~10"],
+        ["PRE-HEATING", "PIN DOWN HOLD TIME #2", 0, "sec", "0~10"],
+        ["PRE-HEATING", "PIN UP HOLD TIME #1", 0, "sec", "0~10"],
+        ["PRE-HEATING", "PIN UP HOLD TIME #2", 0, "sec", "0~10"],
+        ["PRE-HEATING", "PIN DOWN WAIT #1", 240, "sec", "200~260"],
+        ["PRE-HEATING", "PIN DOWN WAIT #2", 240, "sec", "200~260"],
+        ["PRE-HEATING", "AFTER PIN UP HOLD TIME", 0, "sec", "0~10"],
+        ["PRE-HEATING", "AFTER PIN DOWN WAIT", 0, "sec", "0~10"],
+        ["PRE-HEATING", "UP TC MODE", 7, "", "1~9"],
+        ["PRE-HEATING", "DN TC MODE", 7, "", "1~9"],
+        ["FRONT", "UP TEMP", 138, "C", "130~145"],
+        ["FRONT", "DOWN TEMP", 161, "C", "155~166"],
+        ["FRONT", "UP TEMP CONTROL MODE", 7, "", "1~9"],
+        ["FRONT", "DN TEMP CONTROL MODE", 7, "", "1~9"],
+        ["FRONT", "WAIT CONDITION(UP)", 2, "", "0~5"],
+        ["FRONT", "VACUUM CONDITION(DN)", 2, "", "0~5"],
+        ["FRONT", "PIN DOWN HOLD TIME #1", 0, "sec", "0~10"],
+        ["FRONT", "PIN DOWN HOLD TIME #2", 0, "sec", "0~10"],
+        ["FRONT", "PIN UP HOLD TIME #1", 155, "sec", "140~170"],
+        ["FRONT", "PIN UP HOLD TIME #2", 150, "sec", "140~170"],
+        ["FRONT", "PIN DOWN WAIT #1", 30, "sec", "20~40"],
+        ["FRONT", "PIN DOWN WAIT #2", 35, "sec", "25~45"],
+        ["FRONT", "PRESS TIME", 65, "sec", "55~70"],
+        ["FRONT", "AFTER PIN UP HOLD TIME", 1, "sec", "0~5"],
+        ["FRONT", "AFTER PIN DOWN WAIT", 0, "sec", "0~5"],
+        ["FRONT", "PRESS CONDITION(UP)", 600, "", "550~750"],
+        ["FRONT", "CLOSE CONDITION(UP)", 20, "", "15~25"],
+        ["FRONT", "OPEN CONDITION(DN)", 950, "", "900~980"],
+        ["POST", "UP TEMP", 136, "C", "130~145"],
+        ["POST", "DOWN TEMP", 162, "C", "155~168"],
+        ["POST", "PRESS HOLD TIME", 230, "sec", "210~250"],
+        ["POST", "UP TC MODE", 7, "", "1~9"],
+        ["POST", "DN TC MODE", 7, "", "1~9"],
+        ["POST", "VACUUM CONDITION(DN)", 500, "", "450~550"],
+        ["POST", "OPEN CONDITION(DN)", 930, "", "900~960"],
+        ["COOLING", "WAITING TIME", 40, "sec", "30~50"],
+        ["COOLING", "COOLING HOLD TIME", 1, "sec", "0~5"],
+        ["COOLING", "VACUUM TIME", 180, "sec", "160~200"],
+        ["COOLING", "VENT TIME", 5, "sec", "3~8"],
+        ["COOLING", "VACUUM CONDITION(DN)", 600, "", "550~650"],
+        ["COOLING", "OPEN CONDITION(DN)", 930, "", "900~960"]
+      ];
+
+      return base.map(([group, name, value, unit, standard]) => {
+        const override = overrides[`${group}|${name}`] || overrides[name] || {};
+        return [
+          group,
+          name,
+          override.value ?? value,
+          override.unit ?? unit,
+          override.changed ?? false,
+          override.standard ?? standard,
+          override.memo ?? "",
+          override.hidden ?? false
+        ];
+      });
+    }
+
+    const recipes = [
+      {
+        id: "R-J3-001", line: "J3", machine: "LM1", q: "Q2", model: "M10R 156 G2G",
+        version: "2026-05-20", month: "5월", tact: 285, membraneType: "일반",
+        note: "모서리 기포 보정", status: "due", applied: "5/20", ventTime: "55s",
+        params: createRecipeParams({
+          "FRONT|PRESS TIME": { value: 60, changed: true, memo: "모서리 기포" },
+          "FRONT|PRESS CONDITION(UP)": { value: 700, changed: true, memo: "압착 조건 보정" }
+        })
+      },
+      {
+        id: "R-J3-002", line: "J3", machine: "LM1", q: "Q1", model: "S10R 156 G2G",
+        version: "2026-05-11", month: "5월", tact: 290, membraneType: "일반",
+        note: "핀칭 기포", status: "ok", applied: "5/11", ventTime: "50s",
+        params: createRecipeParams({
+          "PRE-HEATING|PIN DOWN WAIT #1": { value: 250, changed: true, memo: "핀칭 기포" },
+          "PRE-HEATING|PIN DOWN WAIT #2": { value: 250, changed: true, memo: "핀칭 기포" }
+        })
+      },
+      {
+        id: "R-J2-003", line: "J2", machine: "LM2", q: "Q3", model: "L10R 156 G2G",
+        version: "2026-05-25", month: "5월", tact: 285, membraneType: "일반",
+        note: "레시피 승인 대기", status: "over", applied: "5/25", ventTime: "54s",
+        params: createRecipeParams({
+          "FRONT|PRESS TIME": { value: 60, changed: true, memo: "승인 대기" },
+          "FRONT|PRESS CONDITION(UP)": { value: 700, changed: true, memo: "승인 대기" },
+          "POST|VACUUM CONDITION(DN)": { value: 520, changed: true, memo: "승인 대기" }
+        })
+      }
+    ];
+
+    const membrane = [
+      { chamber: "Front", mt: 17000, line: "J01", machine: "1호기", maker: "S", q: "Q1", block: "일반", replace: "7/26", count: 553, status: "ok", note: "" },
+      { chamber: "Front", mt: 17000, line: "J01", machine: "2호기", maker: "S", q: "Q1", block: "일반", replace: "7/27", count: 246, status: "ok", note: "" },
+      { chamber: "Front", mt: 17000, line: "J02", machine: "1호기", maker: "L", q: "Q2", block: "분독", replace: "7/28", count: 752, status: "stop", note: "비가동" },
+      { chamber: "Front", mt: 17000, line: "J03", machine: "2호기", maker: "M", q: "Q3", block: "일반", replace: "6/6", count: 16400, status: "due", note: "G2G" },
+      { chamber: "Post", mt: 20000, line: "J01", machine: "1호기", maker: "S", q: "Q1", block: "일반", replace: "8/5", count: 557, status: "ok", note: "" },
+      { chamber: "Post", mt: 20000, line: "J02", machine: "1호기", maker: "L", q: "Q2", block: "일반", replace: "8/7", count: 0, status: "stop", note: "비가동" },
+      { chamber: "Post", mt: 20000, line: "J03", machine: "1호기", maker: "M", q: "Q2", block: "일반", replace: "6/10", count: 18257, status: "due", note: "G2G" },
+      { chamber: "Post", mt: 20000, line: "J03", machine: "2호기", maker: "L", q: "Q3", block: "특수", replace: "7/1", count: 11626, status: "ok", note: "" }
+    ];
+
+    const teflon = [
+      { side: "상부", lv: 35, line: "J01", machine: "1호기", sheet: "1~9", maker: "S", q: "Q2", replace: "7/6", days: 4, status: "ok", note: "G2G" },
+      { side: "상부", lv: 35, line: "J01", machine: "2호기", sheet: "1~9", maker: "S", q: "Q2", replace: "7/8", days: 2, status: "ok", note: "G2G" },
+      { side: "상부", lv: 55, line: "J02", machine: "1호기", sheet: "1~9", maker: "S", q: "Q1", replace: "7/30", days: 0, status: "stop", note: "비가동" },
+      { side: "상부", lv: 40, line: "J03", machine: "2호기", sheet: "1~9", maker: "S", q: "Q2", replace: "6/16", days: 29, status: "due", note: "G2G" },
+      { side: "하부", lv: 35, line: "J01", machine: "1호기", sheet: "1~9", maker: "M", q: "Q2", replace: "7/6", days: 4, status: "ok", note: "G2G" },
+      { side: "하부", lv: 55, line: "J02", machine: "1호기", sheet: "1~9", maker: "M", q: "Q1", replace: "7/30", days: 0, status: "stop", note: "비가동" },
+      { side: "하부", lv: 40, line: "J03", machine: "2호기", sheet: "1~9", maker: "M", q: "Q2", replace: "6/16", days: 29, status: "due", note: "G2G" },
+      { side: "하부", lv: 40, line: "J03", machine: "4호기", sheet: "1~9", maker: "L", q: "Q3", replace: "7/2", days: 13, status: "ok", note: "" }
+    ];
+
+    const history = [
+      { date: "2026-05-20", type: "레시피", line: "J3", machine: "LM1", q: "Q2", item: "FRONT PRESS TIME", before: "65", after: "60", reason: "모서리 기포" },
+      { date: "2026-05-11", type: "레시피", line: "J3", machine: "LM1", q: "Q1", item: "UP Vent time", before: "57s", after: "50s", reason: "핀칭 기포" },
+      { date: "2026-06-06", type: "멤브레인", line: "J03", machine: "2호기", maker: "M", q: "Q3", item: "Front 교체예정", before: "7/4", after: "6/6", reason: "사용횟수 접근" },
+      { date: "2026-06-16", type: "테프론", line: "J03", machine: "2호기", maker: "S", q: "Q2", item: "상부 교체예정", before: "6/20", after: "6/16", reason: "사용일수 접근" }
+    ];
+
+    const recipeStorageKey = "laminator.recipe.params.v1";
+    const userDataStorageKey = "laminator.user.entries.v1";
+
+    const state = {
+      tab: "recipe",
+      maker: "all",
+      q: "all",
+      line: "all",
+      machine: "all",
+      search: "",
+      recipeMode: "all",
+      selectedRecipeId: recipes[0].id
+    };
+
+    const tabMeta = {
+      recipe: ["레시피 관리", "설비라인과 라인코드 기준으로 레시피를 관리합니다."],
+      membrane: ["멤브레인 시트 관리", "Chamber, M/T 기준 사용횟수와 교체예정일을 관리합니다."],
+      teflon: ["테프론 시트 관리", "상부/하부와 L/V 기준 사용일수와 교체예정일을 관리합니다."],
+      history: ["변경이력", "레시피와 소모품 기준 변경 내역을 한 곳에서 확인합니다."]
+    };
+
+    function makerBadge(maker) {
+      return `<span class="badge maker-${maker}">${maker}사</span>`;
+    }
+
+    function makerCell(maker) {
+      return maker ? makerBadge(maker) : `<span class="muted">-</span>`;
+    }
+
+    function qBadge(q) {
+      return `<span class="badge q-${q}">${q}</span>`;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function statusText(status) {
+      const labels = { ok: "정상", due: "임박", stop: "비가동", over: "확인" };
+      return `<span class="status ${status}"><span class="dot"></span>${labels[status] || status}</span>`;
+    }
+
+    function getDataset(tab = state.tab) {
+      if (tab === "recipe") return recipes;
+      if (tab === "membrane") return membrane;
+      if (tab === "teflon") return teflon;
+      return history;
+    }
+
+    function rowText(row) {
+      return Object.values(row).flat().join(" ").toLowerCase();
+    }
+
+    function filteredData(tab = state.tab) {
+      return getDataset(tab).filter(row => {
+        const makerOk = state.maker === "all" || row.maker === undefined || row.maker === state.maker;
+        const qOk = state.q === "all" || row.q === state.q;
+        const lineOk = state.line === "all" || row.line === state.line;
+        const machineOk = state.machine === "all" || row.machine === state.machine;
+        const searchOk = !state.search || rowText(row).includes(state.search.toLowerCase());
+        return makerOk && qOk && lineOk && machineOk && searchOk;
+      });
+    }
+
+    function setFilterOptions() {
+      const combined = [...recipes, ...membrane, ...teflon];
+      const lines = [...new Set(combined.map(item => item.line))].sort();
+      const machines = [...new Set(combined.map(item => item.machine))].sort((a, b) => a.localeCompare(b, "ko"));
+      document.getElementById("lineFilter").innerHTML = `<option value="all">전체</option>${lines.map(line => `<option>${line}</option>`).join("")}`;
+      document.getElementById("machineFilter").innerHTML = `<option value="all">전체</option>${machines.map(machine => `<option>${machine}</option>`).join("")}`;
+    }
+
+    function renderNavCounts() {
+      document.getElementById("recipeNavCount").textContent = recipes.length;
+      document.getElementById("membraneNavCount").textContent = membrane.length;
+      document.getElementById("teflonNavCount").textContent = teflon.length;
+      document.getElementById("historyNavCount").textContent = history.length;
+    }
+
+    function loadRecipeSettings() {
+      try {
+        const payload = JSON.parse(localStorage.getItem(recipeStorageKey) || "{}");
+        recipes.forEach(recipe => {
+          const savedParams = payload[recipe.id];
+          if (!Array.isArray(savedParams)) return;
+          savedParams.forEach((saved, index) => {
+            if (!recipe.params[index]) return;
+            if (saved.name !== undefined) recipe.params[index][1] = saved.name;
+            if (saved.value !== undefined) recipe.params[index][2] = saved.value;
+            if (saved.memo !== undefined) recipe.params[index][6] = saved.memo;
+            if (saved.hidden !== undefined) recipe.params[index][7] = saved.hidden;
+          });
+        });
+      } catch (error) {
+        console.warn("Recipe settings could not be loaded.", error);
+      }
+    }
+
+    function loadUserEntries() {
+      try {
+        const payload = JSON.parse(localStorage.getItem(userDataStorageKey) || "{}");
+        if (Array.isArray(payload.recipes)) recipes.push(...payload.recipes);
+        if (Array.isArray(payload.membrane)) membrane.push(...payload.membrane);
+        if (Array.isArray(payload.teflon)) teflon.push(...payload.teflon);
+        if (Array.isArray(payload.history)) history.push(...payload.history);
+      } catch (error) {
+        console.warn("User entries could not be loaded.", error);
+      }
+    }
+
+    function saveUserEntries() {
+      try {
+        const payload = {
+          recipes: recipes.filter(item => item.source === "user"),
+          membrane: membrane.filter(item => item.source === "user"),
+          teflon: teflon.filter(item => item.source === "user"),
+          history: history.filter(item => item.source === "user")
+        };
+        localStorage.setItem(userDataStorageKey, JSON.stringify(payload));
+      } catch (error) {
+        console.warn("User entries could not be saved.", error);
+      }
+    }
+
+    function saveRecipeSettings() {
+      try {
+        const payload = {};
+        recipes.forEach(recipe => {
+          payload[recipe.id] = recipe.params.map(param => ({
+            name: param[1],
+            value: param[2],
+            memo: param[6],
+            hidden: param[7]
+          }));
+        });
+        localStorage.setItem(recipeStorageKey, JSON.stringify(payload));
+      } catch (error) {
+        console.warn("Recipe settings could not be saved.", error);
+      }
+    }
+
+    function renderSummary() {
+      const recipeFiltered = filteredData("recipe");
+      const membraneFiltered = filteredData("membrane");
+      const teflonFiltered = filteredData("teflon");
+      const dueCount = [...membraneFiltered, ...teflonFiltered].filter(item => item.status === "due").length;
+      const stopCount = [...membraneFiltered, ...teflonFiltered].filter(item => item.status === "stop").length;
+      const q3Count = [...recipeFiltered, ...membraneFiltered, ...teflonFiltered].filter(item => item.q === "Q3").length;
+      document.getElementById("summary").innerHTML = `
+        <div class="metric info">
+          <div class="metric-label">레시피</div>
+          <div class="metric-value">${recipeFiltered.length}</div>
+          <div class="metric-note">현재 조건 기준</div>
+        </div>
+        <div class="metric warn">
+          <div class="metric-label">교체 임박</div>
+          <div class="metric-value">${dueCount}</div>
+          <div class="metric-note">멤브레인 + 테프론</div>
+        </div>
+        <div class="metric danger">
+          <div class="metric-label">비가동</div>
+          <div class="metric-value">${stopCount}</div>
+          <div class="metric-note">라인/호기 확인 필요</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Q3 라인코드</div>
+          <div class="metric-value">${q3Count}</div>
+          <div class="metric-note">라인코드 기준</div>
+        </div>
+      `;
+    }
+
+    function renderRecipe() {
+      const rows = filteredData("recipe");
+      if (rows.length && !rows.some(row => row.id === state.selectedRecipeId)) {
+        state.selectedRecipeId = rows[0].id;
+      }
+      const selected = rows.find(row => row.id === state.selectedRecipeId) || rows[0] || recipes[0];
+      const listRows = rows.map(row => `
+        <tr data-recipe-id="${row.id}" class="${row.id === selected.id ? "selected-row" : ""}" style="cursor:pointer">
+          <td class="center row-head">${row.line}</td>
+          <td class="center">${row.machine}</td>
+          <td>${row.model}</td>
+          <td class="center">${qBadge(row.q)}</td>
+          <td class="center">${row.version}</td>
+          <td class="center">${statusText(row.status)}</td>
+        </tr>
+      `).join("");
+
+      const totalParamCount = selected.params.length;
+      const hiddenParamCount = selected.params.filter(param => param[7]).length;
+      const activeParamCount = selected.params.filter(param => !param[7]).length;
+      const changedParamCount = selected.params.filter(param => param[4] && !param[7]).length;
+      const visibleParams = selected.params.filter(param => {
+        if (state.recipeMode === "hidden") return param[7];
+        if (state.recipeMode === "changed") return param[4] && !param[7];
+        return !param[7];
+      });
+      const groupedParams = visibleParams.reduce((groups, param) => {
+        const group = param[0];
+        groups[group] = groups[group] || [];
+        groups[group].push(param);
+        return groups;
+      }, {});
+      const paramSections = Object.entries(groupedParams).map(([group, params]) => {
+        const groupTotal = selected.params.filter(param => param[0] === group && (state.recipeMode === "hidden" ? param[7] : !param[7])).length;
+        const groupChanged = selected.params.filter(param => param[0] === group && param[4] && !param[7]).length;
+        const rowsHtml = params.map(param => {
+          const [, name, value, unit, changed, standard, memo, hidden] = param;
+          const paramIndex = selected.params.indexOf(param);
+          return `
+            <tr class="${hidden ? "hidden-param" : ""}">
+              <td class="row-head editable-cell" contenteditable="true" data-param-field="name" data-param-index="${paramIndex}" title="항목명 수정">${escapeHtml(name)}</td>
+              <td class="param-value editable-cell ${changed ? "changed" : ""}" contenteditable="true" data-param-field="value" data-param-index="${paramIndex}" title="값 수정">${escapeHtml(value)}</td>
+              <td class="center muted">${escapeHtml(unit || "-")}</td>
+              <td class="center muted">${escapeHtml(standard || "-")}</td>
+              <td class="center">${changed ? `<span class="badge q-Q2">변경</span>` : ""}</td>
+              <td class="editable-cell" contenteditable="true" data-param-field="memo" data-param-index="${paramIndex}" title="메모 수정">${escapeHtml(memo || "")}</td>
+              <td class="action-cell">
+                <button class="mini-action ${hidden ? "restore" : ""}" data-param-action="${hidden ? "restore" : "hide"}" data-param-index="${paramIndex}" type="button">${hidden ? "복구" : "숨김"}</button>
+              </td>
+            </tr>
+          `;
+        }).join("");
+
+        return `
+          <details class="param-group" open>
+            <summary>
+              <span class="param-group-title">${group}<span class="param-group-meta">${params.length}/${groupTotal}개</span></span>
+              <span class="param-group-meta">변경 ${groupChanged}개</span>
+            </summary>
+            <table class="param-mini-table">
+              <thead>
+                <tr>
+                  <th>항목</th>
+                  <th>값</th>
+                  <th>단위</th>
+                  <th>기준</th>
+                  <th>표시</th>
+                  <th>메모</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody>${rowsHtml}</tbody>
+            </table>
+          </details>
+        `;
+      }).join("");
+
+      document.getElementById("workspace").innerHTML = `
+        <div class="band-head">
+          <div class="band-title">레시피 목록 <small>${rows.length}건</small></div>
+          <div class="legend-line">${qBadge("Q1")}${qBadge("Q2")}${qBadge("Q3")}</div>
+        </div>
+        <div class="recipe-layout">
+          <div class="recipe-list">
+            <div class="table-wrap" style="max-height: 520px;">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width:60px">라인</th>
+                    <th style="width:72px">호기</th>
+                    <th style="width:160px">Model</th>
+                    <th style="width:76px">라인코드</th>
+                    <th style="width:116px">버전</th>
+                    <th style="width:88px">상태</th>
+                  </tr>
+                </thead>
+                <tbody>${listRows || `<tr><td colspan="6" class="center muted">표시할 항목 없음</td></tr>`}</tbody>
+              </table>
+            </div>
+          </div>
+          <div class="recipe-detail">
+            <div class="detail-header">
+              <div class="detail-title">
+                <div>
+                  <strong>${selected.model}</strong>
+                  <span class="muted">${selected.line} · ${selected.machine} · ${selected.note}</span>
+                </div>
+                <div class="legend-line">${qBadge(selected.q)}${statusText(selected.status)}</div>
+              </div>
+              <div class="detail-grid">
+                <div class="mini"><span>기준 월</span><strong>${selected.month}</strong></div>
+                <div class="mini"><span>Tact Time</span><strong>${selected.tact}</strong></div>
+                <div class="mini"><span>Up Vent</span><strong>${selected.ventTime}</strong></div>
+                <div class="mini"><span>멤브레인</span><strong>${selected.membraneType}</strong></div>
+                <div class="mini"><span>적용일</span><strong>${selected.applied}</strong></div>
+                <div class="mini"><span>전체 항목</span><strong>${totalParamCount}</strong></div>
+                <div class="mini"><span>변경 항목</span><strong>${changedParamCount}</strong></div>
+                <div class="mini"><span>표시 항목</span><strong>${activeParamCount}</strong></div>
+                <div class="mini"><span>숨김 항목</span><strong>${hiddenParamCount}</strong></div>
+              </div>
+              <div class="recipe-controls">
+                <button class="chip-button ${state.recipeMode === "all" ? "active" : ""}" data-recipe-mode="all" type="button">표시 항목</button>
+                <button class="chip-button ${state.recipeMode === "changed" ? "active" : ""}" data-recipe-mode="changed" type="button">변경값만</button>
+                <button class="chip-button ${state.recipeMode === "hidden" ? "active" : ""}" data-recipe-mode="hidden" type="button">숨김 항목</button>
+              </div>
+            </div>
+            <div class="table-wrap" style="max-height: 464px; background:#f4f6f4;">
+              <div class="param-sections">
+                ${paramSections || `<div class="empty-state">표시할 레시피 파라미터가 없습니다</div>`}
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+
+      document.querySelectorAll("[data-recipe-id]").forEach(row => {
+        row.addEventListener("click", () => {
+          state.selectedRecipeId = row.dataset.recipeId;
+          render();
+        });
+      });
+
+      document.querySelectorAll("[data-recipe-mode]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.recipeMode = button.dataset.recipeMode;
+          render();
+        });
+      });
+
+      document.querySelectorAll("[data-param-field]").forEach(cell => {
+        cell.addEventListener("blur", () => {
+          const param = selected.params[Number(cell.dataset.paramIndex)];
+          if (!param) return;
+          const fieldMap = { name: 1, value: 2, memo: 6 };
+          const fieldIndex = fieldMap[cell.dataset.paramField];
+          if (fieldIndex === undefined) return;
+          param[fieldIndex] = cell.textContent.trim();
+          saveRecipeSettings();
+        });
+
+        cell.addEventListener("keydown", event => {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            cell.blur();
+          }
+        });
+      });
+
+      document.querySelectorAll("[data-param-action]").forEach(button => {
+        button.addEventListener("click", () => {
+          const param = selected.params[Number(button.dataset.paramIndex)];
+          if (!param) return;
+          param[7] = button.dataset.paramAction === "hide";
+          if (state.recipeMode === "hidden" && !selected.params.some(item => item[7])) {
+            state.recipeMode = "all";
+          }
+          saveRecipeSettings();
+          render();
+        });
+      });
+    }
+
+    function dateCell(row, type) {
+      return calendarDays.map(([day]) => {
+        let cls = "date-cell";
+        let text = "";
+        if (row.status === "stop") cls += " planned";
+        if (row.replace === day) {
+          cls += row.status === "due" ? " late focus" : " done";
+          text = type === "membrane" ? row.count : row.days;
+        }
+        return `<td class="${cls}">${text}</td>`;
+      }).join("");
+    }
+
+    function calendarHeader() {
+      return calendarDays.map(([day, week]) => `<th class="date-col"><span class="date-title"><span>${day}</span><span>${week}</span></span></th>`).join("");
+    }
+
+    function renderMembrane() {
+      const rows = filteredData("membrane");
+      const body = rows.map(row => {
+        const pct = row.mt ? Math.min(100, Math.round((row.count / row.mt) * 100)) : 0;
+        const barClass = pct >= 90 ? "danger" : pct >= 75 ? "warn" : "";
+        return `
+          <tr>
+            <td class="center group-cell sticky-1" style="width:86px">${row.chamber}</td>
+            <td class="number row-head sticky-2" style="width:86px">${row.mt.toLocaleString()}</td>
+            <td class="center">${row.line}</td>
+            <td class="center">${row.machine}</td>
+            <td class="center">${makerBadge(row.maker)}</td>
+            <td class="center">${qBadge(row.q)}</td>
+            <td class="center" style="background:#ffc20a;font-weight:800">${row.block}</td>
+            <td class="center">${row.replace}</td>
+            <td class="${row.status === "due" ? "changed" : ""}">
+              <div class="usage-cell">
+                <div class="usage-value"><span>${row.count.toLocaleString()}</span><small>${pct}%</small></div>
+                <div class="usage"><div class="usage-bar ${barClass}" style="--pct:${pct}%"></div></div>
+              </div>
+            </td>
+            <td class="center">${statusText(row.status)}</td>
+            <td class="center muted">${row.note}</td>
+            ${dateCell(row, "membrane")}
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("workspace").innerHTML = `
+        <div class="band-head">
+          <div class="band-title">멤브레인 시트 <small>매일 오전 07~08시 기준</small></div>
+          <div class="legend-line"><span class="status due"><span class="dot"></span>교체 임박</span><span class="status stop"><span class="dot"></span>비가동</span></div>
+        </div>
+        <div class="table-wrap">
+          <table class="calendar">
+            <thead>
+              <tr>
+                <th class="sticky-1" style="width:86px">Chamber</th>
+                <th class="sticky-2" style="width:86px">M/T</th>
+                <th style="width:72px">Line</th>
+                <th style="width:72px">Machine</th>
+                <th style="width:76px">시트 제조사</th>
+                <th style="width:74px">라인코드</th>
+                <th style="width:78px">블록</th>
+                <th style="width:80px">교체</th>
+                <th style="width:78px">횟수</th>
+                <th style="width:86px">상태</th>
+                <th style="width:92px">비고</th>
+                ${calendarHeader()}
+              </tr>
+            </thead>
+            <tbody>${body || `<tr><td colspan="37" class="center muted">표시할 항목 없음</td></tr>`}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderTeflon() {
+      const rows = filteredData("teflon");
+      const body = rows.map(row => {
+        const pct = row.lv ? Math.min(100, Math.round((row.days / row.lv) * 100)) : 0;
+        const barClass = pct >= 90 ? "danger" : pct >= 75 ? "warn" : "";
+        return `
+          <tr>
+            <td class="center group-cell sticky-1" style="width:86px">${row.side}</td>
+            <td class="number row-head sticky-2" style="width:86px">${row.lv}</td>
+            <td class="center">${row.line}</td>
+            <td class="center">${row.machine}</td>
+            <td class="center">${row.sheet}</td>
+            <td class="center">${makerBadge(row.maker)}</td>
+            <td class="center">${qBadge(row.q)}</td>
+            <td class="center">${row.replace}</td>
+            <td class="${row.status === "due" ? "changed" : ""}">
+              <div class="usage-cell">
+                <div class="usage-value"><span>${row.days}</span><small>${pct}%</small></div>
+                <div class="usage"><div class="usage-bar ${barClass}" style="--pct:${pct}%"></div></div>
+              </div>
+            </td>
+            <td class="center">${statusText(row.status)}</td>
+            <td class="center muted">${row.note}</td>
+            ${dateCell(row, "teflon")}
+          </tr>
+        `;
+      }).join("");
+
+      document.getElementById("workspace").innerHTML = `
+        <div class="band-head">
+          <div class="band-title">테프론 시트 <small>매일 오전 07~08시 기준</small></div>
+          <div class="legend-line"><span class="status due"><span class="dot"></span>교체 임박</span><span class="status stop"><span class="dot"></span>비가동</span></div>
+        </div>
+        <div class="table-wrap">
+          <table class="calendar">
+            <thead>
+              <tr>
+                <th class="sticky-1" style="width:86px">구분</th>
+                <th class="sticky-2" style="width:86px">L/V</th>
+                <th style="width:72px">Line</th>
+                <th style="width:72px">Machine</th>
+                <th style="width:76px">Sheet</th>
+                <th style="width:76px">시트 제조사</th>
+                <th style="width:74px">라인코드</th>
+                <th style="width:80px">교체</th>
+                <th style="width:78px">일수</th>
+                <th style="width:86px">상태</th>
+                <th style="width:92px">비고</th>
+                ${calendarHeader()}
+              </tr>
+            </thead>
+            <tbody>${body || `<tr><td colspan="37" class="center muted">표시할 항목 없음</td></tr>`}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderHistory() {
+      const rows = filteredData("history");
+      const body = rows.map(row => `
+        <tr>
+          <td class="center row-head">${row.date}</td>
+          <td class="center">${row.type}</td>
+          <td class="center">${row.line}</td>
+          <td class="center">${row.machine}</td>
+          <td class="center">${makerCell(row.maker)}</td>
+          <td class="center">${qBadge(row.q)}</td>
+          <td>${row.item}</td>
+          <td class="center">${row.before}</td>
+          <td class="center changed">${row.after}</td>
+          <td>${row.reason}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("workspace").innerHTML = `
+        <div class="band-head">
+          <div class="band-title">변경이력 <small>${rows.length}건</small></div>
+          <div class="legend-line">${qBadge("Q1")}${qBadge("Q2")}${qBadge("Q3")}</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:112px">일자</th>
+                <th style="width:90px">구분</th>
+                <th style="width:72px">라인</th>
+                <th style="width:80px">호기</th>
+                <th style="width:80px">시트 제조사</th>
+                <th style="width:76px">라인코드</th>
+                <th>항목</th>
+                <th style="width:96px">변경 전</th>
+                <th style="width:96px">변경 후</th>
+                <th style="width:220px">사유</th>
+              </tr>
+            </thead>
+            <tbody>${body || `<tr><td colspan="10" class="center muted">표시할 항목 없음</td></tr>`}</tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function todayString() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, "0");
+      const day = String(now.getDate()).padStart(2, "0");
+      return `${year}-${month}-${day}`;
+    }
+
+    function formValue(id) {
+      const node = document.getElementById(id);
+      return node ? node.value.trim() : "";
+    }
+
+    function addHistoryRecord(record) {
+      history.unshift({
+        date: todayString(),
+        source: "user",
+        ...record
+      });
+    }
+
+    function parseCustomParams(text) {
+      return text
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(Boolean)
+        .map(line => {
+          const parts = line.includes("|")
+            ? line.split("|").map(part => part.trim())
+            : line.split("=").map(part => part.trim());
+          if (parts.length >= 3) {
+            return [
+              parts[0] || "CUSTOM",
+              parts[1] || "사용자 항목",
+              parts[2] || "",
+              parts[3] || "",
+              false,
+              parts[4] || "",
+              parts[5] || "",
+              false
+            ];
+          }
+          return ["CUSTOM", parts[0] || line, parts[1] || "", "", false, "", "", false];
+        });
+    }
+
+    function addManualEntry() {
+      const type = formValue("entryType");
+      const line = formValue("entryLine") || "J3";
+      const machine = formValue("entryMachine") || (type === "recipe" ? "LM1" : "1호기");
+      const q = formValue("entryQ") || "Q1";
+      const name = formValue("entryName");
+      const maker = formValue("entryMaker") || "M";
+      const limit = Number(formValue("entryLimit")) || 0;
+      const current = Number(formValue("entryCurrent")) || 0;
+      const date = formValue("entryDate") || "6/30";
+      const status = formValue("entryStatus") || "ok";
+      const note = formValue("entryNote");
+      const free = formValue("entryFree");
+      const idStamp = Date.now();
+
+      if (type === "recipe") {
+        const model = name || `USER RECIPE ${recipes.length + 1}`;
+        const params = createRecipeParams();
+        params.push(...parseCustomParams(free));
+        recipes.unshift({
+          id: `R-USER-${idStamp}`,
+          source: "user",
+          line,
+          machine,
+          q,
+          model,
+          version: todayString(),
+          month: `${new Date().getMonth() + 1}월`,
+          tact: current || 0,
+          membraneType: "입력",
+          note: note || free || "사용자 입력",
+          status,
+          applied: date,
+          ventTime: "-",
+          params
+        });
+        addHistoryRecord({ type: "레시피", line, machine, q, item: model, before: "-", after: "신규", reason: note || "사용자 입력" });
+        state.tab = "recipe";
+      }
+
+      if (type === "membrane") {
+        membrane.unshift({
+          source: "user",
+          chamber: name || "Front",
+          mt: limit || 17000,
+          line,
+          machine,
+          maker,
+          q,
+          block: "입력",
+          replace: date,
+          count: current,
+          status,
+          note: note || free
+        });
+        addHistoryRecord({ type: "멤브레인", line, machine, maker, q, item: name || "시트 입력", before: "-", after: date, reason: note || "사용자 입력" });
+        state.tab = "membrane";
+      }
+
+      if (type === "teflon") {
+        teflon.unshift({
+          source: "user",
+          side: name || "상부",
+          lv: limit || 35,
+          line,
+          machine,
+          sheet: "입력",
+          maker,
+          q,
+          replace: date,
+          days: current,
+          status,
+          note: note || free
+        });
+        addHistoryRecord({ type: "테프론", line, machine, maker, q, item: name || "시트 입력", before: "-", after: date, reason: note || "사용자 입력" });
+        state.tab = "teflon";
+      }
+
+      saveUserEntries();
+      saveRecipeSettings();
+      setFilterOptions();
+      document.getElementById("sidePanel").classList.remove("open");
+      render();
+    }
+
+    function buildAiReview() {
+      const activeRecipes = filteredData("recipe");
+      const activeMembrane = filteredData("membrane");
+      const activeTeflon = filteredData("teflon");
+      const items = [];
+      const recipeCheck = activeRecipes.filter(item => item.status !== "ok");
+      const changedParams = activeRecipes.reduce((sum, recipe) => sum + recipe.params.filter(param => param[4] && !param[7]).length, 0);
+      const hiddenParams = activeRecipes.reduce((sum, recipe) => sum + recipe.params.filter(param => param[7]).length, 0);
+      const dueSheets = [...activeMembrane, ...activeTeflon].filter(item => item.status === "due");
+      const stoppedSheets = [...activeMembrane, ...activeTeflon].filter(item => item.status === "stop");
+      const missingCode = [...activeRecipes, ...activeMembrane, ...activeTeflon].filter(item => !item.line || !item.machine || !item.q);
+      const userEntries = [...recipes, ...membrane, ...teflon].filter(item => item.source === "user").length;
+
+      if (recipeCheck.length) items.push({ title: "레시피 확인 대상", body: `${recipeCheck.length}건이 정상 상태가 아닙니다. 변경이력과 적용일을 확인하세요.` });
+      if (changedParams) items.push({ title: "레시피 변경값", body: `표시 중인 레시피에서 변경 표시된 파라미터가 ${changedParams}개 있습니다.` });
+      if (hiddenParams) items.push({ title: "숨김 파라미터", body: `숨김 처리된 레시피 항목이 ${hiddenParams}개 있습니다. 엑셀 전달 전 의도한 숨김인지 확인하세요.` });
+      if (dueSheets.length) items.push({ title: "시트 교체 임박", body: `멤브레인/테프론 교체 임박 항목이 ${dueSheets.length}건 있습니다.` });
+      if (stoppedSheets.length) items.push({ title: "비가동 항목", body: `비가동으로 표시된 시트 항목이 ${stoppedSheets.length}건 있습니다.` });
+      if (missingCode.length) items.push({ title: "필수값 누락", body: `설비라인, 호기, 라인코드 중 누락된 항목이 ${missingCode.length}건 있습니다.` });
+      if (userEntries) items.push({ title: "사용자 입력", body: `사용자가 추가한 데이터 ${userEntries}건이 현재 브라우저에 저장되어 있습니다.` });
+      if (!items.length) items.push({ title: "특이사항 없음", body: "현재 조건에서는 즉시 확인이 필요한 항목이 보이지 않습니다." });
+
+      const summary = `레시피 ${activeRecipes.length}건, 멤브레인 ${activeMembrane.length}건, 테프론 ${activeTeflon.length}건 기준 검토`;
+      const text = [summary, ...items.map(item => `- ${item.title}: ${item.body}`)].join("\n");
+      return { summary, items, text };
+    }
+
+    function tableRowsForExcel(rows) {
+      const keys = [...new Set(rows.flatMap(row => Object.keys(row)))];
+      return { keys, rows };
+    }
+
+    function excelEscape(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+    }
+
+    function excelSection(title, rows) {
+      const { keys } = tableRowsForExcel(rows);
+      if (!rows.length) return `<h2>${excelEscape(title)}</h2><p>데이터 없음</p>`;
+      return `
+        <h2>${excelEscape(title)}</h2>
+        <table border="1">
+          <thead><tr>${keys.map(key => `<th>${excelEscape(key)}</th>`).join("")}</tr></thead>
+          <tbody>
+            ${rows.map(row => `<tr>${keys.map(key => `<td>${excelEscape(row[key])}</td>`).join("")}</tr>`).join("")}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function exportExcel() {
+      const recipeSummary = recipes.map(({ params, ...recipe }) => recipe);
+      const recipeParams = recipes.flatMap(recipe => recipe.params.map(param => ({
+        recipeId: recipe.id,
+        model: recipe.model,
+        설비라인: recipe.line,
+        호기: recipe.machine,
+        라인코드: recipe.q,
+        구간: param[0],
+        항목: param[1],
+        값: param[2],
+        단위: param[3],
+        변경: param[4] ? "Y" : "",
+        기준: param[5],
+        메모: param[6],
+        숨김: param[7] ? "Y" : ""
+      })));
+      const html = `
+        <html>
+          <head><meta charset="utf-8"></head>
+          <body>
+            ${excelSection("Recipe Summary", recipeSummary)}
+            ${excelSection("Recipe Parameters", recipeParams)}
+            ${excelSection("Membrane Sheet", membrane)}
+            ${excelSection("Teflon Sheet", teflon)}
+            ${excelSection("Change History", history)}
+          </body>
+        </html>
+      `;
+      const blob = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = `laminator-management-${todayString()}.xls`;
+      anchor.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function sendMail() {
+      const review = buildAiReview();
+      const subject = encodeURIComponent(`[라미네이터 관리] ${todayString()} 검토 공유`);
+      const body = encodeURIComponent(`${review.text}\n\n엑셀 파일은 화면의 '엑셀로 보내기' 버튼으로 생성 후 첨부하세요.`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+
+    function openPanel(mode) {
+      const panel = document.getElementById("sidePanel");
+      const title = document.getElementById("panelTitle");
+      const body = document.getElementById("panelBody");
+      panel.classList.add("open");
+
+      if (mode === "ai") {
+        title.textContent = "AI 검토";
+        const review = buildAiReview();
+        body.innerHTML = `
+          <div class="drawer-text">
+            ${review.summary}
+          </div>
+          <div class="review-list">
+            ${review.items.map(item => `
+              <div class="review-item">
+                <strong>${item.title}</strong>
+                <span>${item.body}</span>
+              </div>
+            `).join("")}
+          </div>
+          <div class="panel-actions">
+            <button class="btn" type="button" id="reviewMailButton"><span class="btn-icon">@</span>메일로 보내기</button>
+            <button class="btn primary" type="button" id="reviewExcelButton"><span class="btn-icon">XL</span>엑셀로 보내기</button>
+          </div>
+          <div class="thumb-strip">
+            <div class="thumb"><img src="file:///C:/Users/QCELL/Documents/%EB%B0%9B%EC%9D%80%20%ED%8C%8C%EC%9D%BC/E6F356B7.PNG" alt=""><span>Recipe</span></div>
+            <div class="thumb"><img src="file:///C:/Users/QCELL/Documents/%EB%B0%9B%EC%9D%80%20%ED%8C%8C%EC%9D%BC/229D7401.PNG" alt=""><span>Membrane</span></div>
+            <div class="thumb"><img src="file:///C:/Users/QCELL/Documents/%EB%B0%9B%EC%9D%80%20%ED%8C%8C%EC%9D%BC/D2504A0E.PNG" alt=""><span>Teflon</span></div>
+          </div>
+        `;
+        document.getElementById("reviewMailButton").addEventListener("click", sendMail);
+        document.getElementById("reviewExcelButton").addEventListener("click", exportExcel);
+        return;
+      }
+
+      title.textContent = "신규 등록";
+      body.innerHTML = `
+        <div class="form-grid">
+          <label>구분
+            <select id="entryType">
+              <option value="recipe" ${state.tab === "recipe" ? "selected" : ""}>레시피</option>
+              <option value="membrane" ${state.tab === "membrane" ? "selected" : ""}>멤브레인</option>
+              <option value="teflon" ${state.tab === "teflon" ? "selected" : ""}>테프론</option>
+            </select>
+          </label>
+          <label>설비라인
+            <input id="entryLine" value="${state.line === "all" ? "J3" : state.line}">
+          </label>
+          <label>호기
+            <input id="entryMachine" value="${state.machine === "all" ? "LM1" : state.machine}">
+          </label>
+          <label>라인코드
+            <select id="entryQ">
+              <option>Q1</option>
+              <option>Q2</option>
+              <option>Q3</option>
+            </select>
+          </label>
+          <label>모델/위치
+            <input id="entryName" placeholder="레시피 모델, Front, 상부 등">
+          </label>
+          <label>시트 제조사(시트만)
+            <select id="entryMaker">
+              <option>M</option>
+              <option>S</option>
+              <option>L</option>
+            </select>
+          </label>
+          <label>적용/교체일
+            <input id="entryDate" value="6/30">
+          </label>
+          <label>상태
+            <select id="entryStatus">
+              <option value="ok">정상</option>
+              <option value="due">임박</option>
+              <option value="stop">비가동</option>
+              <option value="over">확인</option>
+            </select>
+          </label>
+          <label>기준값
+            <input id="entryLimit" type="number" placeholder="M/T, L/V 등">
+          </label>
+          <label>현재값
+            <input id="entryCurrent" type="number" placeholder="사용횟수, 사용일수, Tact 등">
+          </label>
+          <label class="span-2">비고
+            <input id="entryNote" placeholder="변경 사유, 교체 사유, 특이사항">
+          </label>
+          <label class="span-2">자유 입력
+            <textarea id="entryFree" placeholder="레시피 파라미터는 예: FRONT | PRESS TIME | 60 | sec | 55~70 | 모서리 기포"></textarea>
+          </label>
+        </div>
+        <div class="panel-actions">
+          <button class="btn" type="button" id="cancelEntryButton">취소</button>
+          <button class="btn primary" type="button" id="submitEntryButton"><span class="btn-icon">+</span>등록</button>
+        </div>
+      `;
+      document.getElementById("cancelEntryButton").addEventListener("click", () => panel.classList.remove("open"));
+      document.getElementById("submitEntryButton").addEventListener("click", addManualEntry);
+    }
+
+    function render() {
+      const [title, subtitle] = tabMeta[state.tab];
+      document.getElementById("pageTitle").textContent = title;
+      document.getElementById("pageSubtitle").textContent = subtitle;
+      document.querySelectorAll(".nav button").forEach(button => {
+        button.classList.toggle("active", button.dataset.tab === state.tab);
+      });
+      document.querySelectorAll("#makerFilter button").forEach(button => {
+        button.classList.toggle("active", button.dataset.maker === state.maker);
+      });
+      document.getElementById("makerFilter").style.display = state.tab === "recipe" ? "none" : "inline-flex";
+      document.querySelectorAll("#qFilter button").forEach(button => {
+        button.classList.toggle("active", button.dataset.q === state.q);
+      });
+      document.getElementById("lineFilter").value = state.line;
+      document.getElementById("machineFilter").value = state.machine;
+      document.getElementById("searchInput").value = state.search;
+      renderNavCounts();
+      renderSummary();
+
+      if (state.tab === "recipe") renderRecipe();
+      if (state.tab === "membrane") renderMembrane();
+      if (state.tab === "teflon") renderTeflon();
+      if (state.tab === "history") renderHistory();
+    }
+
+    document.querySelectorAll(".nav button").forEach(button => {
+      button.addEventListener("click", () => {
+        state.tab = button.dataset.tab;
+        render();
+      });
+    });
+
+    document.getElementById("makerFilter").addEventListener("click", event => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      state.maker = button.dataset.maker;
+      render();
+    });
+
+    document.getElementById("qFilter").addEventListener("click", event => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      state.q = button.dataset.q;
+      render();
+    });
+
+    document.getElementById("lineFilter").addEventListener("change", event => {
+      state.line = event.target.value;
+      render();
+    });
+
+    document.getElementById("machineFilter").addEventListener("change", event => {
+      state.machine = event.target.value;
+      render();
+    });
+
+    document.getElementById("searchInput").addEventListener("input", event => {
+      state.search = event.target.value;
+      render();
+    });
+
+    document.getElementById("addButton").addEventListener("click", () => openPanel("add"));
+    document.getElementById("aiButton").addEventListener("click", () => openPanel("ai"));
+    document.getElementById("excelButton").addEventListener("click", exportExcel);
+    document.getElementById("mailButton").addEventListener("click", sendMail);
+    document.getElementById("closePanel").addEventListener("click", () => document.getElementById("sidePanel").classList.remove("open"));
+
+    loadUserEntries();
+    setFilterOptions();
+    loadRecipeSettings();
+    render();
+  </script>
+</body>
+</html>
