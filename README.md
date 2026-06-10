@@ -5,8 +5,10 @@
 ## 주요 기능
 
 - 레시피, 멤브레인, 테프론 시트 탭 분리
-- 설비라인, 호기, 라인코드, 시트 제조사 필터
+- 설비라인, 호기, 시트 제조사 필터
 - 레시피 파라미터 항목명/값/메모 수정
+- 라인/라미호기 선택 시 레시피 표 자동 전환
+- 라인/라미호기/적용일자 기준 레시피 버전 저장
 - 레시피 항목 숨김 및 복구
 - 사용자 신규 등록 데이터 로컬 저장
 - 변경이력 표시
@@ -16,18 +18,21 @@
 
 ## 실행 방법
 
-브라우저에서 `index.html`을 열면 바로 실행됩니다.
+브라우저에서 `lami-management.html`을 열면 바로 실행됩니다.
 
 ```text
-file:///C:/Users/QCELL/Documents/day5/index.html
+file:///C:/Users/QCELL/Documents/day5/lami-management.html
 ```
+
+`index.html`은 GitHub Pages나 웹서버 기본 진입용으로 함께 유지합니다.
 
 ## 현재 구조
 
 ```text
-index.html      # 메인 프로토타입
-README.md       # 프로젝트 설명
-.gitignore      # 로컬 백업/임시 파일 제외
+lami-management.html  # 사용자가 직접 열기 쉬운 실행 파일
+index.html            # 웹 기본 진입용 동일 사본
+README.md             # 프로젝트 설명
+.gitignore            # 로컬 백업/임시 파일 제외
 ```
 
 ## 다음 개발 방향
