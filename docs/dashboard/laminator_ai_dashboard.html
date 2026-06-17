@@ -7,18 +7,22 @@
   <style>
     :root {
       color-scheme: light;
-      --ink: #17202a;
-      --muted: #5d6b78;
-      --line: #d9e1e8;
-      --soft: #f5f7f9;
+      --ink: #1f2933;
+      --muted: #5d6875;
+      --line: #d8dde5;
+      --soft: #f5f8fa;
       --panel: #ffffff;
-      --navy: #17202a;
-      --blue: #1769aa;
-      --green: #1f8a5b;
-      --orange: #b85b18;
-      --red: #b83a3a;
-      --yellow: #f0b429;
-      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+      --navy: #001c77;
+      --blue: #001c77;
+      --teal: #00c6c1;
+      --green: #7ec9a6;
+      --lime: #cfe724;
+      --purple: #7f27a4;
+      --orange: #f75c03;
+      --red: #ce092f;
+      --coral: #f66b54;
+      --yellow: #ffd400;
+      --shadow: 0 10px 26px rgba(0, 28, 119, 0.08);
     }
 
     * {
@@ -28,9 +32,10 @@
     body {
       margin: 0;
       font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
-      background: #eef3f7;
+      background: #f3f6f8;
       color: var(--ink);
-      line-height: 1.55;
+      font-size: 14px;
+      line-height: 1.45;
     }
 
     button {
@@ -40,7 +45,7 @@
     .app {
       min-height: 100vh;
       display: grid;
-      grid-template-columns: 292px minmax(0, 1fr);
+      grid-template-columns: 268px minmax(0, 1fr);
     }
 
     aside {
@@ -48,21 +53,21 @@
       top: 0;
       height: 100vh;
       overflow-y: auto;
-      padding: 28px 22px;
+      padding: 22px 18px;
       background: var(--navy);
-      color: #f8fbfd;
+      color: #ffffff;
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
+      gap: 10px;
+      margin-bottom: 18px;
     }
 
     .mark {
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
       border-radius: 8px;
       display: grid;
       place-items: center;
@@ -73,18 +78,18 @@
 
     .brand h1 {
       margin: 0;
-      font-size: 18px;
+      font-size: 15px;
       line-height: 1.25;
     }
 
     .side-card {
-      padding: 14px;
-      margin-bottom: 18px;
+      padding: 12px;
+      margin-bottom: 14px;
       border: 1px solid rgba(255, 255, 255, 0.15);
       border-radius: 8px;
       background: rgba(255, 255, 255, 0.06);
-      color: #dce7ee;
-      font-size: 13px;
+      color: #dfe8f0;
+      font-size: 12px;
     }
 
     .side-card strong {
@@ -95,27 +100,28 @@
 
     nav {
       display: grid;
-      gap: 8px;
+      gap: 6px;
     }
 
     nav a {
       display: block;
-      padding: 10px 12px;
+      padding: 8px 10px;
       border-radius: 8px;
       border: 1px solid transparent;
       color: #dce7ee;
       text-decoration: none;
+      font-size: 12px;
     }
 
     nav a:hover,
     nav a:focus {
       outline: none;
-      background: rgba(255, 255, 255, 0.08);
-      border-color: rgba(255, 255, 255, 0.16);
+      background: rgba(0, 198, 193, 0.16);
+      border-color: rgba(0, 198, 193, 0.45);
     }
 
     main {
-      padding: 34px;
+      padding: 24px;
     }
 
     .shell {
@@ -134,14 +140,14 @@
     }
 
     header {
-      padding: 28px;
-      margin-bottom: 18px;
+      padding: 22px;
+      margin-bottom: 14px;
     }
 
     .eyebrow {
       margin-bottom: 10px;
       color: var(--blue);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 900;
     }
 
@@ -154,7 +160,7 @@
 
     header h2 {
       margin-bottom: 10px;
-      font-size: 31px;
+      font-size: 24px;
       line-height: 1.24;
       letter-spacing: 0;
     }
@@ -169,75 +175,75 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-top: 18px;
+      gap: 10px;
+      margin-top: 14px;
     }
 
     .chips {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
 
     .chip {
       display: inline-flex;
-      min-height: 30px;
+      min-height: 26px;
       align-items: center;
-      padding: 0 10px;
+      padding: 0 9px;
       border-radius: 999px;
-      background: #eaf2f8;
-      color: #0e4f83;
-      font-size: 13px;
+      background: #e7f6f6;
+      color: var(--navy);
+      font-size: 12px;
       font-weight: 900;
     }
 
     .chip.red {
-      background: #f7d7d7;
-      color: #842525;
+      background: #fde8ed;
+      color: var(--red);
     }
 
     .chip.orange {
-      background: #fff0d4;
-      color: #70420f;
+      background: #fff0e7;
+      color: #a83e00;
     }
 
     .chip.green {
-      background: #dff3e9;
-      color: #135b3b;
+      background: #e6f6ee;
+      color: #23664c;
     }
 
     section {
-      padding: 24px;
-      margin-bottom: 16px;
+      padding: 18px;
+      margin-bottom: 12px;
     }
 
     section h3 {
-      margin-bottom: 8px;
-      font-size: 22px;
+      margin-bottom: 6px;
+      font-size: 18px;
     }
 
     .kpi-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     .card {
-      min-height: 128px;
-      padding: 16px;
+      min-height: 108px;
+      padding: 13px;
     }
 
     .card strong {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .value {
       margin: 0;
-      font-size: 28px;
+      font-size: 22px;
       line-height: 1.1;
       font-weight: 900;
       letter-spacing: 0;
@@ -246,15 +252,15 @@
     .sub {
       margin: 8px 0 0;
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .risk-meter {
-      height: 9px;
+      height: 7px;
       overflow: hidden;
       border-radius: 999px;
-      background: #e4ebf1;
-      margin-top: 12px;
+      background: #e7ebf0;
+      margin-top: 10px;
     }
 
     .risk-fill {
@@ -275,30 +281,30 @@
     .grid-2 {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 14px;
+      gap: 12px;
     }
 
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
+      gap: 12px;
     }
 
     .panel {
-      padding: 18px;
+      padding: 14px;
     }
 
     .panel h4 {
-      margin-bottom: 12px;
-      font-size: 18px;
+      margin-bottom: 10px;
+      font-size: 15px;
     }
 
     .alert {
       display: grid;
       grid-template-columns: 78px minmax(0, 1fr) auto;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
-      padding: 14px;
+      padding: 12px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--soft);
@@ -309,10 +315,10 @@
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      min-height: 30px;
+      min-height: 28px;
       border-radius: 999px;
       color: #ffffff;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
     }
 
@@ -336,7 +342,7 @@
     .alert p {
       margin: 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 12px;
     }
 
     .status {
@@ -355,20 +361,20 @@
       grid-template-columns: 96px minmax(0, 1fr) 72px;
       gap: 10px;
       align-items: center;
-      font-size: 14px;
+      font-size: 12px;
     }
 
     .track {
-      height: 14px;
+      height: 11px;
       overflow: hidden;
       border-radius: 999px;
-      background: #e4ebf1;
+      background: #e7ebf0;
     }
 
     .fill {
       height: 100%;
       border-radius: 999px;
-      background: var(--blue);
+      background: var(--teal);
     }
 
     .fill.red {
@@ -400,8 +406,8 @@
       display: grid;
       place-items: center;
       border-radius: 6px;
-      background: #eaf2f8;
-      color: #0e4f83;
+      background: #e7f6f6;
+      color: var(--navy);
       font-weight: 900;
       padding: 4px;
     }
@@ -413,36 +419,36 @@
     }
 
     .cell.warn {
-      background: #fff0d4;
-      color: #70420f;
+      background: #fff0e7;
+      color: #a83e00;
     }
 
     .cell.critical {
-      background: #f7d7d7;
-      color: #842525;
+      background: #fde8ed;
+      color: var(--red);
     }
 
     .chart-wrap {
-      min-height: 260px;
+      min-height: 240px;
       display: grid;
       align-content: stretch;
-      gap: 10px;
+      gap: 8px;
     }
 
     .chart-svg {
       width: 100%;
-      min-height: 230px;
+      min-height: 210px;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: linear-gradient(180deg, #ffffff 0%, #f8fbfd 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #f6fafb 100%);
     }
 
     .legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 8px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .legend-item {
@@ -455,7 +461,7 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: var(--blue);
+      background: var(--teal);
     }
 
     .legend-dot.red {
@@ -489,12 +495,12 @@
       bottom: 8px;
       left: 6px;
       width: 2px;
-      background: #c8d4df;
+      background: #c9d1da;
     }
 
     .event {
       position: relative;
-      padding: 12px;
+      padding: 10px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--soft);
@@ -523,11 +529,11 @@
     .evidence-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-      gap: 14px;
+      gap: 12px;
     }
 
     .cause {
-      padding: 16px;
+      padding: 13px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--soft);
@@ -538,8 +544,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 10px;
+      gap: 10px;
+      margin-bottom: 8px;
     }
 
     .cause h4 {
@@ -548,12 +554,12 @@
 
     .confidence {
       display: inline-flex;
-      min-height: 28px;
+      min-height: 24px;
       align-items: center;
-      padding: 0 10px;
+      padding: 0 8px;
       border-radius: 999px;
       color: #ffffff;
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 900;
       white-space: nowrap;
     }
@@ -567,7 +573,7 @@
     }
 
     .low {
-      background: #415161;
+      background: #4a5568;
     }
 
     .evidence-list {
@@ -579,11 +585,11 @@
     }
 
     .evidence-list li {
-      padding: 10px;
+      padding: 9px;
       border-radius: 8px;
       background: #ffffff;
       border: 1px solid var(--line);
-      font-size: 14px;
+      font-size: 12px;
     }
 
     .table {
@@ -593,13 +599,13 @@
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 8px;
-      font-size: 14px;
+      font-size: 12px;
       background: #ffffff;
     }
 
     .table th,
     .table td {
-      padding: 11px;
+      padding: 9px;
       border-bottom: 1px solid var(--line);
       text-align: left;
       vertical-align: top;
@@ -623,10 +629,10 @@
     .profile-row {
       display: grid;
       grid-template-columns: 92px minmax(0, 1fr) 74px;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
-      margin-bottom: 12px;
-      font-size: 14px;
+      margin-bottom: 10px;
+      font-size: 12px;
     }
 
     .spark {
@@ -634,8 +640,8 @@
       grid-template-columns: repeat(12, 1fr);
       gap: 4px;
       align-items: end;
-      min-height: 68px;
-      padding: 8px;
+      min-height: 60px;
+      padding: 7px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
@@ -645,7 +651,7 @@
       display: block;
       min-height: 8px;
       border-radius: 5px 5px 0 0;
-      background: var(--blue);
+      background: var(--teal);
     }
 
     .spark .warn {
@@ -667,8 +673,8 @@
     .actions li {
       display: grid;
       grid-template-columns: 92px minmax(0, 1fr);
-      gap: 10px;
-      padding: 12px;
+      gap: 8px;
+      padding: 10px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
@@ -680,9 +686,9 @@
       align-items: center;
       min-height: 28px;
       border-radius: 999px;
-      background: #eaf2f8;
-      color: #0e4f83;
-      font-size: 12px;
+      background: #e7f6f6;
+      color: var(--navy);
+      font-size: 11px;
       font-weight: 900;
     }
 
@@ -701,7 +707,7 @@
     .btn {
       border: 0;
       border-radius: 8px;
-      padding: 11px 14px;
+      padding: 9px 12px;
       background: var(--blue);
       color: #ffffff;
       font-weight: 900;
@@ -710,16 +716,16 @@
 
     .upload-box {
       display: grid;
-      gap: 12px;
-      padding: 18px;
-      border: 2px dashed #b7c6d4;
+      gap: 10px;
+      padding: 14px;
+      border: 2px dashed #b6d8dc;
       border-radius: 8px;
       background: var(--soft);
     }
 
     .file-input {
       width: 100%;
-      padding: 12px;
+      padding: 10px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
@@ -729,16 +735,16 @@
     .upload-summary {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 12px;
+      gap: 8px;
+      margin-top: 10px;
     }
 
     .upload-chip {
-      padding: 12px;
+      padding: 10px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .upload-chip strong {
@@ -755,22 +761,22 @@
     }
 
     .file-list li {
-      padding: 10px;
+      padding: 9px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .mapping-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 12px;
+      gap: 10px;
+      margin-top: 10px;
     }
 
     .mapping-card {
-      padding: 14px;
+      padding: 12px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
@@ -778,7 +784,7 @@
 
     .mapping-card h4 {
       margin: 0 0 8px;
-      font-size: 15px;
+      font-size: 13px;
     }
 
     .mapping-meta {
@@ -794,21 +800,21 @@
       align-items: center;
       padding: 0 8px;
       border-radius: 999px;
-      background: #eaf2f8;
-      color: #0e4f83;
-      font-size: 12px;
+      background: #e7f6f6;
+      color: var(--navy);
+      font-size: 11px;
       font-weight: 900;
     }
 
     .mapping-pill.warn {
-      background: #fff0d4;
-      color: #70420f;
+      background: #fff0e7;
+      color: #a83e00;
     }
 
     .mapping-table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .mapping-table th,
@@ -822,12 +828,12 @@
     .request-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .request-card {
-      padding: 14px;
+      padding: 12px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
@@ -862,8 +868,8 @@
     code {
       padding: 2px 5px;
       border-radius: 6px;
-      background: #edf3f7;
-      color: #0e4f83;
+      background: #e7f6f6;
+      color: var(--navy);
       font-family: Consolas, monospace;
       font-size: 12px;
     }
@@ -871,12 +877,12 @@
     .ai-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .ai-card {
-      padding: 16px;
+      padding: 13px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
@@ -891,20 +897,20 @@
     .ai-card p {
       margin-bottom: 0;
       color: var(--muted);
-      font-size: 14px;
+      font-size: 12px;
     }
 
     .graph-insight-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 14px;
+      gap: 10px;
+      margin-top: 12px;
     }
 
     .graph-insight-card {
       display: grid;
-      gap: 10px;
-      padding: 16px;
+      gap: 8px;
+      padding: 13px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: #ffffff;
@@ -920,7 +926,7 @@
 
     .graph-insight-head h4 {
       margin-bottom: 0;
-      font-size: 16px;
+      font-size: 14px;
     }
 
     .mini-chart {
@@ -929,23 +935,23 @@
 
     .one-line {
       margin: 0;
-      padding: 10px 12px;
+      padding: 9px 10px;
       border-left: 4px solid var(--blue);
       border-radius: 8px;
       background: var(--soft);
       color: var(--ink);
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 800;
     }
 
     .one-line.red {
       border-left-color: var(--red);
-      background: #fff5f5;
+      background: #fde8ed;
     }
 
     .one-line.orange {
       border-left-color: var(--orange);
-      background: #fff9eb;
+      background: #fff0e7;
     }
 
     .graph-sheet-note {
@@ -956,12 +962,12 @@
     }
 
     .graph-sheet-note div {
-      padding: 12px;
+      padding: 10px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--soft);
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .action-list {
@@ -973,11 +979,11 @@
     }
 
     .action-list li {
-      padding: 11px 12px;
+      padding: 9px 10px;
       border: 1px solid var(--line);
       border-radius: 8px;
       background: var(--soft);
-      font-size: 14px;
+      font-size: 12px;
     }
 
     @media (max-width: 1080px) {
@@ -1256,7 +1262,7 @@
                 <span class="chip red" id="insightParetoBadge">우선순위</span>
               </div>
               <svg class="chart-svg mini-chart" id="insightParetoChart" viewBox="0 0 520 210" role="img" aria-label="불량 Pareto 요약 그래프">
-                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 불량 Pareto가 표시됩니다.</text>
+                <text x="32" y="104" fill="#5d6875" font-size="10">CSV 업로드 후 불량 Pareto가 표시됩니다.</text>
               </svg>
               <p class="one-line red" id="insightParetoComment">CRACK/BUBBLE 중 어떤 불량이 먼저 줄여야 할 대상인지 한줄로 표시합니다.</p>
             </article>
@@ -1267,7 +1273,7 @@
                 <span class="chip orange" id="insightTimeBadge">시간대</span>
               </div>
               <svg class="chart-svg mini-chart" id="insightTimeChart" viewBox="0 0 520 210" role="img" aria-label="시간별 불량 집중 그래프">
-                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 시간별 NG 그래프가 표시됩니다.</text>
+                <text x="32" y="104" fill="#5d6875" font-size="10">CSV 업로드 후 시간별 NG 그래프가 표시됩니다.</text>
               </svg>
               <p class="one-line orange" id="insightTimeComment">특정 시간대에 불량이 몰렸는지 한줄로 표시합니다.</p>
             </article>
@@ -1278,7 +1284,7 @@
                 <span class="chip" id="insightEquipmentBadge">설비</span>
               </div>
               <svg class="chart-svg mini-chart" id="insightEquipmentChart" viewBox="0 0 520 210" role="img" aria-label="설비별 NG율 그래프">
-                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 설비별 NG율 또는 NG 건수가 표시됩니다.</text>
+                <text x="32" y="104" fill="#5d6875" font-size="10">CSV 업로드 후 설비별 NG율 또는 NG 건수가 표시됩니다.</text>
               </svg>
               <p class="one-line" id="insightEquipmentComment">어느 설비를 먼저 확인해야 하는지 한줄로 표시합니다.</p>
             </article>
@@ -1289,7 +1295,7 @@
                 <span class="chip orange" id="insightProfileBadge">근거</span>
               </div>
               <svg class="chart-svg mini-chart" id="insightProfileChart" viewBox="0 0 520 210" role="img" aria-label="Profile 및 알람 중첩 그래프">
-                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 Profile/알람 중첩 점수가 표시됩니다.</text>
+                <text x="32" y="104" fill="#5d6875" font-size="10">CSV 업로드 후 Profile/알람 중첩 점수가 표시됩니다.</text>
               </svg>
               <p class="one-line orange" id="insightProfileComment">불량 집중과 설비 조건이 같이 움직였는지 한줄로 표시합니다.</p>
             </article>
@@ -1520,20 +1526,20 @@
             <div class="panel chart-wrap">
               <h4>시간대별 NG 추이</h4>
               <svg class="chart-svg" id="hourlyTrendChart" viewBox="0 0 640 270" role="img" aria-label="시간대별 NG 추이 그래프">
-                <line x1="52" y1="210" x2="602" y2="210" stroke="#c8d4df" />
-                <line x1="52" y1="34" x2="52" y2="210" stroke="#c8d4df" />
-                <rect x="90" y="180" width="26" height="30" fill="#1769aa" rx="4" />
-                <rect x="155" y="166" width="26" height="44" fill="#1769aa" rx="4" />
-                <rect x="220" y="54" width="26" height="156" fill="#b83a3a" rx="4" />
-                <rect x="285" y="130" width="26" height="80" fill="#1769aa" rx="4" />
-                <rect x="350" y="146" width="26" height="64" fill="#b85b18" rx="4" />
-                <polyline points="103,182 168,168 233,58 298,132 363,148" fill="none" stroke="#b83a3a" stroke-width="3" />
-                <text x="52" y="236" fill="#5d6b78" font-size="12">12</text>
-                <text x="117" y="236" fill="#5d6b78" font-size="12">13</text>
-                <text x="182" y="236" fill="#5d6b78" font-size="12">14</text>
-                <text x="247" y="236" fill="#5d6b78" font-size="12">15</text>
-                <text x="312" y="236" fill="#5d6b78" font-size="12">16</text>
-                <text x="52" y="24" fill="#17202a" font-size="13" font-weight="700">Sample: 14시 CRACK 집중</text>
+                <line x1="52" y1="210" x2="602" y2="210" stroke="#c9d1da" />
+                <line x1="52" y1="34" x2="52" y2="210" stroke="#c9d1da" />
+                <rect x="90" y="180" width="26" height="30" fill="#00c6c1" rx="4" />
+                <rect x="155" y="166" width="26" height="44" fill="#00c6c1" rx="4" />
+                <rect x="220" y="54" width="26" height="156" fill="#ce092f" rx="4" />
+                <rect x="285" y="130" width="26" height="80" fill="#00c6c1" rx="4" />
+                <rect x="350" y="146" width="26" height="64" fill="#f75c03" rx="4" />
+                <polyline points="103,182 168,168 233,58 298,132 363,148" fill="none" stroke="#ce092f" stroke-width="3" />
+                <text x="52" y="236" fill="#5d6875" font-size="10">12</text>
+                <text x="117" y="236" fill="#5d6875" font-size="10">13</text>
+                <text x="182" y="236" fill="#5d6875" font-size="10">14</text>
+                <text x="247" y="236" fill="#5d6875" font-size="10">15</text>
+                <text x="312" y="236" fill="#5d6875" font-size="10">16</text>
+                <text x="52" y="24" fill="#1f2933" font-size="10" font-weight="700">Sample: 14시 CRACK 집중</text>
               </svg>
               <div class="legend">
                 <span class="legend-item"><span class="legend-dot"></span>전체 NG</span>
@@ -1544,27 +1550,27 @@
             <div class="panel chart-wrap">
               <h4>설비별 시간분포 Boxplot</h4>
               <svg class="chart-svg" id="equipmentBoxplotChart" viewBox="0 0 640 270" role="img" aria-label="설비별 시간분포 박스플롯">
-                <line x1="58" y1="212" x2="600" y2="212" stroke="#c8d4df" />
-                <line x1="58" y1="34" x2="58" y2="212" stroke="#c8d4df" />
+                <line x1="58" y1="212" x2="600" y2="212" stroke="#c9d1da" />
+                <line x1="58" y1="34" x2="58" y2="212" stroke="#c9d1da" />
                 <g>
-                  <line x1="165" y1="174" x2="165" y2="206" stroke="#1769aa" stroke-width="2" />
-                  <rect x="132" y="178" width="66" height="18" fill="#eaf2f8" stroke="#1769aa" rx="4" />
-                  <line x1="132" y1="188" x2="198" y2="188" stroke="#1769aa" stroke-width="2" />
-                  <text x="137" y="236" fill="#5d6b78" font-size="12">LAM-01</text>
+                  <line x1="165" y1="174" x2="165" y2="206" stroke="#00c6c1" stroke-width="2" />
+                  <rect x="132" y="178" width="66" height="18" fill="#e7f6f6" stroke="#00c6c1" rx="4" />
+                  <line x1="132" y1="188" x2="198" y2="188" stroke="#00c6c1" stroke-width="2" />
+                  <text x="137" y="236" fill="#5d6875" font-size="10">LAM-01</text>
                 </g>
                 <g>
-                  <line x1="320" y1="154" x2="320" y2="206" stroke="#b85b18" stroke-width="2" />
-                  <rect x="287" y="164" width="66" height="30" fill="#fff0d4" stroke="#b85b18" rx="4" />
-                  <line x1="287" y1="180" x2="353" y2="180" stroke="#b85b18" stroke-width="2" />
-                  <text x="292" y="236" fill="#5d6b78" font-size="12">LAM-02</text>
+                  <line x1="320" y1="154" x2="320" y2="206" stroke="#f75c03" stroke-width="2" />
+                  <rect x="287" y="164" width="66" height="30" fill="#fff0e7" stroke="#f75c03" rx="4" />
+                  <line x1="287" y1="180" x2="353" y2="180" stroke="#f75c03" stroke-width="2" />
+                  <text x="292" y="236" fill="#5d6875" font-size="10">LAM-02</text>
                 </g>
                 <g>
-                  <line x1="475" y1="54" x2="475" y2="204" stroke="#b83a3a" stroke-width="2" />
-                  <rect x="442" y="112" width="66" height="72" fill="#f7d7d7" stroke="#b83a3a" rx="4" />
-                  <line x1="442" y1="150" x2="508" y2="150" stroke="#b83a3a" stroke-width="2" />
-                  <text x="447" y="236" fill="#5d6b78" font-size="12">LAM-03</text>
+                  <line x1="475" y1="54" x2="475" y2="204" stroke="#ce092f" stroke-width="2" />
+                  <rect x="442" y="112" width="66" height="72" fill="#fde8ed" stroke="#ce092f" rx="4" />
+                  <line x1="442" y1="150" x2="508" y2="150" stroke="#ce092f" stroke-width="2" />
+                  <text x="447" y="236" fill="#5d6875" font-size="10">LAM-03</text>
                 </g>
-                <text x="58" y="24" fill="#17202a" font-size="13" font-weight="700">시간대별 NG 분포: 박스가 크면 변동이 큼</text>
+                <text x="58" y="24" fill="#1f2933" font-size="10" font-weight="700">시간대별 NG 분포: 박스가 크면 변동이 큼</text>
               </svg>
               <div class="legend">
                 <span class="legend-item"><span class="legend-dot"></span>Q1~Q3</span>
@@ -2405,8 +2411,8 @@
       if (!chart) return;
       chart.outerHTML = `
         <svg class="chart-svg mini-chart" id="${chartId}" viewBox="0 0 520 210" role="img" aria-label="그래프 분석 시트">
-          <rect x="22" y="24" width="476" height="150" fill="#f8fbfd" stroke="#d9e1e8" rx="8" />
-          <text x="40" y="102" fill="#5d6b78" font-size="14">${escapeHtml(message)}</text>
+          <rect x="22" y="24" width="476" height="150" fill="#f6fafb" stroke="#d8dde5" rx="8" />
+          <text x="40" y="102" fill="#5d6875" font-size="10">${escapeHtml(message)}</text>
         </svg>`;
     }
 
@@ -2429,20 +2435,20 @@
       const rows = items.slice(0, 5).map((item, index) => {
         const y = top + index * rowGap;
         const barWidth = clamp((item.value / max) * (width - left - right), 2, width - left - right);
-        const fill = index === 0 ? "#b83a3a" : index === 1 ? "#b85b18" : "#1769aa";
+        const fill = index === 0 ? "#ce092f" : index === 1 ? "#f75c03" : "#00c6c1";
         const label = shortLabel(item.label, 16);
         const valueLabel = item.valueLabel || fmtNumber(item.value);
         return `
-          <text x="18" y="${(y + 15).toFixed(1)}" fill="#5d6b78" font-size="12">${escapeHtml(label)}</text>
-          <rect x="${left}" y="${y}" width="${(width - left - right).toFixed(1)}" height="18" fill="#eaf2f8" rx="6" />
+          <text x="18" y="${(y + 15).toFixed(1)}" fill="#5d6875" font-size="10">${escapeHtml(label)}</text>
+          <rect x="${left}" y="${y}" width="${(width - left - right).toFixed(1)}" height="18" fill="#e7f6f6" rx="6" />
           <rect x="${left}" y="${y}" width="${barWidth.toFixed(1)}" height="18" fill="${fill}" rx="6" />
-          <text x="${(left + barWidth + 8).toFixed(1)}" y="${(y + 14).toFixed(1)}" fill="#17202a" font-size="12" font-weight="700">${escapeHtml(valueLabel)}</text>
+          <text x="${(left + barWidth + 8).toFixed(1)}" y="${(y + 14).toFixed(1)}" fill="#1f2933" font-size="10" font-weight="700">${escapeHtml(valueLabel)}</text>
         `;
       }).join("");
 
       chart.outerHTML = `
         <svg class="chart-svg mini-chart" id="${chartId}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(options.title || "요약 막대 그래프")}">
-          <text x="18" y="23" fill="#17202a" font-size="13" font-weight="700">${escapeHtml(options.title || "Top signals")}</text>
+          <text x="18" y="23" fill="#1f2933" font-size="10" font-weight="700">${escapeHtml(options.title || "Top signals")}</text>
           ${rows}
         </svg>`;
     }
@@ -2473,9 +2479,9 @@
         const value = values[index] || 0;
         const x = left + step * index + step / 2 - barWidth / 2;
         const y = yValue(value);
-        const fill = value === max ? "#b83a3a" : "#1769aa";
+        const fill = value === max ? "#ce092f" : "#00c6c1";
         const label = hours.length <= 12 || index % 2 === 0
-          ? `<text x="${(x - 1).toFixed(1)}" y="186" fill="#5d6b78" font-size="10">${escapeHtml(hour)}</text>`
+          ? `<text x="${(x - 1).toFixed(1)}" y="186" fill="#5d6875" font-size="10">${escapeHtml(hour)}</text>`
           : "";
         return `
           <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth.toFixed(1)}" height="${Math.max(1, bottom - y).toFixed(1)}" fill="${fill}" rx="5" />
@@ -2485,12 +2491,12 @@
 
       chart.outerHTML = `
         <svg class="chart-svg mini-chart" id="${chartId}" viewBox="0 0 ${width} ${height}" role="img" aria-label="시간별 불량 집중 요약">
-          <text x="18" y="23" fill="#17202a" font-size="13" font-weight="700">${escapeHtml(title)}</text>
-          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c8d4df" />
-          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c8d4df" />
-          <line x1="${left}" y1="${yValue(max).toFixed(1)}" x2="${width - right}" y2="${yValue(max).toFixed(1)}" stroke="#f0c5c5" stroke-dasharray="4 5" />
+          <text x="18" y="23" fill="#1f2933" font-size="10" font-weight="700">${escapeHtml(title)}</text>
+          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c9d1da" />
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c9d1da" />
+          <line x1="${left}" y1="${yValue(max).toFixed(1)}" x2="${width - right}" y2="${yValue(max).toFixed(1)}" stroke="#f5b8c4" stroke-dasharray="4 5" />
           ${bars}
-          <text x="18" y="186" fill="#5d6b78" font-size="10">07-07</text>
+          <text x="18" y="186" fill="#5d6875" font-size="10">07-07</text>
         </svg>`;
     }
 
@@ -2625,10 +2631,10 @@
 
       if (rows.length === 0) {
         trendChart.outerHTML = `<svg class="chart-svg" id="hourlyTrendChart" viewBox="0 0 640 270" role="img" aria-label="시간대별 NG 추이">
-          <text x="52" y="130" fill="#5d6b78" font-size="16">defect_events 또는 production CSV를 업로드하면 그래프가 계산됩니다.</text>
+          <text x="52" y="130" fill="#5d6875" font-size="10">defect_events 또는 production CSV를 업로드하면 그래프가 계산됩니다.</text>
         </svg>`;
         boxplotChart.outerHTML = `<svg class="chart-svg" id="equipmentBoxplotChart" viewBox="0 0 640 270" role="img" aria-label="설비별 Boxplot">
-          <text x="52" y="130" fill="#5d6b78" font-size="16">시간대별 NG 분포가 있으면 설비별 박스플롯이 계산됩니다.</text>
+          <text x="52" y="130" fill="#5d6875" font-size="10">시간대별 NG 분포가 있으면 설비별 박스플롯이 계산됩니다.</text>
         </svg>`;
         statsBody.innerHTML = `<tr><td colspan="4">CSV 업로드 필요</td></tr>`;
         if (hint) hint.textContent = "CSV 업로드 후 시간대별 불량 집중과 설비별 변동성을 자동 계산한다.";
@@ -2669,7 +2675,7 @@
         const total = hourly.get(hour)?.total || 0;
         const y = yValue(total);
         const x = xCenter(index) - barWidth / 2;
-        const fill = total === maxTotal ? "#b83a3a" : "#1769aa";
+        const fill = total === maxTotal ? "#ce092f" : "#00c6c1";
         return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth.toFixed(1)}" height="${Math.max(1, bottom - y).toFixed(1)}" fill="${fill}" rx="4" />`;
       }).join("");
 
@@ -2679,25 +2685,25 @@
 
       const labels = hours.map((hour, index) => {
         const visible = hours.length <= 12 || index % 2 === 0;
-        return visible ? `<text x="${(xCenter(index) - 7).toFixed(1)}" y="236" fill="#5d6b78" font-size="11">${escapeHtml(hour)}</text>` : "";
+        return visible ? `<text x="${(xCenter(index) - 7).toFixed(1)}" y="236" fill="#5d6875" font-size="10">${escapeHtml(hour)}</text>` : "";
       }).join("");
 
       const grid = yTicks.map((tick) => {
         const y = yValue(tick);
-        return `<line x1="${left}" y1="${y.toFixed(1)}" x2="${width - right}" y2="${y.toFixed(1)}" stroke="#d9e1e8" stroke-dasharray="3 5" />
-          <text x="18" y="${(y + 4).toFixed(1)}" fill="#5d6b78" font-size="10">${fmtNumber(tick)}</text>`;
+        return `<line x1="${left}" y1="${y.toFixed(1)}" x2="${width - right}" y2="${y.toFixed(1)}" stroke="#d8dde5" stroke-dasharray="3 5" />
+          <text x="18" y="${(y + 4).toFixed(1)}" fill="#5d6875" font-size="10">${fmtNumber(tick)}</text>`;
       }).join("");
 
       trendChart.outerHTML = `
         <svg class="chart-svg" id="hourlyTrendChart" viewBox="0 0 ${width} ${height}" role="img" aria-label="시간대별 NG 추이 그래프">
           ${grid}
-          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c8d4df" />
-          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c8d4df" />
+          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c9d1da" />
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c9d1da" />
           ${bars}
-          <polyline points="${linePoints("crack")}" fill="none" stroke="#b83a3a" stroke-width="3" />
-          <polyline points="${linePoints("bubble")}" fill="none" stroke="#b85b18" stroke-width="3" />
+          <polyline points="${linePoints("crack")}" fill="none" stroke="#ce092f" stroke-width="3" />
+          <polyline points="${linePoints("bubble")}" fill="none" stroke="#f75c03" stroke-width="3" />
           ${labels}
-          <text x="${left}" y="24" fill="#17202a" font-size="13" font-weight="700">최대 집중: ${escapeHtml(topHour.hour)}시 전체 NG ${fmtNumber(topHour.total)}건</text>
+          <text x="${left}" y="24" fill="#1f2933" font-size="10" font-weight="700">최대 집중: ${escapeHtml(topHour.hour)}시 전체 NG ${fmtNumber(topHour.total)}건</text>
         </svg>`;
 
       const equipments = [...new Set(rows.map((row) => row.equipment))].slice(0, 6);
@@ -2727,8 +2733,8 @@
       const boxGrid = [0, 0.5, 1].map((ratio) => {
         const tick = Math.round(boxMax * ratio);
         const y = boxY(tick);
-        return `<line x1="${left}" y1="${y.toFixed(1)}" x2="${width - right}" y2="${y.toFixed(1)}" stroke="#d9e1e8" stroke-dasharray="3 5" />
-          <text x="18" y="${(y + 4).toFixed(1)}" fill="#5d6b78" font-size="10">${fmtNumber(tick)}</text>`;
+        return `<line x1="${left}" y1="${y.toFixed(1)}" x2="${width - right}" y2="${y.toFixed(1)}" stroke="#d8dde5" stroke-dasharray="3 5" />
+          <text x="18" y="${(y + 4).toFixed(1)}" fill="#5d6875" font-size="10">${fmtNumber(tick)}</text>`;
       }).join("");
 
       const boxShapes = stats.map((item, index) => {
@@ -2741,8 +2747,8 @@
         const boxTop = Math.min(q1Y, q3Y);
         const boxHeight = Math.max(6, Math.abs(q1Y - q3Y));
         const isTop = index === 0;
-        const stroke = isTop ? "#b83a3a" : "#1769aa";
-        const fill = isTop ? "#f7d7d7" : "#eaf2f8";
+        const stroke = isTop ? "#ce092f" : "#00c6c1";
+        const fill = isTop ? "#fde8ed" : "#e7f6f6";
         return `
           <g>
             <line x1="${x.toFixed(1)}" y1="${maxY.toFixed(1)}" x2="${x.toFixed(1)}" y2="${minY.toFixed(1)}" stroke="${stroke}" stroke-width="2" />
@@ -2750,18 +2756,18 @@
             <line x1="${(x - boxWidth / 4).toFixed(1)}" y1="${minY.toFixed(1)}" x2="${(x + boxWidth / 4).toFixed(1)}" y2="${minY.toFixed(1)}" stroke="${stroke}" stroke-width="2" />
             <rect x="${(x - boxWidth / 2).toFixed(1)}" y="${boxTop.toFixed(1)}" width="${boxWidth.toFixed(1)}" height="${boxHeight.toFixed(1)}" fill="${fill}" stroke="${stroke}" rx="4" />
             <line x1="${(x - boxWidth / 2).toFixed(1)}" y1="${medianY.toFixed(1)}" x2="${(x + boxWidth / 2).toFixed(1)}" y2="${medianY.toFixed(1)}" stroke="${stroke}" stroke-width="2" />
-            <circle cx="${x.toFixed(1)}" cy="${boxY(item.avg).toFixed(1)}" r="3.5" fill="#1f8a5b" />
-            <text x="${(x - 24).toFixed(1)}" y="236" fill="#5d6b78" font-size="11">${escapeHtml(item.equipment)}</text>
+            <circle cx="${x.toFixed(1)}" cy="${boxY(item.avg).toFixed(1)}" r="3.5" fill="#7ec9a6" />
+            <text x="${(x - 24).toFixed(1)}" y="236" fill="#5d6875" font-size="10">${escapeHtml(item.equipment)}</text>
           </g>`;
       }).join("");
 
       boxplotChart.outerHTML = `
         <svg class="chart-svg" id="equipmentBoxplotChart" viewBox="0 0 ${width} ${height}" role="img" aria-label="설비별 시간분포 박스플롯">
           ${boxGrid}
-          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c8d4df" />
-          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c8d4df" />
+          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c9d1da" />
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c9d1da" />
           ${boxShapes}
-          <text x="${left}" y="24" fill="#17202a" font-size="13" font-weight="700">시간대별 NG 분포: Max/Q3가 큰 설비 우선 점검</text>
+          <text x="${left}" y="24" fill="#1f2933" font-size="10" font-weight="700">시간대별 NG 분포: Max/Q3가 큰 설비 우선 점검</text>
         </svg>`;
 
       statsBody.innerHTML = stats.map((item) => `
