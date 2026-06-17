@@ -868,6 +868,48 @@
       font-size: 12px;
     }
 
+    .ai-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .ai-card {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .ai-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+
+    .ai-card p {
+      margin-bottom: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .action-list {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .action-list li {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      font-size: 14px;
+    }
+
     @media (max-width: 1080px) {
       .app {
         grid-template-columns: 1fr;
@@ -890,7 +932,8 @@
       .grid-3,
       .evidence-grid,
       .upload-summary,
-      .request-grid {
+      .request-grid,
+      .ai-grid {
         grid-template-columns: 1fr;
       }
 
@@ -972,6 +1015,7 @@
         <a href="#overview">Overview</a>
         <a href="#data-import">CSV 불러오기</a>
         <a href="#data-request">CSV 요청 항목</a>
+        <a href="#ai-reanalysis">AI 자동 재분석</a>
         <a href="#alerts">위험도 점수</a>
         <a href="#defect">불량 Pareto</a>
         <a href="#equipment">설비/시간 집중</a>
@@ -1100,6 +1144,33 @@
             </tbody>
           </table>
           <p class="hint">정리: NG 데이터만 있으면 어디서 많이 났는지까지, 생산 분모와 Profile/알람/BOM/위치까지 있으면 왜 났을 가능성이 높은지까지 분석할 수 있습니다.</p>
+        </section>
+
+        <section id="ai-reanalysis">
+          <h3>0-2. CSV 업로드 후 AI 자동 재분석</h3>
+          <p class="hint">CSV를 선택할 때마다 브라우저 안의 로컬 분석 엔진이 다시 실행됩니다. 외부 서버로 원본 데이터를 보내지 않고, 통계 신호와 문헌 기반 원인 후보를 자동으로 갱신합니다.</p>
+          <span class="chip orange" id="aiRunStatus">AI 분석 대기: CSV를 업로드하면 자동 재분석됩니다</span>
+          <div class="ai-grid" id="aiAnalysisCards">
+            <div class="ai-card">
+              <strong>분석 대기</strong>
+              <p>CSV 업로드 후 불량 집중, 설비/Profile 중첩, 위험도 점수, 문헌 기반 원인 후보를 다시 계산합니다.</p>
+            </div>
+            <div class="ai-card">
+              <strong>통계 분석</strong>
+              <p>Pareto, 시간대 집중, 설비별 분포, Boxplot 신호가 업로드 데이터 기준으로 재작성됩니다.</p>
+            </div>
+            <div class="ai-card">
+              <strong>설비 조건 연결</strong>
+              <p>공정 time, 온도, 진공도, 압력, 알람 시간이 불량 집중 구간과 겹치는지 확인합니다.</p>
+            </div>
+            <div class="ai-card">
+              <strong>문헌 기반 해석</strong>
+              <p>CRACK/BUBBLE Failure Mode와 현재 데이터 신호를 연결해 검증 우선순위를 제안합니다.</p>
+            </div>
+          </div>
+          <ul class="action-list" id="aiActionList">
+            <li>CSV를 업로드하면 AI 액션아이템이 자동 생성됩니다.</li>
+          </ul>
         </section>
 
         <div class="kpi-grid">
@@ -2405,6 +2476,90 @@
       `;
     }
 
+    function renderAiAnalysis() {
+      const status = document.getElementById("aiRunStatus");
+      const cards = document.getElementById("aiAnalysisCards");
+      const actionList = document.getElementById("aiActionList");
+      if (!status || !cards || !actionList) return;
+
+      const risk = calculateRiskScore();
+      const topGroup = risk.topGroup || concentrationGroups()[0];
+      const counts = defectCounts();
+      const totalDefects = counts.reduce((sum, item) => sum + item.value, 0);
+      const topDefect = counts[0];
+      const topRatio = topDefect && totalDefects ? (topDefect.value / totalDefects) * 100 : 0;
+      const equipmentRows = groupProductionByEquipment(state.production);
+      const topEquipment = equipmentRows[0];
+      const profile = topGroup ? profileSummary(topGroup.equipment) : null;
+      const alarmMatches = topGroup ? alarmsFor(topGroup.equipment, topGroup.hour) : [];
+      const mismatchRows = quantityMismatches();
+      const hasUploadedData = state.files.length > 0;
+      const band = riskBand(risk.score);
+
+      status.textContent = hasUploadedData
+        ? `AI 재분석 완료: CSV ${fmtNumber(state.files.length)}개 반영, 위험도 ${risk.score}/100`
+        : "AI 분석 대기: CSV를 업로드하면 자동 재분석됩니다";
+      status.className = `chip ${band.className === "high" ? "red" : band.className === "medium" ? "orange" : "green"}`;
+
+      const topGroupText = topGroup
+        ? `${topGroup.equipment} ${topGroup.hour}시대 ${topGroup.defect} ${fmtNumber(topGroup.count)}건 집중`
+        : "불량 이벤트 CSV가 필요합니다.";
+
+      const paretoText = topDefect
+        ? `${topDefect.key} ${fmtNumber(topDefect.value)}건, 전체 NG 중 ${topRatio.toFixed(1)}%입니다.`
+        : "불량 코드별 Pareto를 계산할 데이터가 부족합니다.";
+
+      const equipmentText = topEquipment
+        ? `${topEquipment.equipment} NG율 ${fmtRate(topEquipment.rate)}로 설비 우선 확인 대상입니다.`
+        : topGroup
+          ? `${topGroup.equipment}에서 시간대 집중 신호가 확인됩니다. 생산 분모 CSV가 있으면 NG율까지 계산됩니다.`
+          : "설비별 비교를 위해 equipment_id와 생산 분모가 필요합니다.";
+
+      const profileText = profile
+        ? `Profile 중첩: vacuum ${profile.vacuumWorst.toFixed(1)} kPa, temp ${profile.tempMax.toFixed(1)} C, cycle ${profile.cycleMax.toFixed(1)} sec.`
+        : "Profile CSV가 없거나 해당 설비와 연결되는 Profile 데이터가 부족합니다.";
+
+      const alarmText = alarmMatches.length
+        ? `동시간대 알람 ${fmtNumber(alarmMatches.length)}건이 불량 집중과 겹칩니다.`
+        : "동시간대 알람 중첩은 확인되지 않았습니다.";
+
+      const defectName = String(topGroup?.defect || topDefect?.key || "").toUpperCase();
+      const literatureText = defectName.includes("CRACK")
+        ? "문헌 기준 CRACK은 mechanical stress, handling, lamination pressure/vacuum disturbance와 우선 비교해야 합니다."
+        : defectName.includes("BUBBLE")
+          ? "문헌 기준 BUBBLE/Delamination은 encapsulant, vacuum, temperature, cooling condition과 우선 비교해야 합니다."
+          : "문헌 기반 해석을 위해 CRACK/BUBBLE 등 defect_code가 필요합니다.";
+
+      cards.innerHTML = `
+        <div class="ai-card">
+          <strong>1. 현상 요약</strong>
+          <p>${escapeHtml(topGroupText)}</p>
+        </div>
+        <div class="ai-card">
+          <strong>2. 통계 신호</strong>
+          <p>${escapeHtml(paretoText)} ${escapeHtml(equipmentText)}</p>
+        </div>
+        <div class="ai-card">
+          <strong>3. 설비/Profile 연결</strong>
+          <p>${escapeHtml(profileText)} ${escapeHtml(alarmText)}</p>
+        </div>
+        <div class="ai-card">
+          <strong>4. 문헌 기반 원인 후보</strong>
+          <p>${escapeHtml(literatureText)}</p>
+        </div>
+      `;
+
+      const actions = [];
+      if (topGroup) actions.push(`${topGroup.equipment} ${topGroup.hour}시대 ${topGroup.defect} 발생 모듈과 정상 모듈의 Profile 분포를 비교`);
+      if (profile) actions.push("진공도, 온도, 압력, 공정 time 기준값 이탈 여부를 담당자가 확인");
+      if (alarmMatches.length) actions.push("알람 발생 시각이 불량 발생 전인지 후인지 확인하여 선후관계 검증");
+      if (mismatchRows.length) actions.push(`수량 불일치 ${fmtNumber(mismatchRows.length)}개 시간대의 재판정/재투입 이력 확인`);
+      if (topDefect) actions.push(`${topDefect.key} 관련 논문 Failure Mode와 현장 defect_position/image_ref를 비교`);
+      if (actions.length === 0) actions.push("defect_events, production_summary, laminator_profile CSV를 업로드하면 액션아이템을 자동 생성");
+
+      actionList.innerHTML = actions.slice(0, 6).map((item) => `<li>${escapeHtml(item)}</li>`).join("");
+    }
+
     function renderKpis() {
       const totalInput = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["input_qty"])), 0);
       const totalInspection = state.production.reduce((sum, row) => sum + toNumber(getValue(row, ["inspection_qty"])), 0);
@@ -2644,6 +2799,7 @@
     function renderAll() {
       renderUploadSummary();
       renderMappingCards();
+      renderAiAnalysis();
       renderKpis();
       renderDefects();
       renderEquipmentAndHeatmap();
