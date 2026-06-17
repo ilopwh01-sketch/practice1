@@ -894,6 +894,76 @@
       font-size: 14px;
     }
 
+    .graph-insight-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .graph-insight-card {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .graph-insight-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .graph-insight-head h4 {
+      margin-bottom: 0;
+      font-size: 16px;
+    }
+
+    .mini-chart {
+      min-height: 190px;
+    }
+
+    .one-line {
+      margin: 0;
+      padding: 10px 12px;
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .one-line.red {
+      border-left-color: var(--red);
+      background: #fff5f5;
+    }
+
+    .one-line.orange {
+      border-left-color: var(--orange);
+      background: #fff9eb;
+    }
+
+    .graph-sheet-note {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .graph-sheet-note div {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
     .action-list {
       display: grid;
       gap: 8px;
@@ -933,7 +1003,9 @@
       .evidence-grid,
       .upload-summary,
       .request-grid,
-      .ai-grid {
+      .ai-grid,
+      .graph-insight-grid,
+      .graph-sheet-note {
         grid-template-columns: 1fr;
       }
 
@@ -1016,6 +1088,7 @@
         <a href="#data-import">CSV 불러오기</a>
         <a href="#data-request">CSV 요청 항목</a>
         <a href="#ai-reanalysis">AI 자동 재분석</a>
+        <a href="#graph-insights">그래프 분석 시트</a>
         <a href="#alerts">위험도 점수</a>
         <a href="#defect">불량 Pareto</a>
         <a href="#equipment">설비/시간 집중</a>
@@ -1171,6 +1244,60 @@
           <ul class="action-list" id="aiActionList">
             <li>CSV를 업로드하면 AI 액션아이템이 자동 생성됩니다.</li>
           </ul>
+        </section>
+
+        <section id="graph-insights">
+          <h3>0-3. 그래프 분석 시트</h3>
+          <p class="hint">회의용으로 그래프와 한줄평을 함께 묶은 요약 시트입니다. 업로드한 CSV 기준으로 자동 갱신되며, 상세 수치는 아래 Pareto, 설비/시간 집중, Profile 섹션에서 검증합니다.</p>
+          <div class="graph-insight-grid">
+            <article class="graph-insight-card">
+              <div class="graph-insight-head">
+                <h4>불량 Pareto</h4>
+                <span class="chip red" id="insightParetoBadge">우선순위</span>
+              </div>
+              <svg class="chart-svg mini-chart" id="insightParetoChart" viewBox="0 0 520 210" role="img" aria-label="불량 Pareto 요약 그래프">
+                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 불량 Pareto가 표시됩니다.</text>
+              </svg>
+              <p class="one-line red" id="insightParetoComment">CRACK/BUBBLE 중 어떤 불량이 먼저 줄여야 할 대상인지 한줄로 표시합니다.</p>
+            </article>
+
+            <article class="graph-insight-card">
+              <div class="graph-insight-head">
+                <h4>시간별 불량 집중</h4>
+                <span class="chip orange" id="insightTimeBadge">시간대</span>
+              </div>
+              <svg class="chart-svg mini-chart" id="insightTimeChart" viewBox="0 0 520 210" role="img" aria-label="시간별 불량 집중 그래프">
+                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 시간별 NG 그래프가 표시됩니다.</text>
+              </svg>
+              <p class="one-line orange" id="insightTimeComment">특정 시간대에 불량이 몰렸는지 한줄로 표시합니다.</p>
+            </article>
+
+            <article class="graph-insight-card">
+              <div class="graph-insight-head">
+                <h4>설비별 NG율</h4>
+                <span class="chip" id="insightEquipmentBadge">설비</span>
+              </div>
+              <svg class="chart-svg mini-chart" id="insightEquipmentChart" viewBox="0 0 520 210" role="img" aria-label="설비별 NG율 그래프">
+                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 설비별 NG율 또는 NG 건수가 표시됩니다.</text>
+              </svg>
+              <p class="one-line" id="insightEquipmentComment">어느 설비를 먼저 확인해야 하는지 한줄로 표시합니다.</p>
+            </article>
+
+            <article class="graph-insight-card">
+              <div class="graph-insight-head">
+                <h4>Profile/알람 중첩</h4>
+                <span class="chip orange" id="insightProfileBadge">근거</span>
+              </div>
+              <svg class="chart-svg mini-chart" id="insightProfileChart" viewBox="0 0 520 210" role="img" aria-label="Profile 및 알람 중첩 그래프">
+                <text x="32" y="104" fill="#5d6b78" font-size="14">CSV 업로드 후 Profile/알람 중첩 점수가 표시됩니다.</text>
+              </svg>
+              <p class="one-line orange" id="insightProfileComment">불량 집중과 설비 조건이 같이 움직였는지 한줄로 표시합니다.</p>
+            </article>
+          </div>
+          <div class="graph-sheet-note">
+            <div><strong>읽는 순서</strong><br>1. Pareto로 우선 불량 확인 → 2. 시간 집중 확인 → 3. 설비 우선순위 확인 → 4. Profile/알람 근거 확인</div>
+            <div><strong>사용 방식</strong><br>한줄평은 팀 미팅용 요약이고, 조치 전에는 아래 상세표와 원본 CSV를 함께 검증합니다.</div>
+          </div>
         </section>
 
         <div class="kpi-grid">
@@ -2250,6 +2377,243 @@
       return sorted[lower] + (sorted[upper] - sorted[lower]) * (position - lower);
     }
 
+    function clamp(value, min, max) {
+      return Math.max(min, Math.min(max, value));
+    }
+
+    function shortLabel(value, maxLength = 15) {
+      const text = String(value ?? "");
+      return text.length > maxLength ? `${text.slice(0, maxLength - 1)}…` : text;
+    }
+
+    function setInsightText(id, text, tone = "") {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.textContent = text;
+      element.className = `one-line ${tone}`.trim();
+    }
+
+    function setInsightBadge(id, text, tone = "") {
+      const element = document.getElementById(id);
+      if (!element) return;
+      element.textContent = text;
+      element.className = `chip ${tone}`.trim();
+    }
+
+    function renderEmptyInsightChart(chartId, message) {
+      const chart = document.getElementById(chartId);
+      if (!chart) return;
+      chart.outerHTML = `
+        <svg class="chart-svg mini-chart" id="${chartId}" viewBox="0 0 520 210" role="img" aria-label="그래프 분석 시트">
+          <rect x="22" y="24" width="476" height="150" fill="#f8fbfd" stroke="#d9e1e8" rx="8" />
+          <text x="40" y="102" fill="#5d6b78" font-size="14">${escapeHtml(message)}</text>
+        </svg>`;
+    }
+
+    function renderMiniHorizontalBars(chartId, items, options = {}) {
+      if (!items.length) {
+        renderEmptyInsightChart(chartId, options.emptyText || "CSV 업로드 후 그래프가 표시됩니다.");
+        return;
+      }
+
+      const chart = document.getElementById(chartId);
+      if (!chart) return;
+
+      const width = 520;
+      const height = 210;
+      const left = 118;
+      const right = 42;
+      const top = 38;
+      const rowGap = 30;
+      const max = Math.max(...items.map((item) => item.value), 1);
+      const rows = items.slice(0, 5).map((item, index) => {
+        const y = top + index * rowGap;
+        const barWidth = clamp((item.value / max) * (width - left - right), 2, width - left - right);
+        const fill = index === 0 ? "#b83a3a" : index === 1 ? "#b85b18" : "#1769aa";
+        const label = shortLabel(item.label, 16);
+        const valueLabel = item.valueLabel || fmtNumber(item.value);
+        return `
+          <text x="18" y="${(y + 15).toFixed(1)}" fill="#5d6b78" font-size="12">${escapeHtml(label)}</text>
+          <rect x="${left}" y="${y}" width="${(width - left - right).toFixed(1)}" height="18" fill="#eaf2f8" rx="6" />
+          <rect x="${left}" y="${y}" width="${barWidth.toFixed(1)}" height="18" fill="${fill}" rx="6" />
+          <text x="${(left + barWidth + 8).toFixed(1)}" y="${(y + 14).toFixed(1)}" fill="#17202a" font-size="12" font-weight="700">${escapeHtml(valueLabel)}</text>
+        `;
+      }).join("");
+
+      chart.outerHTML = `
+        <svg class="chart-svg mini-chart" id="${chartId}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${escapeHtml(options.title || "요약 막대 그래프")}">
+          <text x="18" y="23" fill="#17202a" font-size="13" font-weight="700">${escapeHtml(options.title || "Top signals")}</text>
+          ${rows}
+        </svg>`;
+    }
+
+    function renderMiniTimeBars(chartId, hours, values, title) {
+      if (!hours.length) {
+        renderEmptyInsightChart(chartId, "시간 컬럼이 있는 CSV를 업로드하면 그래프가 표시됩니다.");
+        return;
+      }
+
+      const chart = document.getElementById(chartId);
+      if (!chart) return;
+
+      const width = 520;
+      const height = 210;
+      const left = 42;
+      const right = 24;
+      const top = 36;
+      const bottom = 164;
+      const plotWidth = width - left - right;
+      const plotHeight = bottom - top;
+      const max = Math.max(...values, 1);
+      const step = plotWidth / Math.max(hours.length, 1);
+      const barWidth = clamp(step * 0.52, 8, 26);
+      const yValue = (value) => bottom - (value / max) * plotHeight;
+
+      const bars = hours.map((hour, index) => {
+        const value = values[index] || 0;
+        const x = left + step * index + step / 2 - barWidth / 2;
+        const y = yValue(value);
+        const fill = value === max ? "#b83a3a" : "#1769aa";
+        const label = hours.length <= 12 || index % 2 === 0
+          ? `<text x="${(x - 1).toFixed(1)}" y="186" fill="#5d6b78" font-size="10">${escapeHtml(hour)}</text>`
+          : "";
+        return `
+          <rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${barWidth.toFixed(1)}" height="${Math.max(1, bottom - y).toFixed(1)}" fill="${fill}" rx="5" />
+          ${label}
+        `;
+      }).join("");
+
+      chart.outerHTML = `
+        <svg class="chart-svg mini-chart" id="${chartId}" viewBox="0 0 ${width} ${height}" role="img" aria-label="시간별 불량 집중 요약">
+          <text x="18" y="23" fill="#17202a" font-size="13" font-weight="700">${escapeHtml(title)}</text>
+          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c8d4df" />
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c8d4df" />
+          <line x1="${left}" y1="${yValue(max).toFixed(1)}" x2="${width - right}" y2="${yValue(max).toFixed(1)}" stroke="#f0c5c5" stroke-dasharray="4 5" />
+          ${bars}
+          <text x="18" y="186" fill="#5d6b78" font-size="10">07-07</text>
+        </svg>`;
+    }
+
+    function renderGraphInsights() {
+      const counts = defectCounts();
+      const totalDefects = counts.reduce((sum, item) => sum + item.value, 0);
+      const topDefect = counts[0];
+      const defectTone = String(topDefect?.key || "").toUpperCase().includes("CRACK") ? "red" : "orange";
+
+      renderMiniHorizontalBars(
+        "insightParetoChart",
+        counts.slice(0, 5).map((item) => ({
+          label: item.key,
+          value: item.value,
+          valueLabel: `${fmtNumber(item.value)}건`
+        })),
+        { title: "불량 코드별 Top 5", emptyText: "불량 이벤트 CSV를 업로드하면 Pareto가 표시됩니다." }
+      );
+      setInsightBadge("insightParetoBadge", topDefect ? `${topDefect.key} 1순위` : "대기", topDefect ? defectTone : "orange");
+      setInsightText(
+        "insightParetoComment",
+        topDefect && totalDefects
+          ? `${topDefect.key}이 ${fmtNumber(topDefect.value)}건, 전체 NG의 ${((topDefect.value / totalDefects) * 100).toFixed(1)}%로 우선 관리 대상입니다.`
+          : "불량 이벤트 또는 생산 요약 CSV를 넣으면 우선 관리 불량을 자동으로 잡습니다.",
+        topDefect ? defectTone : "orange"
+      );
+
+      const rows = defectSourceRows();
+      const hours = sortHoursForShift(rows.map((row) => row.hour));
+      const hourly = new Map();
+      rows.forEach((row) => hourly.set(row.hour, (hourly.get(row.hour) || 0) + row.count));
+      const values = hours.map((hour) => hourly.get(hour) || 0);
+      const topHour = hours
+        .map((hour) => ({ hour, value: hourly.get(hour) || 0 }))
+        .sort((a, b) => b.value - a.value)[0];
+      renderMiniTimeBars("insightTimeChart", hours, values, "시간대별 NG 집중");
+      setInsightBadge("insightTimeBadge", topHour ? `${topHour.hour}시 Peak` : "시간대", topHour && topHour.value >= 5 ? "red" : "orange");
+      setInsightText(
+        "insightTimeComment",
+        topHour
+          ? `${topHour.hour}시대 NG ${fmtNumber(topHour.value)}건이 최대입니다. 이 시간대의 설비, Recipe, Profile 변화를 먼저 확인합니다.`
+          : "시간 컬럼이 있는 CSV를 넣으면 불량 집중 시간대를 자동으로 찾습니다.",
+        topHour && topHour.value >= 5 ? "red" : "orange"
+      );
+
+      const productionEquipment = groupProductionByEquipment(state.production);
+      const equipmentItems = productionEquipment.length
+        ? productionEquipment.slice(0, 5).map((item) => ({
+            label: item.equipment,
+            value: item.rate,
+            valueLabel: `${fmtRate(item.rate)} / ${fmtNumber(item.ng)}건`
+          }))
+        : aggregateBy(rows, (row) => row.equipment, (row) => row.count)
+            .sort((a, b) => b.value - a.value)
+            .slice(0, 5)
+            .map((item) => ({
+              label: item.key,
+              value: item.value,
+              valueLabel: `${fmtNumber(item.value)}건`
+            }));
+      const topEquipment = equipmentItems[0];
+      renderMiniHorizontalBars(
+        "insightEquipmentChart",
+        equipmentItems,
+        { title: productionEquipment.length ? "설비별 NG율" : "설비별 NG 건수", emptyText: "설비 컬럼이 있는 CSV를 업로드하면 설비 우선순위가 표시됩니다." }
+      );
+      setInsightBadge("insightEquipmentBadge", topEquipment ? topEquipment.label : "설비", topEquipment ? "orange" : "");
+      setInsightText(
+        "insightEquipmentComment",
+        topEquipment
+          ? `${topEquipment.label}이 설비 우선 확인 대상입니다. 생산 분모가 있으면 NG율 기준, 없으면 NG 건수 기준으로 봅니다.`
+          : "equipment_id와 inspection_qty/ng_qty가 있으면 설비별 NG율까지 계산됩니다.",
+        topEquipment ? "orange" : ""
+      );
+
+      const risk = calculateRiskScore();
+      const topGroup = risk.topGroup || concentrationGroups()[0];
+      const profile = topGroup ? profileSummary(topGroup.equipment) : null;
+      const alarmMatches = topGroup ? alarmsFor(topGroup.equipment, topGroup.hour) : [];
+      const profileItems = [];
+      if (profile) {
+        if (profile.vacuumWorst < 0) {
+          profileItems.push({
+            label: "진공도",
+            value: clamp((profile.vacuumWorst + 96) * 12 + 20, 5, 100),
+            valueLabel: `${profile.vacuumWorst.toFixed(1)} kPa`
+          });
+        }
+        if (profile.tempMax > 0) {
+          profileItems.push({
+            label: "온도",
+            value: clamp((profile.tempMax - 145) * 14, 5, 100),
+            valueLabel: `${profile.tempMax.toFixed(1)} C`
+          });
+        }
+        if (profile.cycleMax > 0) {
+          profileItems.push({
+            label: "공정 time",
+            value: clamp((profile.cycleMax - 90) * 9, 5, 100),
+            valueLabel: `${profile.cycleMax.toFixed(1)} sec`
+          });
+        }
+      }
+      profileItems.push({
+        label: "설비 알람",
+        value: alarmMatches.length ? clamp(35 + alarmMatches.length * 18, 5, 100) : 0,
+        valueLabel: `${fmtNumber(alarmMatches.length)}건`
+      });
+      renderMiniHorizontalBars(
+        "insightProfileChart",
+        profileItems.filter((item) => item.value > 0),
+        { title: "설비 조건 중첩 신호", emptyText: "Profile/알람 CSV를 업로드하면 중첩 근거가 표시됩니다." }
+      );
+      setInsightBadge("insightProfileBadge", risk.score ? `${risk.score}/100` : "근거", risk.score >= 80 ? "red" : risk.score >= 55 ? "orange" : "");
+      setInsightText(
+        "insightProfileComment",
+        topGroup && (profile || alarmMatches.length)
+          ? `${topGroup.equipment} ${topGroup.hour}시대 ${topGroup.defect} 집중과 Profile/알람 근거가 겹칩니다. 원인 후보 신뢰도가 올라갑니다.`
+          : "Profile 또는 알람 CSV가 함께 있어야 불량 집중과 설비 조건의 중첩을 판단할 수 있습니다.",
+        risk.score >= 80 ? "red" : "orange"
+      );
+    }
+
     function renderTrendAndBoxplot() {
       const rows = defectSourceRows();
       const trendChart = document.getElementById("hourlyTrendChart");
@@ -2998,6 +3362,7 @@
       renderMappingCards();
       renderAiAnalysis();
       renderLiteratureMatches();
+      renderGraphInsights();
       renderKpis();
       renderDefects();
       renderEquipmentAndHeatmap();
