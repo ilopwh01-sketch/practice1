@@ -1771,6 +1771,31 @@
               </tr>
             </tbody>
           </table>
+          <div class="panel" id="literatureMatchPanel">
+            <div class="cause-head">
+              <h4>업로드 데이터 기반 AI 문헌 매칭</h4>
+              <span class="chip orange" id="literatureMatchStatus">샘플 기준</span>
+            </div>
+            <p class="hint" id="literatureMatchSummary">CSV를 업로드하면 주요 불량, 설비 집중, Profile/알람 중첩을 기준으로 관련 논문과 확인 항목을 다시 매칭한다.</p>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>적용 문헌</th>
+                  <th>현재 데이터 신호</th>
+                  <th>AI 해석</th>
+                  <th>추가 확인 데이터</th>
+                </tr>
+              </thead>
+              <tbody id="literatureMatchBody">
+                <tr>
+                  <td><strong>IEA PVPS Task 13</strong><br>PV 모듈 Failure Mode 정리</td>
+                  <td>샘플 기준 CRACK/BUBBLE 우선 검토</td>
+                  <td>불량 모드별로 설비 Profile, 알람, EL/AOI 근거를 연결해야 한다.</td>
+                  <td>defect_position, image_ref, equipment_id, vacuum/temp/cycle</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
           <div class="print-row">
             <button class="btn" type="button" onclick="window.print()">인쇄 / PDF 저장</button>
           </div>
@@ -2476,6 +2501,166 @@
       `;
     }
 
+    function buildLiteratureContext() {
+      const risk = calculateRiskScore();
+      const topGroup = risk.topGroup || concentrationGroups()[0];
+      const counts = defectCounts();
+      const totalDefects = counts.reduce((sum, item) => sum + item.value, 0);
+      const topDefect = counts[0];
+      const topRatio = topDefect && totalDefects ? (topDefect.value / totalDefects) * 100 : 0;
+      const defectName = String(topGroup?.defect || topDefect?.key || "").toUpperCase();
+      const profile = topGroup ? profileSummary(topGroup.equipment) : null;
+      const alarmMatches = topGroup ? alarmsFor(topGroup.equipment, topGroup.hour) : [];
+      const defectLabel = defectName || "불량코드 미확인";
+      const concentrationSignal = topGroup
+        ? `${topGroup.equipment} ${topGroup.hour}시대 ${topGroup.defect} ${fmtNumber(topGroup.count)}건 집중`
+        : topDefect
+          ? `${topDefect.key} ${fmtNumber(topDefect.value)}건, 전체 NG 중 ${topRatio.toFixed(1)}%`
+          : "불량 이벤트 데이터 부족";
+      const profileSignal = profile
+        ? `Profile: vacuum ${profile.vacuumWorst.toFixed(1)} kPa, temp ${profile.tempMax.toFixed(1)} C, cycle ${profile.cycleMax.toFixed(1)} sec`
+        : "Profile 연결 데이터 없음";
+      const alarmSignal = alarmMatches.length
+        ? `동시간대 설비 알람 ${fmtNumber(alarmMatches.length)}건 중첩`
+        : "동시간대 설비 알람 중첩 없음";
+
+      return {
+        risk,
+        topGroup,
+        topDefect,
+        totalDefects,
+        topRatio,
+        defectName,
+        defectLabel,
+        profile,
+        alarmMatches,
+        concentrationSignal,
+        profileSignal,
+        alarmSignal
+      };
+    }
+
+    function literatureMatchesForContext(context) {
+      const defectName = String(context.defectName || "").toUpperCase();
+      const signal = `${context.concentrationSignal || "불량 신호 미확인"}. ${context.profileSignal || "Profile 신호 미확인"}. ${context.alarmSignal || "알람 신호 미확인"}.`;
+      const processRca = {
+        paperName: "Calaon et al., 2024 / Wehner et al., 2024",
+        href: "https://www.sciencedirect.com/science/article/pii/S0007850624000283",
+        detail: "제조 RCA에서 다중 데이터 결합과 전문가 검증 루프를 강조",
+        signal,
+        interpretation: "단일 불량 건수가 아니라 불량 이벤트, 설비 Profile, 알람, 작업 이력을 함께 묶어 원인 후보 신뢰도를 판단해야 한다.",
+        verify: "작업자 메모, recipe 변경, BOM lot, 재판정/재투입 이력"
+      };
+
+      if (defectName.includes("CRACK")) {
+        return [
+          {
+            paperName: "IEA PVPS Task 13 Failure Review",
+            href: "https://iea-pvps.org/wp-content/uploads/2020/01/IEA-PVPS_T13-01_2014_Review_of_Failures_of_Photovoltaic_Modules_Final.pdf",
+            detail: "PV 모듈 Failure Mode와 Crack/Inactive area 검출 관점 정리",
+            signal,
+            interpretation: "CRACK 집중이 특정 설비·시간·Profile 이상과 겹치면 mechanical stress, handling stress, lamination pressure/vacuum disturbance를 우선 후보로 본다.",
+            verify: "pre/post lamination EL, defect_position, handling/stringing 이력, pressure/vacuum 기준값"
+          },
+          {
+            paperName: "EPJ Photovoltaics, 2024 EL nomenclature",
+            href: "https://www.epj-pv.org/articles/epjpv/full_html/2024/01/pv20240039/pv20240039.html",
+            detail: "EL 이미지에서 crack, inactive area 등 결함 명명/판독 기준 제시",
+            signal,
+            interpretation: "CRACK 원인 후보의 수준을 높이려면 단순 코드가 아니라 edge/cross/inactive area 등 위치·형상 라벨을 함께 봐야 한다.",
+            verify: "EL 이미지 라벨, crack 방향, cell 내 위치, 반복 패턴"
+          },
+          {
+            paperName: "Deitsch et al., 2019",
+            href: "https://arxiv.org/abs/1807.02894",
+            detail: "EL 결함 분류에서 수동 판독의 시간 부담과 자동 분류 가능성 설명",
+            signal,
+            interpretation: "검사 NG 이미지가 많을수록 AI는 이미지 판독 확정이 아니라 의심 이미지 우선순위화와 리뷰 큐 생성에 먼저 쓰는 것이 현실적이다.",
+            verify: "image_ref, reviewer 판정, overkill/underkill 여부, 동일 lot 반복 이미지"
+          },
+          processRca
+        ];
+      }
+
+      if (defectName.includes("BUBBLE") || defectName.includes("DELAM") || defectName.includes("VOID") || defectName.includes("BLISTER")) {
+        return [
+          {
+            paperName: "PV Delamination Review",
+            href: "https://www.sciencedirect.com/science/article/pii/S136403212300802X",
+            detail: "Encapsulant, cell, glass/backsheet 계면 박리와 열·습도·접착 조건 정리",
+            signal,
+            interpretation: "BUBBLE/Delamination 신호는 encapsulant 접착, 진공 배기, 온도 프로파일, 냉각 조건, 자재 lot을 우선 연결해서 봐야 한다.",
+            verify: "bubble 위치/면적, EVA/encapsulant lot, vacuum hold time, cooling time"
+          },
+          {
+            paperName: "IEA PVPS Task 13 Failure Review",
+            href: "https://iea-pvps.org/wp-content/uploads/2020/01/IEA-PVPS_T13-01_2014_Review_of_Failures_of_Photovoltaic_Modules_Final.pdf",
+            detail: "PV 모듈 장기 신뢰성 관점에서 delamination/bubble failure mode 설명",
+            signal,
+            interpretation: "Bubble이 특정 Laminator와 Recipe 구간에 반복되면 자재 문제와 공정 창 이탈을 분리해 검증해야 한다.",
+            verify: "recipe_id, press/vacuum alarm, material lot, lamination temperature zone"
+          },
+          processRca
+        ];
+      }
+
+      if (defectName.includes("PID")) {
+        return [
+          {
+            paperName: "IEA PVPS Task 13 Failure Review",
+            href: "https://iea-pvps.org/wp-content/uploads/2020/01/IEA-PVPS_T13-01_2014_Review_of_Failures_of_Photovoltaic_Modules_Final.pdf",
+            detail: "PV 모듈 전기적 열화와 장기 신뢰성 Failure Mode 정리",
+            signal,
+            interpretation: "PID는 단일 1시간 Laminator 이상보다 전압, 습도, 절연, 장기 노출 조건과 연결되는 경우가 많아 공정 즉시 원인으로 과잉 해석하면 안 된다.",
+            verify: "전압/절연 측정, 환경 조건, 장기 노출 이력, 검사 장비 drift"
+          },
+          processRca
+        ];
+      }
+
+      return [
+        {
+          paperName: "IEA PVPS Task 13 Failure Review",
+          href: "https://iea-pvps.org/wp-content/uploads/2020/01/IEA-PVPS_T13-01_2014_Review_of_Failures_of_Photovoltaic_Modules_Final.pdf",
+          detail: "PV 모듈 Failure Mode를 defect_code와 연결하기 위한 기본 문헌",
+          signal,
+          interpretation: "불량 코드가 CRACK/BUBBLE처럼 표준화되어야 문헌 Failure Mode와 설비 데이터를 안정적으로 매칭할 수 있다.",
+          verify: "defect_code 표준화, defect_position, image_ref, equipment_id, event_time"
+        },
+        processRca
+      ];
+    }
+
+    function renderLiteratureMatches() {
+      const status = document.getElementById("literatureMatchStatus");
+      const summary = document.getElementById("literatureMatchSummary");
+      const body = document.getElementById("literatureMatchBody");
+      if (!status || !summary || !body) return;
+
+      const context = buildLiteratureContext();
+      const matches = literatureMatchesForContext(context);
+      const hasUploadedData = state.files.length > 0;
+      const band = riskBand(context.risk.score);
+
+      status.textContent = hasUploadedData
+        ? `업로드 CSV 기준: ${context.defectLabel}`
+        : "CSV 업로드 대기";
+      status.className = `chip ${hasUploadedData ? (band.className === "high" ? "red" : band.className === "medium" ? "orange" : "green") : "orange"}`;
+
+      summary.textContent = hasUploadedData
+        ? `AI 문헌 매칭 엔진이 ${context.concentrationSignal} 신호를 기준으로 ${fmtNumber(matches.length)}개 문헌 근거와 검증 항목을 다시 선택했다. 이 기능은 외부 API 호출 없이 로컬 문헌 규칙으로 동작한다.`
+        : "CSV를 업로드하면 주요 불량 코드와 설비/Profile/알람 신호에 따라 CRACK, BUBBLE, PID, 기타 결함별 문헌 근거가 자동으로 바뀐다.";
+
+      body.innerHTML = matches.map((item) => `
+        <tr>
+          <td><a href="${escapeHtml(item.href)}" target="_blank" rel="noreferrer"><strong>${escapeHtml(item.paperName)}</strong></a><br>${escapeHtml(item.detail)}</td>
+          <td>${escapeHtml(item.signal)}</td>
+          <td>${escapeHtml(item.interpretation)}</td>
+          <td>${escapeHtml(item.verify)}</td>
+        </tr>
+      `).join("");
+    }
+
     function renderAiAnalysis() {
       const status = document.getElementById("aiRunStatus");
       const cards = document.getElementById("aiAnalysisCards");
@@ -2524,11 +2709,23 @@
         : "동시간대 알람 중첩은 확인되지 않았습니다.";
 
       const defectName = String(topGroup?.defect || topDefect?.key || "").toUpperCase();
-      const literatureText = defectName.includes("CRACK")
-        ? "문헌 기준 CRACK은 mechanical stress, handling, lamination pressure/vacuum disturbance와 우선 비교해야 합니다."
-        : defectName.includes("BUBBLE")
-          ? "문헌 기준 BUBBLE/Delamination은 encapsulant, vacuum, temperature, cooling condition과 우선 비교해야 합니다."
-          : "문헌 기반 해석을 위해 CRACK/BUBBLE 등 defect_code가 필요합니다.";
+      const literatureMatches = literatureMatchesForContext({
+        risk,
+        topGroup,
+        topDefect,
+        totalDefects,
+        topRatio,
+        defectName,
+        defectLabel: defectName || "불량코드 미확인",
+        profile,
+        alarmMatches,
+        concentrationSignal: topGroupText,
+        profileSignal: profileText,
+        alarmSignal: alarmText
+      });
+      const literatureText = literatureMatches.length
+        ? `${literatureMatches[0].paperName}: ${literatureMatches[0].interpretation}`
+        : "문헌 기반 해석을 위해 CRACK/BUBBLE 등 defect_code가 필요합니다.";
 
       cards.innerHTML = `
         <div class="ai-card">
@@ -2800,6 +2997,7 @@
       renderUploadSummary();
       renderMappingCards();
       renderAiAnalysis();
+      renderLiteratureMatches();
       renderKpis();
       renderDefects();
       renderEquipmentAndHeatmap();

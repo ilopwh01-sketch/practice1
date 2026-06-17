@@ -359,6 +359,8 @@ BRD가 비즈니스 필요성과 성과 기준을 설명하는 문서라면, 본
 문헌 기반 RCA 보강 요구사항:
 
 - 도구는 논문/리뷰의 내용을 원문 요약으로만 보여주지 않고, `Failure Mode`, `현장 데이터 신호`, `원인 후보`, `추가 검증 항목`으로 변환해 표시해야 한다.
+- CSV 업로드 또는 컬럼 매핑 결과가 바뀌면 주요 불량 코드, 설비 집중, Profile/알람 중첩을 다시 계산하고 그 결과에 맞는 문헌 근거를 자동 재선택해야 한다.
+- 문헌 근거는 고정 참고자료가 아니라 `CRACK`, `BUBBLE/DELAMINATION`, `PID`, `기타/미분류` 불량 모드에 따라 다른 판단 기준과 검증 항목을 보여줘야 한다.
 - CRACK은 `EL crack pattern`, `inactive area`, `cell/string 위치`, `pre-lamination EL 여부`, `handling/stringing log`, `lamination pressure/cycle/vacuum profile`을 함께 비교해야 한다.
 - BUBBLE/DELAMINATION은 `encapsulant lot`, `interface 추정 위치`, `vacuum_kpa`, `temperature`, `pressure`, `cooling_time`, `visual_bubble_count`를 함께 비교해야 한다.
 - 원인 후보는 항상 `1차 후보`, `경쟁 가설`, `아직 배제 불가한 가설`로 나누어 표시해야 한다.
