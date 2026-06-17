@@ -1413,9 +1413,20 @@
               </svg>
               <p class="one-line" id="insightScatterComment">온도, 진공도, 공정 time 신호가 NG 집중과 같이 커지는지 확인합니다.</p>
             </article>
+
+            <article class="graph-insight-card wide">
+              <div class="graph-insight-head">
+                <h4>Profile 분산도: 온도 x 진공도</h4>
+                <span class="chip orange" id="insightDispersionBadge">분산</span>
+              </div>
+              <svg class="chart-svg mini-chart" id="insightDispersionChart" viewBox="0 0 720 260" role="img" aria-label="Profile 온도와 진공도 분산도">
+                <text x="32" y="126" fill="#5d6875" font-size="10">Profile CSV를 업로드하면 온도와 진공도 분산도가 표시됩니다.</text>
+              </svg>
+              <p class="one-line orange" id="insightDispersionComment">같은 Recipe/설비 조건에서 Profile 값이 얼마나 퍼지는지 확인합니다.</p>
+            </article>
           </div>
           <div class="graph-sheet-note">
-            <div><strong>읽는 순서</strong><br>1. Risk strip으로 오늘의 우선순위 확인 → 2. Pareto/시간/설비 그래프로 집중 패턴 확인 → 3. 매트릭스와 산점도로 설비 조건 근거 검증</div>
+            <div><strong>읽는 순서</strong><br>1. Risk strip으로 오늘의 우선순위 확인 → 2. Pareto/시간/설비 그래프로 집중 패턴 확인 → 3. 매트릭스, 산점도, 분산도로 설비 조건 근거 검증</div>
             <div><strong>사용 방식</strong><br>한줄평은 팀 미팅용 요약이고, 조치 전에는 아래 상세표와 원본 CSV, 현장 Recipe 변경 이력을 함께 검증합니다.</div>
           </div>
         </section>
@@ -2823,6 +2834,83 @@
         </svg>`;
     }
 
+    function renderProfileDispersion(chartId, points, options = {}) {
+      if (points.length < 2) {
+        renderEmptyInsightChart(chartId, options.emptyText || "Profile CSV를 업로드하면 온도와 진공도 분산도가 표시됩니다.");
+        return;
+      }
+
+      const chart = document.getElementById(chartId);
+      if (!chart) return;
+
+      const width = 720;
+      const height = 260;
+      const left = 64;
+      const right = 34;
+      const top = 34;
+      const bottom = 204;
+      const plotWidth = width - left - right;
+      const plotHeight = bottom - top;
+      const xValues = points.map((point) => point.temp);
+      const yValues = points.map((point) => point.vacuum);
+      const rawXMin = Math.min(...xValues);
+      const rawXMax = Math.max(...xValues);
+      const rawYMin = Math.min(...yValues);
+      const rawYMax = Math.max(...yValues);
+      const xPadding = Math.max(1, (rawXMax - rawXMin) * 0.12);
+      const yPadding = Math.max(1, (rawYMax - rawYMin) * 0.12);
+      const xMin = rawXMin - xPadding;
+      const xMax = rawXMax + xPadding;
+      const yMin = rawYMin - yPadding;
+      const yMax = rawYMax + yPadding;
+      const xScale = (value) => left + ((value - xMin) / Math.max(xMax - xMin, 1)) * plotWidth;
+      const yScale = (value) => bottom - ((value - yMin) / Math.max(yMax - yMin, 1)) * plotHeight;
+      const highPoints = [...points]
+        .sort((a, b) => b.ng - a.ng || b.stress - a.stress)
+        .slice(0, 5);
+      const labelSet = new Set(highPoints.map((point) => point.label));
+      const equipmentList = [...new Set(points.map((point) => point.equipment))].slice(0, 4);
+      const equipmentColor = (equipment) => {
+        const palette = ["#00c6c1", "#001c77", "#7ec9a6", "#7f27a4"];
+        const index = Math.max(0, equipmentList.indexOf(equipment));
+        return palette[index % palette.length];
+      };
+      const marks = points.map((point) => {
+        const x = xScale(point.temp);
+        const y = yScale(point.vacuum);
+        const highlight = point.ng > 0 || point.alarms > 0 || point.stress >= 70;
+        const fill = point.stress >= 70 ? "#ce092f" : point.ng > 0 || point.alarms > 0 ? "#f75c03" : equipmentColor(point.equipment);
+        const radius = clamp(4 + point.ng * 0.45 + point.alarms * 1.2, 4, 12);
+        const label = labelSet.has(point.label)
+          ? `<text x="${(x + 8).toFixed(1)}" y="${(y - 8).toFixed(1)}" fill="#1f2933" font-size="9" font-weight="800">${escapeHtml(shortLabel(point.label, 22))}</text>`
+          : "";
+        return `
+          <circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${radius.toFixed(1)}" fill="${fill}" fill-opacity="${highlight ? "0.80" : "0.46"}" stroke="#ffffff" stroke-width="1.5" />
+          ${label}
+        `;
+      }).join("");
+      const legend = equipmentList.map((equipment, index) => `
+        <circle cx="${500 + index * 52}" cy="18" r="4" fill="${equipmentColor(equipment)}" />
+        <text x="${508 + index * 52}" y="21" fill="#5d6875" font-size="9">${escapeHtml(shortLabel(equipment, 7))}</text>
+      `).join("");
+
+      chart.outerHTML = `
+        <svg class="chart-svg mini-chart" id="${chartId}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Profile 온도와 진공도 분산도">
+          <text x="18" y="18" fill="#1f2933" font-size="10" font-weight="700">${escapeHtml(options.title || "Profile dispersion: temp vs vacuum")}</text>
+          ${legend}
+          <line x1="${left}" y1="${bottom}" x2="${width - right}" y2="${bottom}" stroke="#c9d1da" />
+          <line x1="${left}" y1="${top}" x2="${left}" y2="${bottom}" stroke="#c9d1da" />
+          <line x1="${left}" y1="${top}" x2="${width - right}" y2="${top}" stroke="#e8edf3" />
+          <line x1="${width - right}" y1="${top}" x2="${width - right}" y2="${bottom}" stroke="#e8edf3" />
+          <text x="${left}" y="232" fill="#5d6875" font-size="10">Upper temp C</text>
+          <text x="${(width - right - 50).toFixed(1)}" y="232" fill="#5d6875" font-size="10">${xMax.toFixed(1)}</text>
+          <text x="14" y="${top + 7}" fill="#5d6875" font-size="10">Vacuum kPa</text>
+          <text x="24" y="${(yScale(yMax) + 4).toFixed(1)}" fill="#5d6875" font-size="10">${yMax.toFixed(1)}</text>
+          <text x="24" y="${(yScale(yMin) + 4).toFixed(1)}" fill="#5d6875" font-size="10">${yMin.toFixed(1)}</text>
+          ${marks}
+        </svg>`;
+    }
+
     function renderGraphInsights() {
       const counts = defectCounts();
       const totalDefects = counts.reduce((sum, item) => sum + item.value, 0);
@@ -3036,6 +3124,52 @@
           ? `${scatterLeader.label}이 NG ${fmtNumber(scatterLeader.y)}건, Profile stress ${fmtNumber(scatterLeader.x)}점으로 가장 높은 관측점입니다. 점 크기는 동시간대 알람 수를 반영합니다.`
           : "Profile sample_time, vacuum_kpa, upper_temp_c, cycle_time_sec 컬럼이 있어야 NG 집중과 설비 조건 관계를 그릴 수 있습니다.",
         scatterLeader && scatterLeader.x >= 70 ? "red" : ""
+      );
+
+      const defectByEquipmentHour = new Map();
+      rows.forEach((row) => {
+        const key = `${row.equipment}|${row.hour}`;
+        defectByEquipmentHour.set(key, (defectByEquipmentHour.get(key) || 0) + row.count);
+      });
+      const dispersionPoints = state.profile.map((row) => {
+        const equipment = getValue(row, ["equipment_id"]) || "UNKNOWN";
+        const hour = hourLabel(getValue(row, ["sample_time", "event_time", "time_bucket"]));
+        const temp = toNumber(getValue(row, ["upper_temp_c", "temperature_c", "lamination_temp_c", "temp_c"]));
+        const vacuum = toNumber(getValue(row, ["vacuum_kpa", "vacuum"]));
+        if (!temp || !vacuum) return null;
+        const key = `${equipment}|${hour}`;
+        return {
+          label: `${equipment} ${hour}시`,
+          equipment,
+          hour,
+          temp,
+          vacuum,
+          stress: calculateProfileStress(row),
+          ng: defectByEquipmentHour.get(key) || 0,
+          alarms: alarmsFor(equipment, hour).length
+        };
+      }).filter(Boolean);
+      renderProfileDispersion(
+        "insightDispersionChart",
+        dispersionPoints,
+        { title: "Profile dispersion: upper temp vs vacuum", emptyText: "Profile CSV를 업로드하면 온도와 진공도 분산도가 표시됩니다." }
+      );
+      const dispersionLeader = [...dispersionPoints].sort((a, b) => b.ng - a.ng || b.stress - a.stress)[0];
+      const tempValues = dispersionPoints.map((point) => point.temp);
+      const vacuumValues = dispersionPoints.map((point) => point.vacuum);
+      const tempSpread = tempValues.length ? Math.max(...tempValues) - Math.min(...tempValues) : 0;
+      const vacuumSpread = vacuumValues.length ? Math.max(...vacuumValues) - Math.min(...vacuumValues) : 0;
+      setInsightBadge(
+        "insightDispersionBadge",
+        dispersionPoints.length ? `${fmtNumber(dispersionPoints.length)} points` : "분산",
+        dispersionLeader && (dispersionLeader.ng || dispersionLeader.stress >= 70) ? "orange" : ""
+      );
+      setInsightText(
+        "insightDispersionComment",
+        dispersionLeader
+          ? `Profile ${fmtNumber(dispersionPoints.length)}개 점 기준, 온도 범위 ${tempSpread.toFixed(1)} C / 진공도 범위 ${vacuumSpread.toFixed(1)} kPa입니다. ${dispersionLeader.label} 점은 NG ${fmtNumber(dispersionLeader.ng)}건과 함께 확인합니다.`
+          : "Profile CSV가 있으면 온도와 진공도 분산, 군집, 이상점을 한 화면에서 확인합니다.",
+        dispersionLeader && (dispersionLeader.ng >= 3 || dispersionLeader.stress >= 70) ? "red" : "orange"
       );
     }
 
