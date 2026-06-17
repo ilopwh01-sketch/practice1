@@ -293,7 +293,88 @@
     </section>
 
     <section>
-      <h2>5. 남은 이슈와 리스크</h2>
+      <h2>5. 현장 CSV 데이터 요청 항목 및 더미 예시</h2>
+      <p>AI 분석의 핵심은 단순 집계가 아니라 왜 발생했을 가능성이 높은지를 통계 분석, 설비 조건, 문헌 근거와 함께 설명하는 것입니다. 2일차부터는 아래 CSV 항목을 현장 데이터 요청 기준으로 사용합니다.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>파일명</th>
+            <th>목적</th>
+            <th>핵심 컬럼</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>defect_events.csv</code></td>
+            <td>불량 1건 단위 이벤트 분석</td>
+            <td><code>event_time</code>, <code>line</code>, <code>equipment_id</code>, <code>module_id</code>, <code>defect_code</code>, <code>defect_position</code></td>
+          </tr>
+          <tr>
+            <td><code>production_summary.csv</code></td>
+            <td>불량률 계산을 위한 생산/검사 분모</td>
+            <td><code>work_date</code>, <code>time_bucket</code>, <code>equipment_id</code>, <code>input_qty</code>, <code>inspection_qty</code>, <code>ng_qty</code></td>
+          </tr>
+          <tr>
+            <td><code>laminator_profile.csv</code></td>
+            <td>설비 조건과 불량 집중 시간 연결</td>
+            <td><code>sample_time</code>, <code>equipment_id</code>, <code>recipe_id</code>, <code>process_time_sec</code>, <code>upper_temp_c</code>, <code>vacuum_kpa</code>, <code>pressure_kpa</code></td>
+          </tr>
+          <tr>
+            <td><code>equipment_alarm.csv</code></td>
+            <td>알람과 불량 발생 시간 연계</td>
+            <td><code>alarm_time</code>, <code>equipment_id</code>, <code>alarm_code</code>, <code>alarm_name</code>, <code>severity</code>, <code>duration_sec</code></td>
+          </tr>
+          <tr>
+            <td><code>bom_recipe_lot.csv</code></td>
+            <td>자재/BOM/Recipe 반복 패턴 분석</td>
+            <td><code>module_id</code>, <code>product_model</code>, <code>cell_lot</code>, <code>eva_lot</code>, <code>recipe_id</code>, <code>recipe_version</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>간단 더미데이터 예시</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>event_time</th>
+            <th>line</th>
+            <th>equipment_id</th>
+            <th>module_id</th>
+            <th>defect_code</th>
+            <th>defect_position</th>
+            <th>inspection_tool</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-05-21 14:03:11</td><td>MODULE-A</td><td>LAM-03</td><td>MOD-0006</td><td>CRACK</td><td>cell_row=4;cell_col=7;edge</td><td>EL</td></tr>
+          <tr><td>2026-05-21 14:07:28</td><td>MODULE-A</td><td>LAM-03</td><td>MOD-0007</td><td>CRACK</td><td>cell_row=4;cell_col=8;edge</td><td>EL</td></tr>
+          <tr><td>2026-05-21 16:10:47</td><td>MODULE-A</td><td>LAM-02</td><td>MOD-0014</td><td>BUBBLE</td><td>zone=center;size=12mm</td><td>AOI</td></tr>
+        </tbody>
+      </table>
+
+      <table>
+        <thead>
+          <tr>
+            <th>sample_time</th>
+            <th>equipment_id</th>
+            <th>recipe_id</th>
+            <th>process_time_sec</th>
+            <th>upper_temp_c</th>
+            <th>vacuum_kpa</th>
+            <th>pressure_kpa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-05-21 14:00:00</td><td>LAM-03</td><td>RCP-A</td><td>101.4</td><td>151.2</td><td>-86.4</td><td>431</td></tr>
+          <tr><td>2026-05-21 14:05:00</td><td>LAM-03</td><td>RCP-A</td><td>102.0</td><td>151.7</td><td>-85.9</td><td>434</td></tr>
+          <tr><td>2026-05-21 16:10:00</td><td>LAM-02</td><td>RCP-B</td><td>95.9</td><td>148.7</td><td>-90.2</td><td>416</td></tr>
+        </tbody>
+      </table>
+      <p class="hint">별도 요청서: <a href="../data/csv_data_request_template.html">CSV 데이터 요청서 열기</a></p>
+    </section>
+
+    <section>
+      <h2>6. 남은 이슈와 리스크</h2>
       <ul>
         <li>실제 MES/설비 CSV 컬럼 구조가 아직 검증되지 않았습니다.</li>
         <li>`.xlsx` 직접 업로드 분석은 아직 구현되지 않았습니다.</li>
@@ -304,7 +385,7 @@
     </section>
 
     <section>
-      <h2>6. 2일차 진행 계획</h2>
+      <h2>7. 2일차 진행 계획</h2>
       <ul>
         <li>실제 또는 비식별 현장 CSV 1~2개로 업로드 테스트</li>
         <li>컬럼 매핑 추천 정확도 확인 및 보정</li>
@@ -316,7 +397,7 @@
     </section>
 
     <section>
-      <h2>7. 1일차 결론</h2>
+      <h2>8. 1일차 결론</h2>
       <p>1일차에는 Laminator 공정 AI 업무 자동화 프로젝트의 기본 골격을 만들었습니다. 단순 문서 작성이 아니라 실제로 CSV를 업로드하고 대시보드가 계산되는 프로토타입까지 구현했습니다.</p>
       <p>현재 결과물은 과제 제출과 발표에는 충분히 사용할 수 있는 수준이며, 다음 단계는 실제 현장 데이터와 비교하면서 컬럼 매핑, 위험도 점수, 원인 후보 판단 기준을 보정하는 것입니다.</p>
       <p><a href="../dashboard/laminator_ai_dashboard.html">대시보드 열기</a> · <a href="../reports/index.html">보고서 목록으로 이동</a></p>

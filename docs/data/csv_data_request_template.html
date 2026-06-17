@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CSV 데이터 요청서 - Laminator AI 분석</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17202a;
+      --muted: #5d6b78;
+      --line: #d9e1e8;
+      --panel: #ffffff;
+      --soft: #f5f7f9;
+      --navy: #17202a;
+      --blue: #1769aa;
+      --green: #1f8a5b;
+      --orange: #b85b18;
+      --red: #b83a3a;
+      --yellow: #f0b429;
+      --shadow: 0 14px 38px rgba(23, 32, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", Arial, sans-serif;
+      background: #eef3f7;
+      color: var(--ink);
+      line-height: 1.58;
+    }
+
+    .wrap {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0;
+    }
+
+    header,
+    section {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    header {
+      padding: 30px;
+      margin-bottom: 18px;
+      background: var(--navy);
+      color: #ffffff;
+    }
+
+    .eyebrow {
+      margin-bottom: 10px;
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    h1, h2, h3, p { margin-top: 0; }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 31px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    header p { margin-bottom: 0; color: #dce7ee; }
+
+    section {
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .hint { color: var(--muted); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--soft);
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 6px;
+      background: #edf3f7;
+      color: #0e4f83;
+      font-family: Consolas, monospace;
+      font-size: 13px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .box {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--soft);
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .tag {
+      display: inline-flex;
+      min-height: 28px;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      background: #eaf2f8;
+      color: #0e4f83;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .tag.green { background: #dff3e9; color: #135b3b; }
+    .tag.orange { background: #fff0d4; color: #70420f; }
+    .tag.red { background: #f7d7d7; color: #842525; }
+
+    @media (max-width: 820px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <header>
+      <div class="eyebrow">현장 데이터 요청서</div>
+      <h1>AI 원인 분석용 CSV 데이터 요청 항목</h1>
+      <p>CRACK/BUBBLE 불량에 대해 통계 분석, 설비 조건 연결, 문헌 기반 원인 후보 분석을 수행하기 위한 최소 데이터 항목입니다.</p>
+      <div class="tag-row">
+        <span class="tag green">CSV</span>
+        <span class="tag">Root Cause</span>
+        <span class="tag orange">Statistics</span>
+        <span class="tag red">CRACK/BUBBLE</span>
+      </div>
+    </header>
+
+    <section>
+      <h2>1. 요청 목적</h2>
+      <p>AI 분석의 핵심은 단순히 불량 건수를 세는 것이 아니라, 불량 발생 데이터를 설비 Profile, 알람, BOM/Recipe, 불량 위치 정보와 연결해 왜 발생했을 가능성이 높은지 설명하는 것입니다.</p>
+      <div class="grid-2">
+        <div class="box">
+          <h3>가능한 분석</h3>
+          <p class="hint">설비/시간 집중, 평균 대비 이상 여부, 표준편차, Boxplot, Pareto, 위험도 점수, 문헌 Failure Mode 연결.</p>
+        </div>
+        <div class="box">
+          <h3>주의사항</h3>
+          <p class="hint">AI는 원인을 확정하지 않고 검증 우선순위를 제안합니다. 최종 조치와 Recipe 변경은 담당자가 승인해야 합니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2>2. 요청 파일 목록</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>우선순위</th>
+            <th>파일명</th>
+            <th>목적</th>
+            <th>핵심 컬럼</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>필수</td>
+            <td><code>defect_events.csv</code></td>
+            <td>불량 1건 단위 이벤트 분석</td>
+            <td><code>event_time</code>, <code>line</code>, <code>equipment_id</code>, <code>module_id</code>, <code>defect_code</code>, <code>defect_position</code></td>
+          </tr>
+          <tr>
+            <td>필수</td>
+            <td><code>production_summary.csv</code></td>
+            <td>불량률 계산을 위한 생산/검사 분모</td>
+            <td><code>work_date</code>, <code>time_bucket</code>, <code>equipment_id</code>, <code>inspection_qty</code>, <code>ng_qty</code></td>
+          </tr>
+          <tr>
+            <td>필수</td>
+            <td><code>laminator_profile.csv</code></td>
+            <td>설비 조건과 불량 집중 시간 연결</td>
+            <td><code>sample_time</code>, <code>recipe_id</code>, <code>process_time_sec</code>, <code>upper_temp_c</code>, <code>vacuum_kpa</code>, <code>pressure_kpa</code></td>
+          </tr>
+          <tr>
+            <td>권장</td>
+            <td><code>equipment_alarm.csv</code></td>
+            <td>알람과 불량 발생 시간 연계</td>
+            <td><code>alarm_time</code>, <code>equipment_id</code>, <code>alarm_code</code>, <code>alarm_name</code>, <code>severity</code>, <code>duration_sec</code></td>
+          </tr>
+          <tr>
+            <td>권장</td>
+            <td><code>bom_recipe_lot.csv</code></td>
+            <td>자재/BOM/Recipe 반복 패턴 분석</td>
+            <td><code>module_id</code>, <code>product_model</code>, <code>cell_lot</code>, <code>eva_lot</code>, <code>recipe_id</code>, <code>recipe_version</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>3. 더미 데이터 예시</h2>
+      <h3>defect_events.csv</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>event_time</th>
+            <th>line</th>
+            <th>equipment_id</th>
+            <th>module_id</th>
+            <th>defect_code</th>
+            <th>defect_position</th>
+            <th>inspection_tool</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-05-21 14:03:11</td><td>MODULE-A</td><td>LAM-03</td><td>MOD-0006</td><td>CRACK</td><td>cell_row=4;cell_col=7;edge</td><td>EL</td></tr>
+          <tr><td>2026-05-21 14:07:28</td><td>MODULE-A</td><td>LAM-03</td><td>MOD-0007</td><td>CRACK</td><td>cell_row=4;cell_col=8;edge</td><td>EL</td></tr>
+          <tr><td>2026-05-21 16:10:47</td><td>MODULE-A</td><td>LAM-02</td><td>MOD-0014</td><td>BUBBLE</td><td>zone=center;size=12mm</td><td>AOI</td></tr>
+        </tbody>
+      </table>
+
+      <h3>production_summary.csv</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>work_date</th>
+            <th>time_bucket</th>
+            <th>equipment_id</th>
+            <th>input_qty</th>
+            <th>inspection_qty</th>
+            <th>ng_qty</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-05-21</td><td>14:00</td><td>LAM-03</td><td>190</td><td>186</td><td>8</td></tr>
+          <tr><td>2026-05-21</td><td>15:00</td><td>LAM-03</td><td>188</td><td>188</td><td>2</td></tr>
+          <tr><td>2026-05-21</td><td>16:00</td><td>LAM-02</td><td>192</td><td>191</td><td>4</td></tr>
+        </tbody>
+      </table>
+
+      <h3>laminator_profile.csv</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>sample_time</th>
+            <th>equipment_id</th>
+            <th>recipe_id</th>
+            <th>process_time_sec</th>
+            <th>upper_temp_c</th>
+            <th>vacuum_kpa</th>
+            <th>pressure_kpa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>2026-05-21 14:00:00</td><td>LAM-03</td><td>RCP-A</td><td>101.4</td><td>151.2</td><td>-86.4</td><td>431</td></tr>
+          <tr><td>2026-05-21 14:05:00</td><td>LAM-03</td><td>RCP-A</td><td>102.0</td><td>151.7</td><td>-85.9</td><td>434</td></tr>
+          <tr><td>2026-05-21 16:10:00</td><td>LAM-02</td><td>RCP-B</td><td>95.9</td><td>148.7</td><td>-90.2</td><td>416</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section>
+      <h2>4. 분석 품질 기준</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>제공 데이터</th>
+            <th>가능한 분석 수준</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>NG 데이터만 제공</td><td>어디서 어떤 불량이 많이 발생했는지 확인</td></tr>
+          <tr><td>생산 분모 포함</td><td>설비별/시간대별 불량률과 통계 비교 가능</td></tr>
+          <tr><td>Profile/알람 포함</td><td>왜 발생했을 가능성이 높은지 원인 후보 제안 가능</td></tr>
+          <tr><td>BOM/Recipe/위치 포함</td><td>자재 조건, Recipe, 불량 위치, 문헌 Failure Mode까지 연결 가능</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>

@@ -129,7 +129,47 @@
 - GitHub `day3-laminator-ai-automation` 브랜치 업로드 완료
 - GitHub Pages `gh-pages` 브랜치 업로드 완료
 
-## 6. 현재 완성도 판단
+## 6. 현장 CSV 데이터 요청 항목 및 더미 예시
+
+AI 분석의 핵심은 단순 집계가 아니라 `왜 발생했을 가능성이 높은지`를 통계 분석, 설비 조건, 문헌 근거와 함께 설명하는 것이다. 따라서 2일차부터는 아래 CSV 항목을 현장 데이터 요청 기준으로 사용한다.
+
+| 파일명 | 목적 | 핵심 컬럼 |
+|---|---|---|
+| `defect_events.csv` | 불량 1건 단위 이벤트 분석 | `event_time`, `line`, `equipment_id`, `module_id`, `defect_code`, `defect_position`, `inspection_tool` |
+| `production_summary.csv` | 불량률 계산을 위한 생산/검사 분모 | `work_date`, `time_bucket`, `equipment_id`, `input_qty`, `inspection_qty`, `ng_qty` |
+| `laminator_profile.csv` | 설비 조건과 불량 집중 시간 연결 | `sample_time`, `equipment_id`, `recipe_id`, `process_time_sec`, `upper_temp_c`, `vacuum_kpa`, `pressure_kpa` |
+| `equipment_alarm.csv` | 알람과 불량 발생 시간 연계 | `alarm_time`, `equipment_id`, `alarm_code`, `alarm_name`, `severity`, `duration_sec` |
+| `bom_recipe_lot.csv` | 자재/BOM/Recipe 반복 패턴 분석 | `module_id`, `product_model`, `cell_lot`, `eva_lot`, `recipe_id`, `recipe_version` |
+
+간단 더미데이터 예시는 다음과 같다.
+
+### defect_events.csv
+
+| event_time | line | equipment_id | module_id | defect_code | defect_position | inspection_tool |
+|---|---|---|---|---|---|---|
+| 2026-05-21 14:03:11 | MODULE-A | LAM-03 | MOD-0006 | CRACK | cell_row=4;cell_col=7;edge | EL |
+| 2026-05-21 14:07:28 | MODULE-A | LAM-03 | MOD-0007 | CRACK | cell_row=4;cell_col=8;edge | EL |
+| 2026-05-21 16:10:47 | MODULE-A | LAM-02 | MOD-0014 | BUBBLE | zone=center;size=12mm | AOI |
+
+### production_summary.csv
+
+| work_date | time_bucket | line | equipment_id | input_qty | inspection_qty | ng_qty |
+|---|---|---|---|---:|---:|---:|
+| 2026-05-21 | 14:00 | MODULE-A | LAM-03 | 190 | 186 | 8 |
+| 2026-05-21 | 15:00 | MODULE-A | LAM-03 | 188 | 188 | 2 |
+| 2026-05-21 | 16:00 | MODULE-A | LAM-02 | 192 | 191 | 4 |
+
+### laminator_profile.csv
+
+| sample_time | line | equipment_id | recipe_id | process_time_sec | upper_temp_c | vacuum_kpa | pressure_kpa |
+|---|---|---|---|---:|---:|---:|---:|
+| 2026-05-21 14:00:00 | MODULE-A | LAM-03 | RCP-A | 101.4 | 151.2 | -86.4 | 431 |
+| 2026-05-21 14:05:00 | MODULE-A | LAM-03 | RCP-A | 102.0 | 151.7 | -85.9 | 434 |
+| 2026-05-21 16:10:00 | MODULE-A | LAM-02 | RCP-B | 95.9 | 148.7 | -90.2 | 416 |
+
+별도 요청서는 `docs/data/csv_data_request_template.html`에 생성했다.
+
+## 7. 현재 완성도 판단
 
 현실적으로 보면 현재 완성도는 기준에 따라 다르다.
 
@@ -143,7 +183,7 @@
 
 정리하면, 프로그래밍과 발표용 프로토타입은 거의 완성 단계에 가깝지만 실제 현장 적용은 실제 데이터 검증과 운영 보정이 필요하다.
 
-## 7. 남은 이슈와 리스크
+## 8. 남은 이슈와 리스크
 
 - 실제 MES/설비 CSV 컬럼 구조가 아직 검증되지 않았다.
 - `.xlsx` 직접 업로드 분석은 아직 구현되지 않았다.
@@ -152,7 +192,7 @@
 - 설비 Recipe 자동 변경은 side effect가 커서 파일럿 범위에서 제외해야 한다.
 - 반복 이력 DB화, 알림 시스템, 사용자 승인 플로우는 아직 구현되지 않았다.
 
-## 8. 2일차 진행 계획
+## 9. 2일차 진행 계획
 
 2일차에는 프로토타입을 더 현장형으로 만드는 것을 목표로 한다.
 
@@ -164,7 +204,7 @@
 - 반복 이슈 히스토리 관리 방식 구체화
 - 발표용 스크립트와 시연 순서 정리
 
-## 9. 1일차 결론
+## 10. 1일차 결론
 
 1일차에는 Laminator 공정 AI 업무 자동화 프로젝트의 기본 골격을 만들었다. 단순 문서 작성이 아니라 실제로 CSV를 업로드하고 대시보드가 계산되는 프로토타입까지 구현했다.
 
