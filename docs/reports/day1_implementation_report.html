@@ -165,6 +165,38 @@
 
     .hint { color: var(--muted); }
 
+    .link-panel {
+      padding: 18px;
+      border: 1px solid #b7d4e8;
+      border-radius: 8px;
+      background: #f1f8fd;
+      margin-bottom: 16px;
+    }
+
+    .link-panel strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--navy);
+      font-size: 17px;
+    }
+
+    .link-panel p {
+      margin-bottom: 10px;
+      color: var(--muted);
+    }
+
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 0 13px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #ffffff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
     a { color: var(--blue); font-weight: 900; text-decoration: none; }
 
     @media (max-width: 900px) {
@@ -189,6 +221,12 @@
         <span class="tag red">Risk Score</span>
       </div>
     </header>
+
+    <div class="link-panel">
+      <strong>그래프 분석 시트 바로가기</strong>
+      <p>그래프 시트는 결과보고서 안이 아니라, CSV를 업로드해서 다시 분석하는 대시보드 화면 안에 있습니다. 아래 버튼을 누르면 대시보드의 그래프 분석 시트 위치로 바로 이동합니다.</p>
+      <a class="link-button" href="../dashboard/laminator_ai_dashboard.html#graph-insights">대시보드 그래프 시트 열기</a>
+    </div>
 
     <div class="summary-grid">
       <div class="card">
@@ -270,6 +308,11 @@
             <td>위험도 점수</td>
             <td>불량 집중, 우선 불량, Profile/알람 중첩, 수량 불일치, NG율을 100점으로 환산</td>
             <td>긴급/주의보다 객관적인 점검 우선순위 제시</td>
+          </tr>
+          <tr>
+            <td>그래프 분석 시트</td>
+            <td>Risk strip, 시간대별 NG Mix, 설비 x 불량 매트릭스, Profile Stress vs NG 산점도</td>
+            <td>Spotfire식 운영 분석 흐름처럼 현상, 집중 구간, 설비 조건 근거를 한 화면에서 확인</td>
           </tr>
           <tr>
             <td>논문 RCA</td>
@@ -400,7 +443,7 @@
       <h2>8. 1일차 결론</h2>
       <p>1일차에는 Laminator 공정 AI 업무 자동화 프로젝트의 기본 골격을 만들었습니다. 단순 문서 작성이 아니라 실제로 CSV를 업로드하고 대시보드가 계산되는 프로토타입까지 구현했습니다.</p>
       <p>현재 결과물은 과제 제출과 발표에는 충분히 사용할 수 있는 수준이며, 다음 단계는 실제 현장 데이터와 비교하면서 컬럼 매핑, 위험도 점수, 원인 후보 판단 기준을 보정하는 것입니다.</p>
-      <p><a href="../dashboard/laminator_ai_dashboard.html">대시보드 열기</a> · <a href="../reports/index.html">보고서 목록으로 이동</a></p>
+      <p><a href="../dashboard/laminator_ai_dashboard.html#graph-insights">대시보드 그래프 시트 바로 열기</a> · <a href="../dashboard/laminator_ai_dashboard.html">대시보드 처음부터 열기</a> · <a href="../reports/index.html">보고서 목록으로 이동</a></p>
     </section>
   </main>
 </body>
