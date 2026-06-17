@@ -819,6 +819,55 @@
       vertical-align: top;
     }
 
+    .request-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .request-card {
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #ffffff;
+    }
+
+    .request-card strong {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .sample-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 12px;
+    }
+
+    .sample-table th,
+    .sample-table td {
+      padding: 8px 7px;
+      border-top: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .sample-table th {
+      background: var(--soft);
+      color: var(--muted);
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 6px;
+      background: #edf3f7;
+      color: #0e4f83;
+      font-family: Consolas, monospace;
+      font-size: 12px;
+    }
+
     @media (max-width: 1080px) {
       .app {
         grid-template-columns: 1fr;
@@ -840,7 +889,8 @@
       .grid-2,
       .grid-3,
       .evidence-grid,
-      .upload-summary {
+      .upload-summary,
+      .request-grid {
         grid-template-columns: 1fr;
       }
 
@@ -921,6 +971,7 @@
       <nav aria-label="대시보드 목차">
         <a href="#overview">Overview</a>
         <a href="#data-import">CSV 불러오기</a>
+        <a href="#data-request">CSV 요청 항목</a>
         <a href="#alerts">위험도 점수</a>
         <a href="#defect">불량 Pareto</a>
         <a href="#equipment">설비/시간 집중</a>
@@ -972,6 +1023,83 @@
               <p class="hint">CSV를 업로드하면 컬럼명을 시간, 설비, 불량, 알람, Profile, 생산수량, BOM/Recipe로 자동 분류한다.</p>
             </div>
           </div>
+        </section>
+
+        <section id="data-request">
+          <h3>0-1. AI 분석용 CSV 요청 항목</h3>
+          <p class="hint">좋은 원인분석은 NG 건수만으로는 부족합니다. 불량 이벤트, 생산 분모, 설비 Profile, 알람, BOM/Recipe, 불량 위치가 서로 연결될수록 통계분석과 문헌 기반 원인 후보의 신뢰도가 올라갑니다.</p>
+          <div class="request-grid">
+            <div class="request-card">
+              <strong>필수 1. 불량 이벤트</strong>
+              <p class="hint">불량 1건을 한 줄로 기록합니다.</p>
+              <code>event_time</code>, <code>line</code>, <code>equipment_id</code>, <code>module_id</code>, <code>defect_code</code>, <code>defect_position</code>, <code>inspection_tool</code>
+            </div>
+            <div class="request-card">
+              <strong>필수 2. 생산/검사 분모</strong>
+              <p class="hint">불량률, 설비별 NG율, 수량 불일치 검증에 필요합니다.</p>
+              <code>work_date</code>, <code>time_bucket</code>, <code>equipment_id</code>, <code>input_qty</code>, <code>inspection_qty</code>, <code>ng_qty</code>
+            </div>
+            <div class="request-card">
+              <strong>필수 3. Laminator Profile</strong>
+              <p class="hint">왜 났을 가능성이 높은지 설비 조건과 연결합니다.</p>
+              <code>sample_time</code>, <code>recipe_id</code>, <code>process_time_sec</code>, <code>upper_temp_c</code>, <code>vacuum_kpa</code>, <code>pressure_kpa</code>
+            </div>
+            <div class="request-card">
+              <strong>권장 4. 설비 알람</strong>
+              <p class="hint">알람이 불량보다 먼저 또는 같은 시간대에 발생했는지 봅니다.</p>
+              <code>alarm_time</code>, <code>alarm_code</code>, <code>alarm_name</code>, <code>severity</code>, <code>duration_sec</code>
+            </div>
+            <div class="request-card">
+              <strong>권장 5. BOM/Recipe/Lot</strong>
+              <p class="hint">특정 자재, Recipe, Lot 조합 반복 여부를 봅니다.</p>
+              <code>module_id</code>, <code>product_model</code>, <code>cell_lot</code>, <code>eva_lot</code>, <code>recipe_id</code>, <code>recipe_version</code>
+            </div>
+            <div class="request-card">
+              <strong>권장 6. 불량 위치/이미지</strong>
+              <p class="hint">CRACK/BUBBLE 위치 패턴과 문헌 Failure Mode를 연결합니다.</p>
+              <code>cell_row</code>, <code>cell_col</code>, <code>zone</code>, <code>defect_size_mm</code>, <code>image_ref</code>
+            </div>
+          </div>
+
+          <h4>간단 더미데이터 예시</h4>
+          <table class="sample-table">
+            <thead>
+              <tr>
+                <th>event_time</th>
+                <th>line</th>
+                <th>equipment_id</th>
+                <th>module_id</th>
+                <th>defect_code</th>
+                <th>defect_position</th>
+                <th>inspection_tool</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2026-05-21 14:03:11</td><td>MODULE-A</td><td>LAM-03</td><td>MOD-0006</td><td>CRACK</td><td>cell_row=4;cell_col=7;edge</td><td>EL</td></tr>
+              <tr><td>2026-05-21 14:07:28</td><td>MODULE-A</td><td>LAM-03</td><td>MOD-0007</td><td>CRACK</td><td>cell_row=4;cell_col=8;edge</td><td>EL</td></tr>
+              <tr><td>2026-05-21 16:10:47</td><td>MODULE-A</td><td>LAM-02</td><td>MOD-0014</td><td>BUBBLE</td><td>zone=center;size=12mm</td><td>AOI</td></tr>
+            </tbody>
+          </table>
+
+          <table class="sample-table">
+            <thead>
+              <tr>
+                <th>sample_time</th>
+                <th>equipment_id</th>
+                <th>recipe_id</th>
+                <th>process_time_sec</th>
+                <th>upper_temp_c</th>
+                <th>vacuum_kpa</th>
+                <th>pressure_kpa</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>2026-05-21 14:00:00</td><td>LAM-03</td><td>RCP-A</td><td>101.4</td><td>151.2</td><td>-86.4</td><td>431</td></tr>
+              <tr><td>2026-05-21 14:05:00</td><td>LAM-03</td><td>RCP-A</td><td>102.0</td><td>151.7</td><td>-85.9</td><td>434</td></tr>
+              <tr><td>2026-05-21 16:10:00</td><td>LAM-02</td><td>RCP-B</td><td>95.9</td><td>148.7</td><td>-90.2</td><td>416</td></tr>
+            </tbody>
+          </table>
+          <p class="hint">정리: NG 데이터만 있으면 어디서 많이 났는지까지, 생산 분모와 Profile/알람/BOM/위치까지 있으면 왜 났을 가능성이 높은지까지 분석할 수 있습니다.</p>
         </section>
 
         <div class="kpi-grid">
